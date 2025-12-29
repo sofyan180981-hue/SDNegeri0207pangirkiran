@@ -48,7 +48,7 @@
                 certification: "Guru Kelas",
                 university: "STIT PL GUNUNG TUA",
                 address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "nuraini.jpg" // Placeholder if file exists, or fallback
+                image: "nuraini1.jpg" // Placeholder if file exists, or fallback
             },
             { 
                 name: "Warda Kembang Bunga Harahap", 
@@ -766,7 +766,8 @@
                                         onClick={() => setSelectedTeacher(teacher)}
                                         className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100"
                                     >
-                                        <div className="h-40 bg-gray-200 relative overflow-hidden">
+                                        {/* PERBAIKAN: Mengubah h-40 menjadi h-72 untuk rasio portrait, dan menambahkan object-top */}
+                                        <div className="h-72 bg-gray-200 relative overflow-hidden">
                                             <img 
                                                 src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
                                                 alt={teacher.name} 
@@ -774,15 +775,15 @@
                                                     e.target.onerror = null; 
                                                     e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
                                                 }}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                                                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                                             />
-                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
-                                                <span className="text-white opacity-0 group-hover:opacity-100 font-bold px-4 py-1 bg-red-600 rounded-full text-sm">Lihat Profil</span>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                                                <span className="text-white font-bold px-4 py-1 bg-red-600 rounded-full text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Profil</span>
                                             </div>
                                         </div>
                                         <div className="p-4 text-center">
                                             <h4 className="font-bold text-gray-800 text-sm md:text-base line-clamp-1">{teacher.name}</h4>
-                                            <p className="text-xs text-red-600 mt-1">{teacher.role}</p>
+                                            <p className="text-xs text-red-600 mt-1 font-semibold">{teacher.role}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -1146,10 +1147,11 @@
                                     e.target.onerror = null; 
                                     e.target.src = "https://placehold.co/1200x400/1e3a8a/ffffff?text=SD+Negeri+0207+Pangirkiran";
                                 }}
-                                className="absolute inset-0 w-full h-full object-cover opacity-40" 
+                                className="absolute inset-0 w-full h-full object-cover opacity-90" 
                                 alt="Sekolah"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                            {/* PERBAIKAN: Layer merah transparan halus tipis */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-red-900/60 via-red-500/10 to-transparent"></div>
                             
                             <div className="relative z-10 container mx-auto px-4 text-center text-white h-full flex flex-col justify-center">
                                 
@@ -1182,14 +1184,14 @@
                         {activeTab === "Profil" && (
                             <section id="sambutan" className="mb-16 scroll-mt-24">
                                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
-                                    <div className="md:w-1/3 bg-red-50 relative">
+                                    <div className="md:w-1/3 bg-red-50 relative h-96 md:h-auto">
                                         <img 
-                                            src="nuraini.jpg" 
+                                            src="nuraini1.jpg" 
                                             onError={(e) => {
                                                 e.target.onerror = null; 
                                                 e.target.src = "https://placehold.co/400x500/e2e8f0/1e293b?text=Foto+Kepsek";
                                             }}
-                                            className="w-full h-full object-cover" 
+                                            className="absolute inset-0 w-full h-full object-cover object-top" 
                                             alt="Kepala Sekolah"
                                         />
                                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-900 to-transparent p-6 pt-20">
@@ -1241,7 +1243,8 @@
                                             e.target.onerror = null; 
                                             e.target.src = `https://ui-avatars.com/api/?name=${selectedTeacher.name}&background=random&size=256`;
                                         }}
-                                        className="w-32 h-32 rounded-full mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover" 
+                                        // PERBAIKAN: Menambahkan object-top pada modal juga
+                                        className="w-32 h-32 rounded-full mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover object-top border-4 border-white" 
                                     />
                                     <div className="space-y-3 flex-1">
                                         <div><span className="text-xs text-gray-500 block uppercase">Nama Lengkap</span><span className="font-bold text-lg">{selectedTeacher.name}</span></div>
