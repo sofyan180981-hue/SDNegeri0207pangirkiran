@@ -515,14 +515,62 @@
         ];
 
         const galleryData = [
-            { id: 1, title: "Upacara Bendera Senin", category: "Rutin", image: "upacara.jpg" },
-            { id: 2, title: "Polisi Cilik", category: "Ekskul", image: "kegiatan1.jpg" },
-            { id: 3, title: "Kegiatan ANBK", category: "ANBK", image: "kegiatan3.jpg" },
-            { id: 4, title: "Pemberian Hadiah Juara Kelas", category: "Akademik", image: "kegiatan7.jpg" },
-            { id: 5, title: "Karnaval HUTRI", category: "HUT-RI", image: "Kegiatan.jpg" },
-            { id: 6, title: "Pramuka Gudep 02116", category: "Ekskul", image: "Pramuka.jpg,kegiatan8.jpg" },
-            { id: 7, title: "Kegiatan Sholat Dhuha Berjamaah", category: "Keagamaan", image: "kegiatan2.jpg" },
-            { id: 8, title: "Alumni", category: "Alumni", image: "Alumni.jpg" },
+            { 
+                id: 1, 
+                title: "Upacara Bendera Senin", 
+                category: "Rutin", 
+                image: "upacara.jpg",
+                images: ["upacara.jpg", "https://placehold.co/600x400?text=Petugas+Upacara", "https://placehold.co/600x400?text=Barisan+Siswa"] 
+            },
+            { 
+                id: 2, 
+                title: "Polisi Cilik", 
+                category: "Ekskul", 
+                image: "kegiatan1.jpg",
+                images: ["kegiatan1.jpg", "https://placehold.co/600x400?text=Latihan+Pocil", "https://placehold.co/600x400?text=Lomba+Pocil"]
+            },
+            { 
+                id: 3, 
+                title: "Kegiatan ANBK", 
+                category: "ANBK", 
+                image: "kegiatan3.jpg",
+                images: ["kegiatan3.jpg", "https://placehold.co/600x400?text=Siswa+ANBK", "https://placehold.co/600x400?text=Pengawas+ANBK"]
+            },
+            { 
+                id: 4, 
+                title: "Pemberian Hadiah Juara Kelas", 
+                category: "Akademik", 
+                image: "kegiatan7.jpg",
+                images: ["kegiatan7.jpg", "https://placehold.co/600x400?text=Juara+Kelas+1", "https://placehold.co/600x400?text=Juara+Umum"]
+            },
+            { 
+                id: 5, 
+                title: "Karnaval HUTRI", 
+                category: "HUT-RI", 
+                image: "Kegiatan.jpg",
+                images: ["Kegiatan.jpg", "https://placehold.co/600x400?text=Pawai+Adat", "https://placehold.co/600x400?text=Marching+Band"]
+            },
+            { 
+                id: 6, 
+                title: "Pramuka Gudep 02116", 
+                category: "Ekskul", 
+                image: "Pramuka.jpg",
+                images: ["Pramuka.jpg", "https://placehold.co/600x400?text=Api+Unggun", "https://placehold.co/600x400?text=Tali+Temali"]
+            },
+            { 
+                id: 7, 
+                title: "Kegiatan Sholat Dhuha Berjamaah", 
+                category: "Keagamaan", 
+                image: "kegiatan2.jpg",
+                images: ["kegiatan2.jpg", "https://placehold.co/600x400?text=Ceramah+Agama", "https://placehold.co/600x400?text=Siswa+Sholat"]
+            },
+            { 
+                id: 8, 
+                title: "Alumni", 
+                category: "Alumni", 
+                image: "Alumni.jpg",
+                images: ["Alumni.jpg", "https://placehold.co/600x400?text=Reuni+Akbar", "https://placehold.co/600x400?text=Foto+Bersama"]
+            },
         ];
 
         // --- ICONS (Safe Inline Definition) ---
@@ -1074,7 +1122,7 @@
                     case "Galeri":
                         return (
                             <div className="animate-fade-in space-y-6">
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                     {galleryData.map(item => (
                                         <div 
                                             key={item.id} 
@@ -1086,9 +1134,13 @@
                                                 alt={item.title} 
                                                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                                <span className="text-xs text-red-200 font-semibold mb-1 uppercase tracking-wider">{item.category}</span>
-                                                <h4 className="text-white font-bold text-sm leading-tight">{item.title}</h4>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2">
+                                                <span className="text-[10px] text-red-200 font-semibold mb-0.5 uppercase tracking-wider">{item.category}</span>
+                                                <h4 className="text-white font-bold text-xs leading-tight line-clamp-2">{item.title}</h4>
+                                                <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                                    <Icon name="image" className="w-3 h-3" />
+                                                    {item.images ? item.images.length : 1}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -1353,9 +1405,30 @@
                         <Modal isOpen={selectedGalleryImage} onClose={() => setSelectedGalleryImage(null)} title="">
                             {selectedGalleryImage && (
                                 <div>
-                                    <img src={selectedGalleryImage.image} className="w-full rounded-lg mb-4 shadow-md" alt={selectedGalleryImage.title} />
-                                    <h4 className="font-bold text-lg text-center text-gray-800">{selectedGalleryImage.title}</h4>
-                                    <p className="text-center text-gray-500 text-sm">{selectedGalleryImage.category}</p>
+                                    <div className="mb-4">
+                                        <h4 className="font-bold text-xl text-center text-gray-800">{selectedGalleryImage.title}</h4>
+                                        <p className="text-center text-gray-500 text-sm mb-4">{selectedGalleryImage.category}</p>
+                                        
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                                            {(selectedGalleryImage.images || [selectedGalleryImage.image]).map((img, index) => (
+                                                <div key={index} className="relative rounded-lg overflow-hidden shadow-md bg-gray-100 group">
+                                                    <img 
+                                                        src={img} 
+                                                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                                                        alt={`${selectedGalleryImage.title} - ${index + 1}`} 
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <button 
+                                            onClick={() => setSelectedGalleryImage(null)}
+                                            className="px-6 py-2 bg-red-600 text-white rounded-full text-sm font-semibold hover:bg-red-700 transition-colors"
+                                        >
+                                            Tutup Galeri
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </Modal>
