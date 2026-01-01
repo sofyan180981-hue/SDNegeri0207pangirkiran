@@ -3,1406 +3,1095 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SD Negeri 0207 Pangirkiran</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>SD Negeri 0207 Pangirkiran - Website Resmi</title>
+    <meta name="description" content="Website Resmi SD Negeri 0207 Pangirkiran, Kabupaten Padang Lawas. Kurikulum Merdeka.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hero-pattern {
-            background-color: #ffffff;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239CA3AF' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        /* --- VARIABEL CSS (TEMA MERAH PUTIH) --- */
+        :root {
+            --primary-color: #C62828; /* Merah Indonesia */
+            --secondary-color: #f39c12; /* Kuning/Emas (Kontras) */
+            --accent-green: #27ae60; /* Hijau (Khusus Kurikulum Merdeka) */
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --radius: 10px;
+            --light-red-bg: #FFEBEE; /* Background merah muda untuk badge */
         }
-        /* Custom Scrollbar for tables */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+
+        /* --- RESET & DASAR --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background-color: var(--bg-light); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+        section { padding: 80px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { color: var(--primary-color); margin-bottom: 20px; font-weight: 700; }
+        h2 { font-size: 2.2rem; text-align: center; position: relative; padding-bottom: 20px; margin-bottom: 40px; }
+        h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background-color: var(--secondary-color); border-radius: 2px; }
+        p { margin-bottom: 15px; color: var(--text-light); }
+        
+        /* --- BUTTONS --- */
+        .btn { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 12px 30px; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; }
+        .btn:hover { background-color: #a01f1f; transform: translateY(-2px); }
+        .btn-secondary { background-color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: #e67e22; }
+
+        /* --- HEADER & NAV (UPDATE: 2 BARIS RAPI) --- */
+        header { background-color: var(--white); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 1000; }
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            height: 110px; /* DIPERBESAR AGAR MUAT 2 BARIS */
+            padding: 0 20px; /* Padding tambahan agar teks tidak nabrak pinggir */
         }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary-color); display: flex; align-items: center; gap: 10px; }
+        .logo i { font-size: 1.8rem; color: var(--secondary-color); }
+        
+        .nav-links { 
+            display: flex; 
+            flex-wrap: wrap; /* KUNCINYA: AGAR TURUN KE BARIS KE-2 JIKA PENUH */
+            gap: 15px; 
+            justify-content: center; /* RATA TENGAH SUPAYA RAPI */
+            align-items: center;
+        }
+
+        .nav-links a { 
+            font-weight: 500; 
+            color: var(--text-dark); 
+            font-size: 0.85rem; /* UKURAN FONT DIKECILKAN AGAR MUAT */
+            padding: 6px 12px;
+            border-radius: 20px; /* DIBULATKAN AGAR TIDAK KOTAK KASAR */
+        }
+        
+        /* UPDATE WARNA MENU SAAT HOVER & AKTIF */
+        .nav-links a:hover, .nav-links a.active { 
+            color: var(--white); 
+            background-color: var(--primary-color); 
+            box-shadow: 0 4px 8px rgba(198, 40, 40, 0.3);
+        }
+
+        /* PEMBATAS (SEPARATOR) ANTAR MENU AGAR RAPI */
+        .nav-links li { position: relative; }
+        .nav-links li:not(:last-child)::after {
+            content: "|";
+            color: #eee;
+            margin-left: 15px;
+            font-size: 0.7rem;
+        }
+
+        .hamburger { display: none; cursor: pointer; font-size: 1.5rem; color: var(--primary-color); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            background: linear-gradient(rgba(198, 40, 40, 0.4), rgba(198, 40, 40, 0.4)), url('banner-sekolah.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            padding: 0;
+        }
+        .hero-logo { position: absolute; top: 20px; z-index: 10; }
+        .left-logo { left: 20px; }
+        .right-logo { right: 20px; }
+        .hero-logo img { width: 130px; height: auto; background: rgba(255,255,255, 0.9); padding: 12px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.3s; }
+        .hero-logo img:hover { transform: scale(1.1); }
+        .hero-content h1 { color: var(--white); font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .hero-content p { color: #eee; font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px; }
+
+        /* --- SAMBUTAN KEPALA SEKOLAH --- */
+        .sambutan-section { background-color: var(--white); padding: 60px 20px; border-bottom: 1px solid #eee; }
+        .sambutan-box { display: flex; align-items: center; gap: 40px; max-width: 1000px; margin: 0 auto; }
+        .sambutan-img { flex: 0 0 300px; }
+        .sambutan-img img { width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 4px solid var(--primary-color); }
+        .sambutan-content { position: relative; flex: 1; }
+        .quote-icon { font-size: 3rem; color: var(--primary-color); opacity: 0.1; position: absolute; top: -20px; left: 0; transform: rotate(180deg); }
+        .sambutan-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-dark); margin-bottom: 15px; font-style: italic; }
+        .sambutan-sign { font-weight: bold; font-style: italic; color: var(--text-dark); margin-top: 20px; border-top: 2px solid #eee; padding-top: 10px; display: inline-block; color: var(--primary-color); }
+
+        /* --- PROFIL SECTION --- */
+        .about-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; align-items: start; }
+        .headmaster-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+        .headmaster-img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px; border: 5px solid var(--light-red-bg); }
+        .info-badge { display: inline-block; background: var(--light-red-bg); color: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 10px; font-weight: 600; }
+
+        /* --- VISI MISI & KURIKULUM --- */
+        .visi-misi-section { background: var(--white); }
+        .visi-box { text-align: center; background: var(--primary-color); color: var(--white); padding: 40px; border-radius: var(--radius); margin-bottom: 40px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .visi-box::before { content: '\f10d'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; top: 20px; left: 20px; font-size: 3rem; opacity: 0.1; }
+        .visi-box h3 { color: var(--white); margin-bottom: 15px; font-size: 1.8rem; }
+        .misi-container { max-width: 900px; margin: 0 auto; }
+        .misi-list li { position: relative; padding-left: 35px; margin-bottom: 15px; font-size: 1.05rem; color: var(--text-light); }
+        .misi-list li::before { content: '\f00c'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; left: 0; top: 2px; color: var(--secondary-color); }
+        .kurikulum-box { background: linear-gradient(to right, #fff, #f0fff4); border: 2px solid var(--accent-green); padding: 20px; border-radius: var(--radius); text-align: center; margin-top: 40px; }
+        .kurikulum-box h3 { color: var(--accent-green); display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        /* --- SARPRAS & EKSKUL --- */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; transition: 0.3s; height: 100%; border-top: 4px solid var(--primary-color); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(198, 40, 40, 0.15); }
+        
+        .card.sarpras-card { cursor: pointer; position: relative; }
+        .card.sarpras-card::after { content: 'Lihat Foto'; position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; opacity: 0; transition: 0.3s; }
+        .card.sarpras-card:hover::after { opacity: 1; bottom: 25px; }
+        .card-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+        .ekskul-item { position: relative; border-radius: var(--radius); overflow: hidden; height: 250px; group; }
+        .ekskul-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .ekskul-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(198, 40, 40, 0.85); color: var(--white); padding: 15px; transform: translateY(100%); transition: 0.3s; }
+        .ekskul-item:hover img { transform: scale(1.1); }
+        .ekskul-item:hover .ekskul-overlay { transform: translateY(0); }
+
+        /* --- TENAGA PENDIDIK (GRID FOTO) --- */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; } 
+
+        .guru-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border-bottom: 3px solid var(--primary-color); cursor: pointer; transition: 0.3s; }
+        .guru-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .guru-img-wrapper { height: 220px; overflow: hidden; background: #eee; }
+        .guru-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .guru-info { padding: 15px; text-align: center; }
+        .guru-name { font-weight: 700; color: var(--primary-color); margin-bottom: 5px; font-size: 1rem; }
+        .guru-role { color: var(--secondary-color); font-size: 0.9rem; font-weight: 600; }
+
+        /* --- DATA SISWA --- */
+        .class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .class-card { background: var(--white); border-radius: var(--radius); padding: 30px 20px; text-align: center; box-shadow: var(--shadow); cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .class-card:hover { border-color: var(--primary-color); background: var(--light-red-bg); }
+        .class-num { font-size: 3rem; font-weight: 800; color: var(--primary-color); display: block; margin-bottom: 10px; opacity: 0.3; }
+        .class-total { font-size: 1.1rem; font-weight: 600; }
+        .click-hint { font-size: 0.8rem; color: var(--secondary-color); margin-top: 10px; display: block; }
+
+        /* --- JADWAL PELAJARAN --- */
+        .schedule-section { background-color: var(--bg-light); }
+        .schedule-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .schedule-card { background: var(--white); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); cursor: pointer; border-left: 5px solid var(--primary-color); transition: 0.3s; }
+        .schedule-card:hover { transform: translateX(5px); background: var(--light-red-bg); }
+        .schedule-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .schedule-class-name { font-weight: 700; color: var(--primary-color); font-size: 1.2rem; }
+        .schedule-icon { color: var(--secondary-color); }
+        .schedule-days-list { font-size: 0.9rem; color: #555; }
+        .schedule-days-list li { margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .schedule-days-list li i { width: 20px; text-align: center; color: var(--primary-color); }
+
+        /* --- INFO PPDB --- */
+        .ppdb-section { background-color: var(--white); }
+        .ppdb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .ppdb-item { background: #fafafa; padding: 30px; border-radius: var(--radius); border: 1px solid #eee; text-align: center; }
+        .ppdb-icon-circle { width: 60px; height: 60px; background: var(--light-red-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary-color); font-size: 1.5rem; }
+        .ppdb-title { font-weight: 700; margin-bottom: 15px; font-size: 1.1rem; color: var(--text-dark); }
+        .ppdb-list { text-align: left; font-size: 0.9rem; color: var(--text-light); }
+        .ppdb-list li { margin-bottom: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 8px; }
+
+        /* --- KALENDER PENDIDIKAN --- */
+        .calendar-section { background-color: var(--bg-light); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .cal-card { background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: var(--shadow); border-left: 4px solid var(--secondary-color); transition: 0.3s; }
+        .cal-card:hover { border-left-color: var(--primary-color); transform: translateY(-3px); }
+        .cal-date { font-weight: 700; color: var(--secondary-color); font-size: 0.9rem; margin-bottom: 5px; display: block; }
+        .cal-event { font-size: 0.9rem; color: var(--text-dark); font-weight: 600; }
+
+        /* --- STATISTIK TABEL --- */
+        .stats-wrapper { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
+        .stats-table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 20px; }
+        .stats-table th { background-color: var(--primary-color); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        .stats-table td { padding: 15px; border-bottom: 1px solid #eee; color: var(--text-dark); }
+        .stats-table tr:nth-child(even) { background-color: var(--light-red-bg); }
+        .stats-table tr:hover { background-color: #ffebee; transition: 0.3s; }
+        .stats-total { background-color: #333 !important; color: #fff; font-weight: bold; }
+
+        /* --- BERITA --- */
+        .news-section { background-color: var(--bg-light); }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .news-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; border-top: 4px solid var(--primary-color); transition: 0.3s; }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; }
+        .news-img { height: 200px; overflow: hidden; position: relative; }
+        .news-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .news-date-badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; }
+        .news-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .news-title { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .news-desc { font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px; line-height: 1.5; flex-grow: 1; }
+        .read-more { color: var(--primary-color); font-weight: 600; font-size: 0.9rem; align-self: flex-start; }
+
+        /* --- TAUTAN REFERENSI --- */
+        .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+        .link-card { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--white); padding: 30px 20px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; text-decoration: none; border: 2px solid transparent; transition: 0.3s; }
+        .link-card:hover { transform: translateY(-5px); border-color: var(--primary-color); box-shadow: 0 8px 20px rgba(198, 40, 40, 0.15); }
+        .link-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 15px; transition: 0.3s; }
+        .link-card:hover .link-icon { color: var(--secondary-color); transform: scale(1.1); }
+        .link-title { font-weight: 600; color: var(--text-dark); font-size: 1rem; }
+
+        /* --- MODAL POPUP (UMUM, SISWA, GURU) --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background-color: var(--white); margin: auto; padding: 30px; border-radius: var(--radius); width: 90%; max-width: 800px; position: relative; animation: slideDown 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; border-top: 5px solid var(--primary-color); }
+        
+        /* Modal Khusus Sarpras */
+        #sarprasModal .modal-content { max-width: 700px; }
+        #sarprasModal img { width: 100%; height: 300px; object-fit: cover; border-radius: var(--radius); margin-bottom: 20px; }
+
+        /* Modal Khusus Guru (PROFIL LENGKAP) */
+        #guruModal .modal-content { max-width: 800px; flex-direction: row; overflow: hidden; padding: 0; border: none; background: #fff; }
+        .guru-modal-left { background: var(--light-red-bg); width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; position: relative; }
+        .guru-modal-left img { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 5px solid var(--white); box-shadow: var(--shadow); margin-bottom: 20px; }
+        .guru-modal-right { width: 60%; padding: 40px; overflow-y: auto; }
+        .guru-details-list li { margin-bottom: 15px; display: flex; align-items: flex-start; color: var(--text-dark); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .guru-details-list li i { color: var(--primary-color); width: 25px; margin-top: 5px; }
+        .guru-details-list li strong { display: block; font-size: 0.85rem; color: #888; margin-bottom: 3px; }
+
+        @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+        #guruModal .close-modal { position: absolute; right: 20px; top: 20px; z-index: 10; background: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
+        .close-modal { position: absolute; right: 20px; top: 20px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .close-modal:hover { color: var(--text-dark); }
+        .modal-header { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .modal-header h3 { color: var(--primary-color); margin: 0; font-size: 1.5rem; }
+        .student-list { overflow-y: auto; padding-right: 10px; }
+        .student-list li { padding: 10px 0; border-bottom: 1px dashed #eee; display: flex; align-items: center; }
+        .student-list li::before { content: '\f007'; font-family: 'Font Awesome 5 Free'; margin-right: 10px; color: var(--primary-color); font-size: 0.8rem; }
+
+        /* --- JADWAL MODAL (UPDATED STRUCTURE) --- */
+        #scheduleModal .modal-content { width: 95%; } /* Lebar agar muat 7 kolom */
+        .schedule-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.75rem; }
+        .schedule-table th, .schedule-table td { padding: 8px 4px; border: 1px solid #ddd; text-align: center; }
+        .schedule-table th { background-color: var(--primary-color); color: white; }
+        .schedule-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .schedule-table td { white-space: pre-wrap; } /* Agar teks panjang P5 wrap rapi */
+
+        /* --- GALERI --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .gallery-item { border-radius: 8px; overflow: hidden; height: 200px; box-shadow: var(--shadow); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        /* --- FOOTER & MAP --- */
+        .map-container { width: 100%; height: 350px; border-radius: var(--radius); overflow: hidden; margin-bottom: 30px; box-shadow: var(--shadow); }
+        footer { background-color: #222; color: #ccc; padding: 60px 0 20px; margin-top: 50px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h3 { color: var(--white); margin-bottom: 20px; font-size: 1.3rem; }
+        .contact-list li { margin-bottom: 15px; display: flex; gap: 15px; }
+        .contact-list i { color: var(--secondary-color); margin-top: 5px; }
+        .copyright { text-align: center; border-top: 1px solid #444; padding-top: 20px; font-size: 0.9rem; }
+
+        /* --- CATATAN KECIL --- */
+        .note-creator { text-align: center; background: var(--white); border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 40px 20px; }
+        .note-creator p { font-size: 0.95rem; color: #666; margin: 5px 0 0; }
+        .note-creator strong { color: var(--primary-color); }
+        .note-icon { font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 15px; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .about-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            /* GAYA MOBILE (HAMBURGER MENU) */
+            .navbar { padding: 0 15px; height: 80px; } /* Kembali ke tinggi normal di HP */
+            .hamburger { display: block; }
+            
+            .nav-links { 
+                position: fixed; 
+                background: var(--white); 
+                height: 100vh; 
+                width: 100%; 
+                top: 0; 
+                right: -100%; 
+                flex-direction: column; 
+                justify-content: center; 
+                align-items: center; 
+                transition: 0.4s; 
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                padding: 0; /* Hapus padding agar menu tidak tergeser */
+                width: 100%;
+            }
+            .nav-links.active { right: 0; }
+
+            /* Hilangkan separator di mobile agar rapi */
+            .nav-links li:not(:last-child)::after { display: none; }
+            .nav-links li { margin: 15px 0; }
+
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-logo img { width: 60px; padding: 5px; }
+            .sambutan-box { flex-direction: column; text-align: center; gap: 20px; }
+            .sambutan-img { flex: 0 0 auto; max-width: 250px; }
+            .quote-icon { top: 0; left: 50%; transform: translateX(-50%) rotate(90deg); }
+            #sarprasModal .modal-content { width: 95%; padding: 15px; }
+            #sarprasModal img { height: 200px; }
+            #guruModal .modal-content { flex-direction: column; width: 95%; }
+            .guru-modal-left { width: 100%; padding: 30px 15px; background: #fff; }
+            .guru-modal-right { width: 100%; padding: 20px; }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <div id="root"></div>
+<body>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        
-        // --- DATA ---
+    <!-- Header -->
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <i class="fas fa-school"></i> SDN 0207 PANGIRKIRAN
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#beranda" onclick="closeMenu()">Beranda</a></li>
+                    <li><a href="#sambutan" onclick="closeMenu()">Sambutan</a></li>
+                    <li><a href="#profil" onclick="closeMenu()">Profil</a></li>
+                    <li><a href="#akademik" onclick="closeMenu()">Akademik</a></li>
+                    <li><a href="#guru" onclick="closeMenu()">Guru</a></li>
+                    <li><a href="#siswa" onclick="closeMenu()">Siswa</a></li>
+                    <li><a href="#jadwal" onclick="closeMenu()">Jadwal</a></li>
+                    <li><a href="#ppdb" onclick="closeMenu()">PPDB</a></li>
+                    <li><a href="#statistik" onclick="closeMenu()">Statistik</a></li>
+                    <li><a href="#kalender" onclick="closeMenu()">Kalender</a></li>
+                    <li><a href="#galeri" onclick="closeMenu()">Galeri</a></li>
+                    <li><a href="#berita" onclick="closeMenu()">Berita</a></li>
+                    <li><a href="#tautan" onclick="closeMenu()">Tautan</a></li>
+                    <li><a href="#kontak" onclick="closeMenu()">Kontak</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
 
-        const teacherData = [
-            { 
-                name: "Nuraini Nasution, S.Pd.I", 
-                role: "Kepala Sekolah", 
-                nip: "197004121993082001", 
-                nuptk: "1744748650220002",
-                birth: "Huta Pasir, 12 April 1970",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "Guru Kelas",
-                university: "STIT PL GUNUNG TUA",
-                address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "nuraini1.jpg" // Placeholder if file exists, or fallback
-            },
-            { 
-                name: "Warda Kembang Bunga Harahap", 
-                role: "Guru Kelas 3", 
-                nip: "197101031992022001", 
-                nuptk: "8435749651300022",
-                birth: "Sihoda-Hoda, 03 Januari 1971",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "Guru Kelas",
-                university: "STIT PL GUNUNG TUA",
-                address: "Desa Pangirkiran Dolok, Kec.Barumun Tengah",
-                image: "warda.jpg"
-            },
-            { 
-                name: "Adanan Siregar", 
-                role: "Guru SBK", 
-                nip: "196709121992031005", 
-                nuptk: "8244745648200063",
-                birth: "Binanga, 12 September 1967",
-                education: "SLTA Sederajat", 
-                certification: "-",
-                university: "SPG Swasta Widyasana",
-                address: "Desa Binanga, Kec.Barumun Tengah",
-                image: "adanan.jpg"
-            },
-            { 
-                name: "Sofyan Tanjung", 
-                role: "Guru Mapel PJOK", 
-                nip: "198109182010011021", 
-                nuptk: "8250759661200033",
-                birth: "Batang Toru, 18 September 1981",
-                education: "S1 Pendidikan Olahraga", 
-                certification: "Pendidikan Jasmani Olahraga dan Kesehatan",
-                university: "Universitas Negeri Medan",
-                address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "sofyan.jpg"
-            },
-            { 
-                name: "Tirohima Harahap", 
-                role: "Guru Kelas 1", 
-                nip: "197611242008012002", 
-                nuptk: "1456754655300013",
-                birth: "Aek Nabara Tonga, 24 November 1976",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "Guru Kelas",
-                university: "STIT PL GUNUNG TUA",
-                address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "tirohima.jpg"
-            },
-            { 
-                name: "Rokimah Siregar", 
-                role: "Guru Kelas 2", 
-                nip: "196908132007012006", 
-                nuptk: "7145747651300003",
-                birth: "PP Makmur, 13 Agustus 1969",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "Guru Kelas",
-                university: "STAIS Dairi Sidikalang",
-                address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "rokimah.jpg"
-            },
-            { 
-                name: "Hotmaida Pohan", 
-                role: "Guru Kelas 4", 
-                nip: "198702082023212032", 
-                nuptk: "1540765667210032",
-                birth: "Pasar Binanga, 08 Februari 1987",
-                education: "S1 PGSD", 
-                certification: "Guru Kelas",
-                university: "Universitas Negeri Medan",
-                address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "hotma.jpg"
-            },
-            { 
-                name: "Rosmina Tamba", 
-                role: "Guru Mapel PAI", 
-                nip: "198810252023212015", 
-                nuptk: "5357766667130123",
-                birth: "Pangirkiran, 25 Oktober 1988",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "Pendidikan Agama Islam",
-                university: "IAIN Padangsidimpuan",
-                address: "Desa Gulangan, Kec. Sihapas Barumun",
-                image: "rosmina.jpg"
-            },
-            { 
-                name: "Nora Hanifah Pane", 
-                role: "Guru Kelas 6", 
-                nip: "-", 
-                nuptk: "3942775676230072",
-                birth: "Padang Matinggi, 10 Juni 1997",
-                education: "S1 Pendidikan BK", 
-                certification: "Guru PAUD",
-                university: "Universitas Muhammadiah Sumatera Utara",
-                address: "Desa Padang Matinggi, Kec. Barumun Tengah",
-                image: "nora.jpg"
-            },
-            { 
-                name: "Rukiatul Marjulia Ujung", 
-                role: "Guru Kelas 5", 
-                nip: "-", 
-                nuptk: "8635774675230272",
-                birth: "Medan, 03 Maret 1996",
-                education: "S1 PGSD", 
-                certification: "Guru Kelas",
-                university: "Universitas NU Sumatera Utara",
-                address: "Desa Padang Matinggi, Kec. Barumun Tengah",
-                image: "rukiatul.jpg"
-            },
-            { 
-                name: "Syaroh Silitonga", 
-                role: "Guru Mapel B.Ing", 
-                nip: "-", 
-                nuptk: "-",
-                birth: "Morang, 03 Oktober 1996",
-                education: "S1 Pendidikan Agama Islam", 
-                certification: "-",
-                university: "IAIN Padangsidimpuan",
-                address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "syaroh.jpg"
-            },
-            { 
-                name: "Siti Hoyriya Harahap", 
-                role: "Guru P5", 
-                nip: "-", 
-                nuptk: "-",
-                birth: "Rura Burangir, 17 Juli 2001",
-                education: "S1 PGMI", 
-                certification: "-",
-                university: "UIN Syekh Ali Hasan Ahmad Addary Padangsidimpuan",
-                address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "hoiriyah.jpg"
-            },
-            { 
-                name: "Romaito Harahap", 
-                role: "Guru Mapel Seni Tari", 
-                nip: "-", 
-                nuptk: "-",
-                birth: "Maranti, 22 Januari 2002",
-                education: "S1 Pendidikan Vokasional Informatika", 
-                certification: "-",
-                university: "Institut Pendidikan Tapanuli Selatan",
-                address: "Desa Pangirkiran Dolok",
-                image: "romaito.jpg"
-            },
-            { 
-                name: "Muhammad Johan Pohan", 
-                role: "Penjaga Sekolah", 
-                nip: "-", 
-                nuptk: "0646766667130212",
-                birth: "Padang Lawas, 1 November 1975",
-                education: "SLTA Sederajat", 
-                certification: "-",
-                university: "SMA Negeri 1 Barumun Tengah",
-                address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "johan.jpg"
-            },
-        ];
+    <!-- Hero Section -->
+    <section id="beranda" class="hero">
+        <!-- LOGO KIRI: KABUPATEN PADANG LAWAS -->
+        <div class="hero-logo left-logo">
+            <img src="logo-padang-lawas.jpg" alt="Logo Kabupaten Padang Lawas">
+        </div>
+        <!-- Teks Tengah -->
+        <div class="container hero-content">
+            <h1>SD NEGERI 0207 PANGIRKIRAN</h1>
+            <p>Mewujudkan peserta didik yang akhlak mulia, berilmu, berprestasi, dan berwawasan global dengan Kurikulum Merdeka.</p>
+            <a href="#profil" class="btn">Jelajahi Profil</a>
+        </div>
+        <!-- LOGO KANAN: TUT WURI HANDAYANI -->
+        <div class="hero-logo right-logo">
+            <img src="logo-tutwuri.png" alt="Logo Tut Wuri Handayani">
+        </div>
+    </section>
 
-        // Helper function to create student objects
-        const createStudent = (name) => ({ 
-            name: name.toUpperCase(), // Memastikan nama otomatis jadi huruf besar
-            gender: "-", 
-            nisn: "-", 
-            birth: "-", 
-            parent: "-"
-        });
+    <!-- SAMBUTAN KEPALA SEKOLAH -->
+    <section id="sambutan" class="sambutan-section">
+        <div class="container">
+            <div class="sambutan-box">
+                <div class="sambutan-img">
+                    <!-- Menggunakan foto yang sama dengan di kartu profil -->
+                    <img src="nuraini1.jpg" alt="Foto Kepala Sekolah">
+                </div>
+                <div class="sambutan-content">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <h3>Sambutan Kepala Sekolah</h3>
+                    <div class="sambutan-text">
+                        <p>Assalamu'alaikum Warahmatullahi Wabarakatuh,</p>
+                        <p>Selamat datang di Website Resmi SD Negeri 0207 Pangirkiran. Kami mengucapkan rasa syukur atas kepercayaan yang diberikan oleh masyarakat Desa Pangirkiran Dolok dan Kecamatan Barumun Tengah.</p>
+                        <p>Dalam era digital ini, website kami hadir sebagai sarana informasi dan komunikasi antara sekolah, orang tua, dan masyarakat. Kami berkomitmen untuk terus meningkatkan mutu pendidikan, baik dari sisi kurikulum maupun akhlak mulia peserta didik.</p>
+                        <p>Kami mengajak seluruh warga sekolah untuk terus berkarya, berinovasi, dan beradaptasi dengan perkembangan zaman demi kemajuan putra-putri bangsa tercinta.</p>
+                    </div>
+                    <div class="sambutan-sign">- Nuraini Nasution, S.Pd.I</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profil Section -->
+    <section id="profil">
+        <div class="container">
+            <h2>Profil Sekolah</h2>
+            <div class="about-grid">
+                <div>
+                    <p><strong>SD Negeri 0207 Pangirkiran</strong> beralamat di Desa Pangirkiran Dolok, Kecamatan Barumun Tengah, Kabupaten Padang Lawas. Secara geografis, sekolah ini terletak di daerah dataran tinggi yang sejuk.</p>
+            <p>Tenaga Pendidik di sekolah ini alumni sarjana dari Perguruan tinggi dan sudah tersertifikasi.
+Siswa di SD Negeri 0207 Pangirkiran berasal dari Desa Pangirkiran Dolok dan Desa Janji Raja yang berjumlah kurang lebih 117 orang.</p>	
+            <p>Kegiatan KBM berlangsung selama 6 (enam) Hari senin sampai dengan Sabtu, dan memiliki kegiatan Ekstrakurikuler Pramuka, Seni, dan Olah Raga.</p>
+                    <p>Sekolah ini berstatus negeri dengan <strong>NPSN 10207504</strong>. Berdiri sejak tahun <strong>1977</strong> dan memiliki akreditasi <strong>C</strong>.</p>
+                    
+                    <div>
+                        <span class="info-badge"><i class="fas fa-building"></i> Negeri</span>
+                        <span class="info-badge"><i class="fas fa-calendar-alt"></i> Est. 1977</span>
+                        <span class="info-badge"><i class="fas fa-certificate"></i> Akreditasi C</span>
+                        <span class="info-badge"><i class="fas fa-map-marker-alt"></i> Dataran Tinggi</span>
+                    </div>
+                </div>
+
+                <div class="headmaster-card">
+                    <img src="nuraini.jpg" alt="Nuraini Nasution, S.Pd.I" class="headmaster-img">
+                    <h3>Nuraini Nasution, S.Pd.I</h3>
+                    <p>Kepala Sekolah</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">"Pimpinan yang berkomitmen untuk meningkatkan kualitas pendidikan dan karakter siswa."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visi Misi & Kurikulum -->
+    <section id="akademik" class="visi-misi-section">
+        <div class="container">
+            <div class="visi-box">
+                <i class="fas fa-quote-left fa-2x" style="opacity: 0.3; margin-bottom: 20px;"></i>
+                <h3>Visi Sekolah</h3>
+                <p style="color: #fff; font-size: 1.4rem; font-style: italic;">"Terwujudnya Peserta Didik Yang Akhlak Mulia Berilmu Berprestasi Dan Berwawasan Global"</p>
+            </div>
+
+            <h2>Misi Sekolah</h2>
+            <div class="misi-container">
+                <ul class="misi-list">
+                    <li>Menanamkan keimanan dan ketakwaan melalui pengamalan ajaran agama</li>
+                    <li>Mengoptimalkan proses belajar dan bimbingan</li>
+                    <li>Mengembangkan minat bakat dan potensi Peserta Didik</li>
+                    <li>Menjalin Kerjasama yang Harmonis Antar warga Sekolah dan Lembaga Lain yang Terkait</li>
+                </ul>
+            </div>
+
+            <div class="kurikulum-box">
+                <h3><i class="fas fa-book-reader"></i> Kurikulum Merdeka</h3>
+                <p>SD Negeri 0207 Pangirkiran menerapkan <strong>Kurikulum Merdeka</strong> yang berfokus pada pengembangan karakter Profil Pelajar Pancasila.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sarpras & Ekskul -->
+    <section id="sarpras">
+        <div class="container">
+            <h2>Sarana & Prasarana</h2>
+            <p style="text-align: center;">Klik pada kartu di bawah untuk melihat foto.</p>
+            <div class="grid-3">
+                <div class="card sarpras-card" onclick="openSarprasModal(1)">
+                    <i class="fas fa-chalkboard-teacher card-icon"></i>
+                    <h4>Ruang Belajar</h4>
+                    <p>Kondisi nyaman dan kondusif untuk KBM.</p>
+                </div>
+                <div class="card sarpras-card" onclick="openSarprasModal(2)">
+                    <i class="fas fa-users card-icon"></i>
+                    <h4>Ruang Guru</h4>
+                    <p>Tempat koordinasi dan persiapan mengajar.</p>
+                </div>
+                <div class="card sarpras-card" onclick="openSarprasModal(3)">
+                    <i class="fas fa-book card-icon"></i>
+                    <h4>Perpustakaan</h4>
+                    <p>Koleksi buku untuk menunjang literasi siswa.</p>
+                </div>
+                <div class="card sarpras-card" onclick="openSarprasModal(4)">
+                    <i class="fas fa-desktop card-icon"></i>
+                    <h4>Lab Komputer</h4>
+                    <p>Sarana pengenalan teknologi informasi.</p>
+                </div>
+                <div class="card sarpras-card" onclick="openSarprasModal(5)">
+                    <i class="fas fa-restroom card-icon"></i>
+                    <h4>Toilet Bersih</h4>
+                    <p>Fasilitas kebersihan yang terjaga.</p>
+                </div>
+                <div class="card sarpras-card" onclick="openSarprasModal(6)">
+                    <i class="fas fa-running card-icon"></i>
+                    <h4>Lapangan Olahraga</h4>
+                    <p>Area untuk kegiatan fisik dan upacara.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ekskul" style="background-color: #fff;">
+        <div class="container">
+            <h2>Ekstrakurikuler</h2>
+            <div class="grid-3">
+                <div class="ekskul-item">
+                    <img src="https://picsum.photos/seed/sports/400/300" alt="Olahraga">
+                    <div class="ekskul-overlay">
+                        <h4>Olahraga</h4>
+                        <p>Mengembangkan fisik dan sportivitas.</p>
+                    </div>
+                </div>
+                <div class="ekskul-item">
+                    <img src="https://picsum.photos/seed/dance/400/300" alt="Seni Tari">
+                    <div class="ekskul-overlay">
+                        <h4>Seni Tari</h4>
+                        <p>Melestarikan budaya daerah.</p>
+                    </div>
+                </div>
+                <div class="ekskul-item">
+                    <img src="https://picsum.photos/seed/scouts/400/300" alt="Pramuka">
+                    <div class="ekskul-overlay">
+                        <h4>Pramuka</h4>
+                        <p>Membentuk karakter mandiri dan disiplin.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Guru -->
+    <section id="guru">
+        <div class="container">
+            <h2>Tenaga Pendidik & Tenaga Kependidikan</h2>
+            <p style="text-align: center;">Klik pada foto guru untuk melihat profil lengkap.</p>
+            <div class="grid-3">
+                <!-- Guru Cards (Loop JS for clean code) -->
+                <div class="guru-card" onclick="openGuruModal(1)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru1/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Warda Kembang Bunga Harahap</div><div class="guru-role">Guru Kelas 3</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(2)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru2/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Adanan Siregar</div><div class="guru-role">Guru SBK</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(3)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru3/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Sofyan Tanjung</div><div class="guru-role">Guru Mapel PJOK</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(4)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru4/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Tirohima Harahap</div><div class="guru-role">Guru Kelas 1</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(5)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru5/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Rokimah Siregar</div><div class="guru-role">Guru Kelas 2</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(6)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru6/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Hotmaida Pohan</div><div class="guru-role">Guru Kelas 4</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(7)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru7/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Rosmina Tamba</div><div class="guru-role">Guru Mapel PAI</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(8)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru8/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Nora Hanifah Pane</div><div class="guru-role">Guru Kelas 6</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(9)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru9/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Rukiatul Marjulia Ujung</div><div class="guru-role">Guru Kelas 5</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(10)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru10/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Syaroh Silitonga</div><div class="guru-role">Guru Mapel B. Ing</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(11)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru11/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Siti Hoyriya Harahap</div><div class="guru-role">Guru P5</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(12)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/guru12/300/300" alt="Foto Guru"></div><div class="guru-info"><div class="guru-name">Romaito Harahap</div><div class="guru-role">Guru Mapel Seni Tari</div></div></div>
+                <div class="guru-card" onclick="openGuruModal(13)"><div class="guru-img-wrapper"><img src="https://picsum.photos/seed/staf1/300/300" alt="Foto Staf"></div><div class="guru-info"><div class="guru-name">Muhammad Johan Pohan</div><div class="guru-role">Penjaga Sekolah</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Siswa -->
+    <section id="siswa" style="background-color: #fff;">
+        <div class="container">
+            <h2>Data Siswa</h2>
+            <p style="text-align: center;">Klik pada kartu kelas untuk melihat daftar nama siswa.</p>
+            <div class="class-grid">
+                <div class="class-card" onclick="openModal(1)"><span class="class-num">1</span><div class="class-total">22 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+                <div class="class-card" onclick="openModal(2)"><span class="class-num">2</span><div class="class-total">13 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+                <div class="class-card" onclick="openModal(3)"><span class="class-num">3</span><div class="class-total">25 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+                <div class="class-card" onclick="openModal(4)"><span class="class-num">4</span><div class="class-total">20 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+                <div class="class-card" onclick="openModal(5)"><span class="class-num">5</span><div class="class-total">16 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+                <div class="class-card" onclick="openModal(6)"><span class="class-num">6</span><div class="class-total">22 Siswa</div><span class="click-hint"><i class="fas fa-hand-pointer"></i> Lihat Nama</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JADWAL PELAJARAN -->
+    <section id="jadwal" class="schedule-section">
+        <div class="container">
+            <h2>Jadwal Pelajaran</h2>
+            <p style="text-align: center;">Klik pada kartu kelas untuk melihat jadwal lengkap (Jam vs Hari).</p>
+            <div class="schedule-wrapper">
+                <div class="schedule-card" onclick="openScheduleModal(1)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 1</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 6 Jam Pelajaran per Hari</li></ul>
+                </div>
+                <div class="schedule-card" onclick="openScheduleModal(2)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 2</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 6 Jam Pelajaran per Hari</li></ul>
+                </div>
+                <div class="schedule-card" onclick="openScheduleModal(3)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 3</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 7 Jam Pelajaran per Hari</li></ul>
+                </div>
+                <div class="schedule-card" onclick="openScheduleModal(4)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 4</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 7 Jam Pelajaran per Hari</li></ul>
+                </div>
+                <div class="schedule-card" onclick="openScheduleModal(5)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 5</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 7 Jam Pelajaran per Hari</li></ul>
+                </div>
+                <div class="schedule-card" onclick="openScheduleModal(6)">
+                    <div class="schedule-header"><span class="schedule-class-name">Kelas 6</span><i class="fas fa-calendar-alt schedule-icon"></i></div>
+                    <ul class="schedule-days-list"><li><i class="fas fa-clock"></i> 6 Jam Pelajaran per Hari</li></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATISTIK -->
+    <section id="statistik">
+        <div class="container">
+            <h2>Statistik Penerimaan Siswa</h2>
+            <p style="text-align: center;">Data penerimaan siswa baru dalam 5 tahun terakhir.</p>
+            <div class="stats-wrapper">
+                <table class="stats-table">
+                    <thead><tr><th>No</th><th>Tahun Ajaran</th><th>Laki-laki</th><th>Perempuan</th><th>Total Siswa</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>2021/2022</td><td>6</td><td>10</td><td>16</td></tr>
+                        <tr><td>2</td><td>2022/2023</td><td>10</td><td>10</td><td>20</td></tr>
+                        <tr><td>3</td><td>2023/2024</td><td>12</td><td>13</td><td>25</td></tr>
+                        <tr><td>4</td><td>2024/2025</td><td>5</td><td>13</td><td>18</td></tr>
+                        <tr><td>5</td><td>2025/2026</td><td>12</td><td>10</td><td>21</td></tr>
+                        <tr class="stats-total"><td colspan="4" style="text-align: right;">Total 5 Tahun:</td><td>100 Siswa</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFO PPDB -->
+    <section id="ppdb" class="ppdb-section">
+        <div class="container">
+            <h2>Info PPDB / Penerimaan</h2>
+            <p style="text-align: center;">Informasi lengkap penerimaan peserta didik baru SDN 0207 Pangirkiran.</p>
+            <div class="ppdb-grid">
+                <div class="ppdb-item">
+                    <div class="ppdb-icon-circle"><i class="fas fa-file-alt"></i></div>
+                    <h3 class="ppdb-title">Syarat Daftar</h3>
+                    <ul class="ppdb-list"><li>Usia minimal 6 tahun per 1 Juli.</li><li>Fotokopi Kartu Keluarga (KK).</li><li>Fotokopi Akta Kelahiran.</li></ul>
+                </div>
+                <div class="ppdb-item">
+                    <div class="ppdb-icon-circle"><i class="fas fa-clock"></i></div>
+                    <h3 class="ppdb-title">Waktu Pendaftaran</h3>
+                    <ul class="ppdb-list"><li>Bulan Mei - Agustus</li><li>Senin - Jumat</li><li>Pukul 08:00 - 14:00 WIB</li></ul>
+                </div>
+                <div class="ppdb-item">
+                    <div class="ppdb-icon-circle"><i class="fas fa-map-marked"></i></div>
+                    <h3 class="ppdb-title">Lokasi</h3>
+                    <ul class="ppdb-list"><li>Kantor Sekolah</li><li>Hubungi Panitia PPDB</li><li>Nomor Kontak: (0812xxxx)</li></ul>
+                </div>
+                <div class="ppdb-item">
+                    <div class="ppdb-icon-circle"><i class="fas fa-folder-open"></i></div>
+                    <h3 class="ppdb-title">Kelengkapan</h3>
+                    <ul class="ppdb-list"><li>Formulir PPDB</li><li>Pas Foto Berwarnah</li><li>Konfirmasi Wali Kelas</li></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KALENDER PENDIDIKAN (UPDATED) -->
+    <section id="kalender" class="calendar-section">
+        <div class="container">
+            <h2>Kalender Pendidikan</h2>
+            
+            <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 30px; margin-top: 50px;">Agenda Tahun 2025</h3>
+            <div class="calendar-grid">
+                <div class="cal-card"><span class="cal-date">1-12 Juli 2025</span><div class="cal-event">Libur Semester Genap</div></div>
+                <div class="cal-card"><span class="cal-date">14 Juli 2025</span><div class="cal-event">Hari Pertama Sekolah</div></div>
+                <div class="cal-card"><span class="cal-date">14-16 Juli 2025</span><div class="cal-event">MPLS</div></div>
+                <div class="cal-card"><span class="cal-date">17 Agustus 2025</span><div class="cal-event">HUT RI ke-80</div></div>
+                <div class="cal-card"><span class="cal-date">5 September 2025</span><div class="cal-event">Maulid Nabi Muhammad SAW</div></div>
+                <div class="cal-card"><span class="cal-date">15-20 September 2025</span><div class="cal-event">Ujian Tengah Semester</div></div>
+                <div class="cal-card"><span class="cal-date">22-25 September 2025</span><div class="cal-event">ANBK Tahap 1</div></div>
+                <div class="cal-card"><span class="cal-date">29-30 September 2025</span><div class="cal-event">ANBK Tahap 2</div></div>
+                <div class="cal-card"><span class="cal-date">1-2 Oktober 2025</span><div class="cal-event">ANBK Tahap 2 (Susulan)</div></div>
+                <div class="cal-card"><span class="cal-date">8-13 Desember 2025</span><div class="cal-event">Ujian Semester Ganjil</div></div>
+                <div class="cal-card"><span class="cal-date">20 Desember 2025</span><div class="cal-event">Penerimaan Raport</div></div>
+                <div class="cal-card"><span class="cal-date">22-31 Desember 2025</span><div class="cal-event">Libur Semester Ganjil</div></div>
+                <div class="cal-card"><span class="cal-date">25-26 Desember 2025</span><div class="cal-event">Hari Raya Natal</div></div>
+            </div>
+
+            <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 30px; margin-top: 50px;">Agenda Tahun 2026</h3>
+            <div class="calendar-grid">
+                <div class="cal-card"><span class="cal-date">1 Januari 2026</span><div class="cal-event">Tahun Baru Masehi 2026</div></div>
+                <div class="cal-card"><span class="cal-date">2-3 Januari 2026</span><div class="cal-event">Libur Semester Ganjil</div></div>
+                <div class="cal-card"><span class="cal-date">5 Januari 2026</span><div class="cal-event">Hari Pertama Semester Genap</div></div>
+                <div class="cal-card"><span class="cal-date">16 Januari 2026</span><div class="cal-event">Isra Mikraj 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">17 Februari 2026</span><div class="cal-event">Tahun Baru Imlek</div></div>
+                <div class="cal-card"><span class="cal-date">16-21 Februari 2026</span><div class="cal-event">Libur Awal Ramadhan 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">2-7 Maret 2026</span><div class="cal-event">Ujian Tengah Semester</div></div>
+                <div class="cal-card"><span class="cal-date">9-14 Maret 2026</span><div class="cal-event">Kegiatan Ramadhan/Keagamaan</div></div>
+                <div class="cal-card"><span class="cal-date">16-18 Maret 2026</span><div class="cal-event">Libur Ramadhan 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">19 Maret 2026</span><div class="cal-event">Idul Fitri 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">19 Maret 2026</span><div class="cal-event">Hari Raya Nyepi</div></div>
+                <div class="cal-card"><span class="cal-date">20-25 Maret 2026</span><div class="cal-event">Libur Idul Fitri 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">26 Maret 2026</span><div class="cal-event">Hari Pertama Sekolah (Setelah Lebaran)</div></div>
+                <div class="cal-card"><span class="cal-date">3 April 2026</span><div class="cal-event">Wafat Yesus Kristus</div></div>
+                <div class="cal-card"><span class="cal-date">1 Mei 2026</span><div class="cal-event">Hari Buruh</div></div>
+                <div class="cal-card"><span class="cal-date">14 Mei 2026</span><div class="cal-event">Kenaikan Yesus Kristus</div></div>
+                <div class="cal-card"><span class="cal-date">18-23 Mei 2026</span><div class="cal-event">ASSP Kelas VI</div></div>
+                <div class="cal-card"><span class="cal-date">26-28 Mei 2026</span><div class="cal-event">Libur Khusus Idul Adha 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">27 Mei 2026</span><div class="cal-event">Hari Raya Idul Adha 1447 H</div></div>
+                <div class="cal-card"><span class="cal-date">31 Mei 2026</span><div class="cal-event">Hari Raya Waisak</div></div>
+                <div class="cal-card"><span class="cal-date">1 Juni 2026</span><div class="cal-event">Hari Lahir Pancasila</div></div>
+                <div class="cal-card"><span class="cal-date">2 Juni 2026</span><div class="cal-event">Pengumuman Kelulusan</div></div>
+                <div class="cal-card"><span class="cal-date">8-13 Juni 2026</span><div class="cal-event">Ujian Semester Genap</div></div>
+                <div class="cal-card"><span class="cal-date">16 Juni 2026</span><div class="cal-event">Tahun Baru Hijriah 1448 H</div></div>
+                <div class="cal-card"><span class="cal-date">20 Juni 2026</span><div class="cal-event">Penerimaan Raport</div></div>
+                <div class="cal-card"><span class="cal-date">22-30 Juni 2026</span><div class="cal-event">Libur Semester Genap</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri -->
+    <section id="galeri">
+        <div class="container">
+            <h2>Galeri Kegiatan</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan1/400/300" alt="Kegiatan Sekolah"></div>
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan2/400/300" alt="Kegiatan Sekolah"></div>
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan3/400/300" alt="Kegiatan Sekolah"></div>
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan4/400/300" alt="Kegiatan Sekolah"></div>
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan5/400/300" alt="Kegiatan Sekolah"></div>
+                <div class="gallery-item"><img src="https://picsum.photos/seed/kegiatan6/400/300" alt="Kegiatan Sekolah"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BERITA -->
+    <section id="berita" class="news-section">
+        <div class="container">
+            <h2>Berita & Pengumuman</h2>
+            <div class="news-grid">
+                <div class="news-card" onclick="openNewsModal(1)">
+                    <div class="news-img"><img src="https://picsum.photos/seed/news1/400/300" alt="Berita Sekolah"><span class="news-date-badge">15 Mei 2024</span></div>
+                    <div class="news-content"><h3 class="news-title">Penerimaan Raport Kenaikan Kelas</h3><p class="news-desc">Pengambilan raport akan dilaksanakan pada hari Senin tanggal 20 Mei 2024.</p><span class="read-more">Baca Selengkapnya...</span></div>
+                </div>
+                <div class="news-card" onclick="openNewsModal(2)">
+                    <div class="news-img"><img src="https://picsum.photos/seed/news2/400/300" alt="Berita Sekolah"><span class="news-date-badge">17 Agustus 2025</span></div>
+                    <div class="news-content"><h3 class="news-title">Peringatan HUT RI ke-80</h3><p class="news-desc">Seluruh siswa dan guru SD Negeri 0207 Pangirkiran mengikuti upacara bendera dalam rangka memperingati Hari Kemerdekaan.</p><span class="read-more">Baca Selengkapnya...</span></div>
+                </div>
+                <div class="news-card" onclick="openNewsModal(3)">
+                    <div class="news-img"><img src="https://picsum.photos/seed/news3/400/300" alt="Berita Sekolah"><span class="news-date-badge">10 September 2024</span></div>
+                    <div class="news-content"><h3 class="news-title">Lomba Kebersihan Lingkungan</h3><p class="news-desc">Siswa SDN 0207 Pangirkiran mengikuti lomba kebersihan lingkungan tingkat kecamatan.</p><span class="read-more">Baca Selengkapnya...</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tautan Referensi -->
+    <section id="tautan" style="background-color: #fff;">
+        <div class="container">
+            <h2>Tautan Referensi</h2>
+            <p style="text-align: center;">Akses ke portal resmi Kementerian Pendidikan.</p>
+            <div class="link-grid">
+                <a href="https://dapo.kemendikdasmen.go.id/" target="_blank" class="link-card"><i class="fas fa-database link-icon"></i><span class="link-title">DAPO DIKDASMEN</span></a>
+                <a href="https://gurudikdas.dikdasmen.go.id/" target="_blank" class="link-card"><i class="fas fa-chalkboard-teacher link-icon"></i><span class="link-title">GURU DIKDASMEN</span></a>
+                <a href="https://kemendikdasmen.go.id/" target="_blank" class="link-card"><i class="fas fa-building link-icon"></i><span class="link-title">KEMENDIKDASMEN</span></a>
+                <a href="https://gtk.kemendikdasmen.go.id/" target="_blank" class="link-card"><i class="fas fa-users link-icon"></i><span class="link-title">GTK</span></a>
+                <a href="https://guru.kemendikdasmen.go.id/" target="_blank" class="link-card"><i class="fas fa-user-graduate link-icon"></i><span class="link-title">GURU KEMDIKBUD</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak & Peta -->
+    <section id="kontak" style="background-color: #fff;">
+        <div class="container">
+            <h2>Lokasi Sekolah</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps?q=1.366409,99.795892&hl=id&z=15&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catatan Kecil -->
+    <section id="catatan" class="note-creator">
+        <div class="container">
+            <i class="fas fa-code note-icon"></i>
+            <p><strong>Catatan Pembuat Situs</strong></p>
+            <p>Website ini dirancang, dibuat, dan dikembangkan oleh <strong style="color: var(--primary-color);">Sofyan Tanjung</strong> (Guru Mapel PJOK SD Negeri 0207 Pangirkiran).</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>SDN 0207 Pangirkiran</h3>
+                    <p>Membentuk generasi penerus bangsa yang berkarakter, cerdas, dan berdaya saing global.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Kontak Kami</h3>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-map-marker-alt"></i> Desa Pangirkiran Dolok, Kec. Barumun Tengah, Kab. Padang Lawas</li>
+                        <li><i class="fas fa-envelope"></i> sdn0211pangirkiran@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> (Hubungi via Email)</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <ul style="line-height: 2;">
+                        <li><a href="#profil"><i class="fas fa-chevron-right"></i> Profil</a></li>
+                        <li><a href="#guru"><i class="fas fa-chevron-right"></i> Guru</a></li>
+                        <li><a href="#siswa"><i class="fas fa-chevron-right"></i> Data Siswa</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 SD Negeri 0207 Pangirkiran. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL STRUKTUR (SISWA) -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h3 id="modalClassTitle">Daftar Siswa Kelas</h3>
+                <p id="modalCount" style="margin:0; color: #666;"></p>
+            </div>
+            <ul class="student-list" id="modalList"></ul>
+        </div>
+    </div>
+
+    <!-- MODAL STRUKTUR (SARPRAS) -->
+    <div id="sarprasModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSarprasModal()">&times;</span>
+            <img id="sarprasImg" src="" alt="Foto Sarpras">
+            <div class="modal-header">
+                <h3 id="sarprasTitle">Judul Sarpras</h3>
+            </div>
+            <p id="sarprasDesc">Deskripsi sarpras akan muncul di sini.</p>
+        </div>
+    </div>
+
+    <!-- MODAL STRUKTUR (GURU) -->
+    <div id="guruModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeGuruModal()">&times;</span>
+            <div class="guru-modal-left">
+                <img id="guruModalImg" src="" alt="Foto Guru">
+                <h3 id="guruModalRole" style="color: var(--secondary-color); font-size: 1.2rem; margin-bottom: 5px;">Jabatan</h3>
+            </div>
+            <div class="guru-modal-right">
+                <div class="modal-header" style="border:none; padding: 0; margin: 0 0 20px 0;">
+                    <h3 id="guruModalName" style="font-size: 1.8rem;">Nama Lengkap</h3>
+                </div>
+                <ul class="guru-details-list">
+                    <li><i class="fas fa-birthday-cake"></i><div><strong>Tempat, Tanggal Lahir</strong><span id="guruModalTtl">Contoh: Padang Lawas, 12 Mei 1990</span></div></li>
+                    <li><i class="fas fa-graduation-cap"></i><div><strong>Pendidikan Terakhir</strong><span id="guruModalEdu">Contoh: S1 Pendidikan Guru SD</span></div></li>
+                    <li><i class="fas fa-school"></i><div><strong>Asal Sekolah</strong><span id="guruModalOrigin">Contoh: IKIP Padang</span></div></li>
+                    <li><i class="fas fa-map-marker-alt"></i><div><strong>Alamat</strong><span id="guruModalAddress">Contoh: Jl. Pendidikan No. 1, Pangirkiran Dolok</span></div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL STRUKTUR (JADWAL) -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeScheduleModal()">&times;</span>
+            <div class="modal-header">
+                <h3 id="scheduleModalTitle">Jadwal Kelas</h3>
+                <p style="margin:0; color: #666;">Struktur: Jam (Vertikal) x Hari (Horizontal)</p>
+            </div>
+            <table class="schedule-table">
+                <thead><tr><th>Jam</th><th>Senin</th><th>Selasa</th><th>Rabu</th><th>Kamis</th><th>Jumat</th><th>Sabtu</th></tr></thead>
+                <tbody id="scheduleTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL STRUKTUR (BERITA) -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeNewsModal()">&times;</span>
+            <div class="modal-header">
+                <h3 id="newsModalTitle">Judul Berita</h3>
+                <span id="newsModalDate" style="font-size: 0.9rem; background: #eee; padding: 2px 8px; border-radius: 4px;"></span>
+            </div>
+            <p id="newsModalBody" style="color: #444; line-height: 1.6;">Isi berita lengkap...</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA GURU (PROFIL LENGKAP) ---
+        const guruData = {
+            1: { name: "Warda Kembang Bunga Harahap", role: "Guru Kelas 3", img: "https://picsum.photos/seed/guru1/400/400", ttl: "Sihoda-Hoda, 03 Januari 1971", edu: "S1 PAI", origin: "STIT PL GUNUNG TUA", address: "Desa Pangirkiran Dolok,Kec.Barumun Tengah" },
+            2: { name: "Adanan Siregar", role: "Guru SBK", img: "https://picsum.photos/seed/guru2/400/400", ttl: "Binanga, 12 September 1967", edu: "SLTA", origin: "SPG", address: "Desa Binanga, Kec.Barumun Tengah" },
+            3: { name: "Sofyan Tanjung", role: "Guru Mapel PJOK", img: "https://picsum.photos/seed/guru3/400/400", ttl: "Batang Toru, 18 September 1981", edu: "S1 Pendidikan Olahraga", origin: "Universitas Negeri Medan", address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah" },
+            4: { name: "Tirohima Harahap", role: "Guru Kelas 1", img: "https://picsum.photos/seed/guru4/400/400", ttl: "Aek Nabara Tonga, 24 November 1976", edu: "S1 PAI", origin: "STIT PL GUNUNG TUA", address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah" },
+            5: { name: "Rokimah Siregar", role: "Guru Kelas 2", img: "https://picsum.photos/seed/guru5/400/400", ttl: "PP Makmur, 13 Agustus 1969", edu: "S1 PAI", origin: "STAIS Dairi Sidikalang", address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah" },
+            6: { name: "Hotmaida Pohan", role: "Guru Kelas 4", img: "https://picsum.photos/seed/guru6/400/400", ttl: "Pasar Binanga, 08 Februari 1987", edu: "S1 PGSD", origin: "Universitas Negeri Medan", address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah" },
+            7: { name: "Rosmina Tamba", role: "Guru Mapel PAI", img: "https://picsum.photos/seed/guru7/400/400", ttl: "Pangirkiran, 25 Oktober 1988", edu: "S1 Pendidikan Agama Islam", origin: "IAIN Padangsidimpuan", address: "Desa Gulangan, Kec. Sihapas Barumun" },
+            8: { name: "Nora Hanifah Pane", role: "Guru Kelas 6", img: "https://picsum.photos/seed/guru8/400/400", ttl: "Padang Matinggi, 10 Juni 1997", edu: "S1 Pendidikan BK", origin: "Universitas Muhammadiah Sumatera Utara", address: "Desa Padang Matinggi, Kec. Barumun Tengah" },
+            9: { name: "Rukiatul Marjulia Ujung", role: "Guru Kelas 5", img: "https://picsum.photos/seed/guru9/400/400", ttl: "Medan, 03 Maret 1996", edu: "S1 PGSD", origin: "Universitas NU Sumatera Utara", address: "Desa Padang Matinggi, Kec. Barumun Tengah" },
+            10: { name: "Syaroh Silitonga", role: "Guru Mapel B. Ing", img: "https://picsum.photos/seed/guru10/400/400", ttl: "Morang, 03 Oktober 1996", edu: "S1 PAI", origin: "IAIN Padangsidimpuan", address: "Pangirkiran Dolok, Kec. Barumun Tengah, " },
+            11: { name: "Siti Hoyriya Harahap", role: "Guru P5", img: "https://picsum.photos/seed/guru11/400/400", ttl: "Padang Lawas, 2 Februari 1993", edu: "S1 Bimbingan Konseling", origin: "Universitas Negeri Medan", address: "Jl. Sekolah No. 1" },
+            12: { name: "Romaito Harahap", role: "Guru Mapel Seni Tari", img: "https://picsum.photos/seed/guru12/400/400", ttl: "Padang Sidempuan, 20 Mei 1985", edu: "S1 Pendidikan Seni Tari", origin: "Institut Seni Indonesia", address: "Desa Pangirkiran Dolok" },
+            13: { name: "Muhammad Johan Pohan", role: "Penjaga Sekolah", img: "https://picsum.photos/seed/staf1/400/400", ttl: "Padang Lawas, 1 November 1975", edu: "SMA Sederajat", origin: "SMA Negeri 1 Barumun", address: "Rumah Dinas Sekolah" }
+        };
+
+        const sarprasData = {
+            1: { title: "Ruang Belajar", desc: "Ruang kelas yang luas, bersih, dan nyaman untuk mendukung kegiatan Belajar Mengajar (KBM) secara efektif.", img: "https://picsum.photos/seed/ruangbelajar/800/600" },
+            2: { title: "Ruang Guru", desc: "Tempat para guru untuk melakukan koordinasi, persiapan materi mengajar, dan istirahat sejenak.", img: "https://picsum.photos/seed/ruangguru/800/600" },
+            3: { title: "Perpustakaan", desc: "Gudang ilmu yang berisi ratusan koleksi buku pelajaran dan cerita untuk menunjang literasi dan minat baca para siswa.", img: "https://picsum.photos/seed/perpustakaan/800/600" },
+            4: { title: "Lab Komputer", desc: "Sarana pengenalan teknologi informasi bagi siswa. Dilengkapi dengan komputer desktop untuk pembelajaran TIK.", img: "https://picsum.photos/seed/komputer/800/600" },
+            5: { title: "Toilet Bersih", desc: "Fasilitas sanitasi yang bersih dan terjaga untuk guru maupun siswa, memastikan kesehatan dan kebersihan lingkungan sekolah.", img: "https://picsum.photos/seed/toilet/800/600" },
+            6: { title: "Lapangan Olahraga", desc: "Area terbuka luas untuk kegiatan olahraga, upacara bendera senin, dan kegiatan ekstrakurikuler seperti Pramuka.", img: "https://picsum.photos/seed/lapangan/800/600" }
+        };
 
         const studentData = {
-            "Kelas 1": [
-                { name: "ADIBA UFAIRAH SIREGAR", gender: "P", nisn: "3188117570", birth: "Pangirkiran Dolok, 19/10/2018", parent: "Ahmad Rizal Siregar / Ermina Harahap" },
-                { name: "AHMAD ALI SUTEN HARAHAP", gender: "L", nisn: "3185521637", birth: "Janji Raja, 21/11/2018", parent: "Muhammad Rifai Harahap / Nila Wati Siregar" },
-                { name: "AHMAD PARTOMUAN DALIMUNTHE", gender: "L", nisn: "3191744902", birth: "PANGIRKIRAN DOLOK, 23/05/2019", parent: "WILDAN DALIMUNTE / PEBRIANTI SIREGAR" },
-                { name: "ALFIANSYAH RAMADHAN HARAHAP", gender: "L", nisn: "3190554100", birth: "Janji Raja, 28/05/2019", parent: "Maradoli Harahap / Lanniari Siregar" },
-                { name: "ALIF SYAHBANA POHAN", gender: "L", nisn: "3194100991", birth: "Pangirkiran Dolok, 19/04/2019", parent: "Saddam Husein Pohan / Riski Romaito Siregar" },
-                { name: "ALIKA RAHMA DONGORAN", gender: "P", nisn: "3184647750", birth: "PANGIRKIRAN DOLOK, 09/06/2018", parent: "ROSULUDDIN DONGORAN / TETTI HERAWATI HARAHAP" },
-                { name: "AZFAR ROBBANI", gender: "L", nisn: "3197210537", birth: "Maranti, 26/08/2019", parent: "Sundung Pohan / Ida Nerry" },
-                { name: "BINTANG PERMATA INDAH POHAN", gender: "P", nisn: "3189349447", birth: "Pangirkiran Dolok, 20/09/2018", parent: "Toras Pohan / Lannur Siregar" },
-                { name: "BUNGA LESTARI SIREGAR", gender: "P", nisn: "3195063799", birth: "PANGIRKIRAN DOLOK, 24/05/2019", parent: "ALI MUKTI SIREGAR / TETTI MAHARANI PAKPAHAN" },
-                { name: "DIMAS SETIAWAN POHAN", gender: "L", nisn: "3185005035", birth: "Pangirkiran Dolok, 09/09/2018", parent: "Sahala Pohan / Aisah" },
-                { name: "IFRA MIKAYLA DONGORAN", gender: "P", nisn: "3193072330", birth: "Pangirkiran Dolok, 24/12/2019", parent: "Ilham Dongoran / Ita Purnama Sari" },
-                { name: "ISNANDAR HAKIM SIREGAR", gender: "L", nisn: "3177507169", birth: "Pangirkiran Dolok, 04/09/2017", parent: "Ahmad Rifai Siregar / Jaleha Pohan" },
-                { name: "JEPRI HANDIKA POHAN", gender: "L", nisn: "3197339464", birth: "Pangirkiran Dolok, 10/04/2019", parent: "Mangsur Pohan / Tiaisa Nasution" },
-                { name: "MUHAMMAD RAMDAN ALFAREZEL", gender: "L", nisn: "3186827643", birth: "Bangkuang, 19/11/2018", parent: "Wandi Syah Putra / Hotma Diani" },
-                { name: "MUHAMMAD RISKY HASIBUAN", gender: "L", nisn: "3180030163", birth: "SIBUHUAN, 20/09/2018", parent: "SUTAN DARWIS HASIBUAN / HOTMAIDA POHAN" },
-                { name: "NILLA SARI", gender: "P", nisn: "3198504738", birth: "Lampung Barat, 31/01/2019", parent: "Suhendri / Sugiyanti" },
-                { name: "PAZRI AMINANSYAH POHAN", gender: "L", nisn: "3197458201", birth: "PANGIRKIRAN DOLOK, 05/05/2019", parent: "PARTAHANAN POHAN / ROSLAN HASIBUAN" },
-                { name: "PUTRI IRMA SURYANI NASUTION", gender: "P", nisn: "3199339923", birth: "Kabupaten Padang Lawas, 04/03/2019", parent: "Ali Erwin Nasution / Erna Harahap" },
-                { name: "RAFA HABIB POHAN", gender: "L", nisn: "3194161477", birth: "BINANGA, 19/01/2019", parent: "ERWIN POHAN / MARDIANI SIREGAR" },
-                { name: "ROSMIATI SIREGAR", gender: "P", nisn: "3180089119", birth: "Janji Raja, 27/10/2018", parent: "Arsad Siregar / Maisaroh" },
-                { name: "VIOLA ARSA NASUTION", gender: "P", nisn: "3193761490", birth: "PANGIRKIRAN DOLOK, 23/06/2019", parent: "ALI ARMAN NASUTION / HOTNIDA" },
-                { name: "NABILA AYUNDA TAMBA", gender: "P", nisn: "3193824581", birth: "Siboris Lombang, 04/07/2019", parent: "Imam Saleh Tamba / Siti Agen Masderia Hasibuan" },
+            1: ["Adiba Ufairah Siregar", "Ahmad Ali Suten Harahap", "AHMAD PARTOMUAN DALIMUNTHE", "Alfiansyah Ramadhan Harahap", "Alif Syahbana Pohan", "ALIKA RAHMA DONGORAN", "Azfar Robbani", "Bintang Permata Indah Pohan", "BUNGA LESTARI SIREGAR", "Dimas Setiawan Pohan", "Ifra Mikayla Dongoran", "Isnandar Hakim Siregar", "Jepri Handika Pohan", "Muhammad Ramdan Alfarezel", "MUHAMMAD RISKY HASIBUAN", "Nilla Sari", "PAZRI AMINANSYAH POHAN", "Putri Irma Suryani Nasution", "RAFA HABIB POHAN", "Rosmiati Siregar", "VIOLA ARSA NASUTION", "NABILA AYUNDA TAMBA"],
+            2: ["AKRAM AL MUBAROK HARAHAP", "ALI NIKMAT SUANGKUPON POHAN", "AQILA PUTRI POHAN", "CLARASATI HARAHAP", "DANI ALRAID RAFIYAH HARAHAP", "NADIRA QISTY SIREGAR", "NASRUN HABIBISIREGAR", "NISFA RAHMADHANI POHAN", "NUR KHORIAH HASIBUAN", "NUR SYAHMA SIREGAR", "RAFLY KHOTIF SIREGAR", "ROSINTAN NASUTION", "ZAHIRA ALIFA SIREGAR"],
+            3: ["AHMAD YANI SIREGAR", "ALI ANSOR POHAN", "ALWY SYAHPUTRA HARAHAP", "AMIN SYAH PUTRA SIREGAR", "AMIRUDDIN HARAHAP", "ARSYA ADE MUHARRAM", "AYDIL ASMAN HARAHAP", "DARLENA HARAHAP", "DEWI SANTI POHAN", "FRISKA ARDILA", "GENA LAMSURI HARAHAP", "HAMZAH POHAN", "ISRAN P. SIREGAR", "JULIANA HARAHAP", "JULIANI HARAHAP", "LAMRO HARAHAP", "MUHAMMAD ALI RAMBE", "NUR INTAN POHAN", "NURI YANTI POHAN", "PUAN RAHMALIANA HASIBUAN", "RAJA MINTA ITO NASUTION", "RASI ADELIYANI HASIBUAN", "RISKA DELILAN SIREGAR", "SHAIMA PUTRI SIREGAR", "SYAHREL ARDIANSAH POHAN"],
+            4: ["ABDUL ALIM RAMADHAN PANE", "AIRIN ZAHRA SIREGAR", "AMIR SALIM HARAHAP", "AYU ROSMALINA POHAN", "FAHMI DZAKWAN POHAN", "GINDO MARTUA POHAN", "HAFNI RAISA SIREGAR", "HENDRA GUNAWAN SIREGAR", "IQBAL HABIBI SIREGAR", "KHILDAFATHMAH POHAN", "MUHAMMAD FADLY SIREGAR", "MUHAMMAD ROUF SIREGAR", "NUR KAMILA HARAHAP", "PUTRI RAHAYU SIREGAR", "RAJA DIMA PANDAWA SIREGAR", "SAIMA PUTRI HARAHAP", "SAKINAH MARWAH HASIBUAN", "SUCI NAPISAH POHAN", "SYAIR ZAIDAN POHAN", "ULFA AMELIA HARAHAP"],
+            5: ["ADINDA NURJIAH", "AFRIJAL SIREGAR", "AMRIL MUHAIMIN DONGORAN", "ANISA BALQIS HARAHAP", "ARIKA ZAHRA", "ARY PRATAMA HARAHAP", "DIRA NOVERIANI SIREGAR", "ERIN SAHRI", "GONG MATUA SIREGAR", "LAILA SERLINA HARAHAP", "MASLIANI SIREGAR", "NUR AZIJAH HARAHAP", "NURUL HAFIZA TAMBA", "RAHMAT HORIZON DONGORAN", "RAISAH POHAN", "SAFARUDDIN NASUTION"],
+            6: ["AGUNG GUNAWAN POHAN", "AHMAD YUNAN POHAN", "ALDO SAPUTRA SIREGAR", "ALI NURDIN SIREGAR", "Aqilah Azahra Nasution", "AZKIA ROMINDA SIREGAR", "BAYAN PARULIAN SIREGAR", "DERHANA POHAN", "DHAFITHA NUR AZIZAH HASIBUAN", "DZUL FAKHRI TAMBA", "FERIYANTO", "FITRI HANDAYANI HARAHAP", "INDAH DWI FITRI POHAN", "ISAR MARTUA POHAN", "ISRA AMALIA RIZKY SIREGAR", "NURSAHADA HARAHAP", "PUTRI ASYIPA DONGORAN", "RAFIQI HAMLAN SIREGAR", "RINI HARAHAP", "SALSABILA NADIFA POHAN", "UMMI HIDAYAH POHAN", "YAHDIL PRATAMA HARAHAP"]
+        };
+
+        const newsData = {
+            1: { title: "Penerimaan Raport Kenaikan Kelas", date: "15 Mei 2024", body: "Pengambilan raport akan dilaksanakan pada hari Senin tanggal 20 Mei 2024." },
+            2: { title: "Peringatan HUT RI ke-80", date: "17 Agustus 2025", body: "Seluruh siswa dan guru SD Negeri 0207 Pangirkiran mengikuti upacara bendera dalam rangka memperingati Hari Kemerdekaan." },
+            3: { title: "Lomba Kebersihan Lingkungan", date: "10 September 2024", body: "Alhamdulillah, siswa-siswa SDN 0207 Pangirkiran berhasil meraih Juara 3 dalam lomba kebersihan lingkungan tingkat kecamatan." }
+        };
+
+        // --- DATA ROSTER JADWAL (UPDATED STRUCTURE) ---
+        const scheduleData = {
+            1: [ 
+                { jam: "1", senin: "PKN", selasa: "B.INDO", rabu: "PKN", kamis: "B.INDO", jumat: "PJOK", sabtu: "MTK" },
+                { jam: "2", senin: "PKN", selasa: "B.INDO", rabu: "PKN", kamis: "B.INDO", jumat: "PJOK", sabtu: "MTK" },
+                { jam: "3", senin: "PAI", selasa: "MTK", rabu: "PKN/P5", kamis: "MTK", jumat: "PJOK", sabtu: "B.INGGRIS" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "PAI", selasa: "MTK", rabu: "B.INDO", kamis: "MTK/P5", jumat: "PJOK/P5", sabtu: "B.INGGRIS" },
+                { jam: "5", senin: "PAI", selasa: "SBDP", rabu: "B.INDO", kamis: "B.INDO", jumat: "SBDP", sabtu: "SBDP/P5" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "PAI/P5", selasa: "SBDP", rabu: "B.INDO/P5", kamis: "B.INDO/P5", jumat: "", sabtu: "" }
             ],
-            "Kelas 2": [
-                { name: "AKRAM AL MUBAROK HARAHAP", gender: "L", nisn: "-", birth: "Padang Garugur, 31/05/2018", parent: "Ilham Fauzi Harahap / Nursaima Siregar" },
-                { name: "ALI NIKMAT SUANGKUPON POHAN", gender: "L", nisn: "3178079819", birth: "Pangirkiran Dolok, 19/10/2017", parent: "Berlin Pohan / Nisra Dewi Harahap" },
-                { name: "AQILA PUTRI POHAN", gender: "P", nisn: "3177770035", birth: "Pangirkiran Dolok, 16/08/2017", parent: "Saddam Husein Pohan / Riski Romaito Siregar" },
-                { name: "CLARASATI HARAHAP", gender: "P", nisn: "3185197784", birth: "Siboris Lombang, 18/02/2018", parent: "Sehat Harahap / Nur Hotna Siregar" },
-                { name: "DANI ALRAID RAFIYAH HARAHAP", gender: "L", nisn: "3185677349", birth: "Pangirkiran Dolok, 31/07/2018", parent: "Ali Akbar Harahap / Saloma Siregar" },
-                { name: "NADIRA QISTY SIREGAR", gender: "P", nisn: "3182692109", birth: "KABUPATEN PADANG LAWAS, 14/05/2018", parent: "Muhammad Toha Siregar / Nuraisyah Harahap" },
-                { name: "NASRUN HABIBISIREGAR", gender: "L", nisn: "3178358370", birth: "KABUPATEN PADANG LAWAS, 28/04/2017", parent: "Awaluddin Siregar / Tiaslina Hasibuan" },
-                { name: "NISFA RAHMADHANI POHAN", gender: "P", nisn: "3189912414", birth: "PANGIRKIRAN DOLOK, 01/05/2018", parent: "INDRA GUNAWAN.P / NUR INDAH SARI" },
-                { name: "NUR KHORIAH HASIBUAN", gender: "P", nisn: "3179453996", birth: "Pangirkiran Dolok, 09/08/2017", parent: "Barumun Hasibuan / Nurhida Hannum Nasution" },
-                { name: "NUR SYAHMA SIREGAR", gender: "P", nisn: "3174984593", birth: "Gunung Tua, 16/10/2017", parent: "Mukhlis Siregar / Yusri Dawati Harahap" },
-                { name: "RAFLY KHOTIF SIREGAR", gender: "L", nisn: "3187452155", birth: "Pangirkiran Dolok, 28/12/2018", parent: "Ahmad Rohim Siregar / Katija Namora Harahap" },
-                { name: "ROSINTAN NASUTION", gender: "P", nisn: "3172779015", birth: "Pangirkiran Dolok, 30/06/2017", parent: "Ali Arman Nst / Hotnida" },
-                { name: "ZAHIRA ALIFA SIREGAR", gender: "P", nisn: "3172167721", birth: "Pangirkiran Dolok, 03/11/2017", parent: "Ahmad Rizal Siregar / Ermina Harahap" },
+            2: [ 
+                { jam: "1", senin: "PKN", selasa: "PJOK", rabu: "B.INDO", kamis: "MTK", jumat: "PAI", sabtu: "B.INDO" },
+                { jam: "2", senin: "PKN", selasa: "PJOK", rabu: "B.INDO", kamis: "MTK", jumat: "PAI", sabtu: "B.INDO/P5" },
+                { jam: "3", senin: "PKN/P5", selasa: "PJOK", rabu: "B.INDO", kamis: "MTK", jumat: "PAI", sabtu: "B.INDO/P5" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "B.INDO", selasa: "PJOK/P5", rabu: "MTK", kamis: "B.INGGRIS", jumat: "PAI/P5", sabtu: "SBDP" },
+                { jam: "5", senin: "B.INDO", selasa: "PKN", rabu: "MTK", kamis: "B.INGGRIS", jumat: "SBDP", sabtu: "SBDP/P5" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "B.INDO", selasa: "PKN", rabu: "MTK/P5", kamis: "SBDP", jumat: "", sabtu: "" }
             ],
-            "Kelas 3": [
-                { name: "AHMAD YANI SIREGAR", gender: "L", nisn: "3171525607", birth: "JANJI RAJA, 21/08/2017", parent: "ARSAD SIREGAR / MAISAROH" },
-                { name: "ALI ANSOR POHAN", gender: "L", nisn: "3168569900", birth: "PANGIRKIRAN DOLOK, 03/10/2016", parent: "YAHYA POHAN / NUR AZIZAH HARAHAP" },
-                { name: "ALWY SYAHPUTRA HARAHAP", gender: "L", nisn: "3175035371", birth: "BARA BATU, 16/09/2017", parent: "MARADOLI HARAHAP / LANNIARI SIREGAR" },
-                { name: "AMIN SYAH PUTRA SIREGAR", gender: "L", nisn: "3171868158", birth: "BOGOR, 11/12/2017", parent: "SAIDI SIREGAR / UMMI KALSUM POHAN" },
-                { name: "AMIRUDDIN HARAHAP", gender: "L", nisn: "3177730401", birth: "PANGIRKIRAN DOLOK, 23/03/2017", parent: "ADIAN HARAHAP / MURTINA SIREGAR" },
-                { name: "ARSYA ADE MUHARRAM", gender: "L", nisn: "3171724918", birth: "SIBUHUAN, 21/09/2017", parent: "IRWANSYAH PUTRA / ROSITA WAHYUNI POHAN" },
-                { name: "AYDIL ASMAN HARAHAP", gender: "L", nisn: "3179801618", birth: "PANGIRKIRAN DOLOK, 08/07/2017", parent: "ARIPIN HARAHAP / TIAPESA WANITA SIREGAR" },
-                { name: "DARLENA HARAHAP", gender: "P", nisn: "3172149443", birth: "PANGIRKIRAN DOLOK, 23/04/2017", parent: "TAUFIK HARAHAP / NUR ALIYAH HASIBUAN" },
-                { name: "DEWI SANTI POHAN", gender: "P", nisn: "3165396449", birth: "PANGIRKIRAN DOLOK, 09/08/2016", parent: "MANGSUR POHAN / TIAISA NASUTION" },
-                { name: "FRISKA ARDILA", gender: "P", nisn: "3164795955", birth: "PANGIRKIRAN DOLOK, 30/12/2016", parent: "ANTONI / NURYANI" },
-                { name: "GENA LAMSURI HARAHAP", gender: "P", nisn: "3168272127", birth: "PANGIRKIRAN DOLOK, 10/12/2016", parent: "SOLEMAN HARAHAP / ELPI IDAIA SIREGAR" },
-                { name: "HAMZAH POHAN", gender: "L", nisn: "3178970389", birth: "PANGIRKIRAN DOLOK, 10/04/2017", parent: "ISHAK POHAN / MARDIANI SIREGAR" },
-                { name: "ISRAN P. SIREGAR", gender: "L", nisn: "3166074863", birth: "JANJI RAJA, 22/08/2016", parent: "MUHAMMAD TOHIR SIREGAR / ARNIDA HSB" },
-                { name: "JULIANA HARAHAP", gender: "P", nisn: "3178043058", birth: "PANGIRKIRAN DOLOK, 12/07/2017", parent: "ASPAN HARAHAP / HAIRANI SIREGAR" },
-                { name: "JULIANI HARAHAP", gender: "P", nisn: "3178840581", birth: "PANGIRKIRAN DOLOK, 12/07/2017", parent: "ASPAN HARAHAP / HAIRANI SIREGAR" },
-                { name: "LAMRO HARAHAP", gender: "P", nisn: "3162699895", birth: "PANGIRKIRAN DOLOK, 13/11/2016", parent: "ARSAD HARAHAP / PARIDA SIMAMORA" },
-                { name: "MUHAMMAD ALI RAMBE", gender: "L", nisn: "3163865943", birth: "-JANJI RAJA, 15/12/2016", parent: "SARIP MUDA RAMBE / ASMINAR" },
-                { name: "NUR INTAN POHAN", gender: "P", nisn: "3169674460", birth: "PANGIRKIRAN DOLOK, 27/11/2016", parent: "- / MARNI MARBUN" },
-                { name: "NURI YANTI POHAN", gender: "P", nisn: "3164289100", birth: "PANGIRKIRAN DOLOK, 24/08/2016", parent: "AKHIR KALAM POHAN / KASMILAWATI HARAHAP" },
-                { name: "PUAN RAHMALIANA HASIBUAN", gender: "P", nisn: "3162837563", birth: "JANJI RAJA, 10/09/2016", parent: "EDI SAPUTRA HASIBUAN / MASDELINA NST" },
-                { name: "RAJA MINTA ITO NASUTION", gender: "L", nisn: "3170706957", birth: "KABUPATEN PADANG LAWAS, 02/01/2017", parent: "ALI ERWIN NASUTION / ERNA HARAHAP" },
-                { name: "RASI ADELIYANI HASIBUAN", gender: "P", nisn: "3161535334", birth: "SIBUHUAN, 11/10/2016", parent: "BASARUDDIN HASIBUAN / IRMA YANTI" },
-                { name: "RISKA DELILAN SIREGAR", gender: "P", nisn: "3177818611", birth: "PANGIRKIRAN DOLOK, 11/06/2017", parent: "ALI MUKTI SIREGAR / TETTI MAHARANI PAKPAHAN" },
-                { name: "SHAIMA PUTRI SIREGAR", gender: "P", nisn: "3171172119", birth: "PANGIRKIRAN DOLOK, 13/01/2017", parent: "IRWAN SYAH SIREGAR / NURHAWANI HARAHAP" },
-                { name: "SYAHREL ARDIANSAH POHAN", gender: "L", nisn: "3166690796", birth: "SIHOPUK BARU, 10/12/2016", parent: "YAHYA POHAN / EVI SANURHAYATI HASIBUAN" },
+            3: [
+                { jam: "1", senin: "MTK", selasa: "PKN", rabu: "PKN", kamis: "SBDP", jumat: "PKN", sabtu: "PJOK" },
+                { jam: "2", senin: "MTK", selasa: "PKN", rabu: "PKN", kamis: "SBDP", jumat: "PKN", sabtu: "PJOK" },
+                { jam: "3", senin: "MTK", selasa: "B.INGGRIS", rabu: "B.INDO", kamis: "MTK", jumat: "PKN", sabtu: "PJOK" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "IPAS", selasa: "B.INGGRIS", rabu: "PAI", kamis: "B.INDO", jumat: "SBDP", sabtu: "PJOK" },
+                { jam: "5", senin: "IPAS", selasa: "MTK", rabu: "PAI", kamis: "B.INDO", jumat: "SBDP", sabtu: "IPAS" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "B.INDO", selasa: "MTK", rabu: "PAI", kamis: "IPAS", jumat: "B.INDO", sabtu: "" },
+                { jam: "7", senin: "B.INDO", selasa: "MTK", rabu: "PAI", kamis: "IPAS", jumat: "B.INDO", sabtu: "" }
             ],
-            "Kelas 4": [
-                { name: "ABDUL ALIM RAMADHAN PANE", gender: "L", nisn: "3163402650", birth: "MEDAN, 26/06/2016", parent: "Huzaipan Pane / FATIMAH POHAN" },
-                { name: "AIRIN ZAHRA SIREGAR", gender: "P", nisn: "3155056627", birth: "Janji Raja, 27/11/2015", parent: "Parlindungan Siregar / Siti Ambia Harahap" },
-                { name: "AMIR SALIM HARAHAP", gender: "L", nisn: "3165437228", birth: "Pangirkiran Dolok, 12/04/2016", parent: "Idam Khalid Harahap / Eka Asroini Pohan" },
-                { name: "AYU ROSMALINA POHAN", gender: "P", nisn: "3166064136", birth: "Pangirkiran Dolok, 13/02/2016", parent: "Jamaluddin Pohan / Tiapsah Harahap" },
-                { name: "FAHMI DZAKWAN POHAN", gender: "L", nisn: "3161254144", birth: "Pangirkiran Dolok, 15/01/2016", parent: "Erwin Pohan / Mardiani Siregar" },
-                { name: "GINDO MARTUA POHAN", gender: "L", nisn: "3155889350", birth: "Pangirkiran Dolok, 20/09/2015", parent: "Asnan Pohan / Ita Daulay" },
-                { name: "HAFNI RAISA SIREGAR", gender: "P", nisn: "3160357064", birth: "Janji Raja, 01/01/2016", parent: "Mara Udin Siregar / Timahara Harahap" },
-                { name: "HENDRA GUNAWAN SIREGAR", gender: "L", nisn: "3166130182", birth: "Pangirkiran Dolok, 18/05/2016", parent: "Ahmad Rizal Siregar / Ermina Harahap" },
-                { name: "IQBAL HABIBI SIREGAR", gender: "L", nisn: "3151780607", birth: "Janji Raja, 14/09/2015", parent: "Mulia Efendi Siregar / Ermilan Nst" },
-                { name: "KHILDAFATHMAH POHAN", gender: "P", nisn: "3164142024", birth: "Pangirkiran Dolok, 30/03/2016", parent: "Kholiluddin Pohan / Dermilan Sir" },
-                { name: "MUHAMMAD FADLY SIREGAR", gender: "L", nisn: "3168945967", birth: "Janji Raja, 24/09/2016", parent: "Umar Dani Siregar / Sariam Harahap" },
-                { name: "MUHAMMAD ROUF SIREGAR", gender: "L", nisn: "3158138356", birth: "Pangirkiran Dolok, 03/11/2015", parent: "MUkhlis Siregar / Yusri Dawati Harahap" },
-                { name: "NUR KAMILA HARAHAP", gender: "P", nisn: "3158075411", birth: "Pangirkiran Dolok, 31/12/2015", parent: "Samaun Harahap / Bangsawin" },
-                { name: "PUTRI RAHAYU SIREGAR", gender: "P", nisn: "3161976876", birth: "Sibuhuan, 28/05/2016", parent: "ANWAR SAHABAN SIREGAR / Kardina" },
-                { name: "RAJA DIMA PANDAWA SIREGAR", gender: "L", nisn: "3154535441", birth: "Pangirkiran, 03/10/2015", parent: "Mara Saman Siregar / Maswani Harahap" },
-                { name: "SAIMA PUTRI HARAHAP", gender: "P", nisn: "3167828138", birth: "Janji Raja, 05/03/2016", parent: "Muhammad Rifai Harahap / NIla Wati Siregar" },
-                { name: "SAKINAH MARWAH HASIBUAN", gender: "P", nisn: "3164344593", birth: "ACEH TAMIANG, 11/11/2016", parent: "ABDURRASYAD HASIBUAN / GABENA POHAN" },
-                { name: "SUCI NAPISAH POHAN", gender: "P", nisn: "3166646775", birth: "KABUPATEN PADANG LAWAS, 30/04/2016", parent: "Rahmad Pohan / JUNAIDA SIREGAR" },
-                { name: "SYAIR ZAIDAN POHAN", gender: "L", nisn: "3160186329", birth: "Pangirkiran Dolok, 26/01/2016", parent: "Muhammad Johan Pohan / Siti Roilan Siregar" },
-                { name: "ULFA AMELIA HARAHAP", gender: "P", nisn: "3153891435", birth: "Pekanbaru, 30/11/2015", parent: "Mahyuddin Harahap / Asroni Pohan" },
+            4: [
+                { jam: "1", senin: "B.INGGRIS", selasa: "MTK", rabu: "PJOK", kamis: "PKN", jumat: "IPAS", sabtu: "SBDP" },
+                { jam: "2", senin: "B.INGGRIS", selasa: "MTK", rabu: "PJOK", kamis: "PKN/P5", jumat: "IPAS", sabtu: "SBDP/P5" },
+                { jam: "3", senin: "PKN", selasa: "MTK", rabu: "PJOK", kamis: "B.INDO", jumat: "MTK", sabtu: "B.INDO" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "PKN", selasa: "PAI", rabu: "PJOK/P5", kamis: "B.INDO/P5", jumat: "MTK", sabtu: "B.INDO" },
+                { jam: "5", senin: "PKN", selasa: "PAI", rabu: "B.INDO", kamis: "IPAS", jumat: "MTK/P5", sabtu: "B.INDO" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "SBDP", selasa: "PAI", rabu: "B.INDO", kamis: "IPAS", jumat: "", sabtu: "" },
+                { jam: "7", senin: "SBDP", selasa: "PAI/P5", rabu: "B.INDO/P5", kamis: "IPAS", jumat: "", sabtu: "" }
             ],
-            "Kelas 5": [
-                { name: "ADINDA NURJIAH", gender: "P", nisn: "3143525705", birth: "Pangirkiran Dolok, 27/11/2014", parent: "Najili / Simaputra SImamora" },
-                { name: "AFRIJAL SIREGAR", gender: "L", nisn: "3152068753", birth: "Gunungtua, 15/01/2015", parent: "Saidi Siregar / Ummi Kalsum Pohan" },
-                { name: "AMRIL MUHAIMIN DONGORAN", gender: "L", nisn: "3152090925", birth: "Pangirkiran Dolok, 18/05/2015", parent: "Ilham Dongoran / Ita Purnama Sari" },
-                { name: "ANISA BALQIS HARAHAP", gender: "P", nisn: "3150018793", birth: "Selangor, 21/12/2015", parent: "TORAS NAULI / SITI MAWAR POHAN" },
-                { name: "ARIKA ZAHRA", gender: "P", nisn: "3143894563", birth: "Maranti, 19/06/2014", parent: "SUNDUNG POHAN / Ida Nerry" },
-                { name: "ARY PRATAMA HARAHAP", gender: "L", nisn: "3151815947", birth: "Pangirkiran Dolok, 16/01/2015", parent: "Taufik Harahap / Nur Aliyah Hasibuan" },
-                { name: "DIRA NOVERIANI SIREGAR", gender: "P", nisn: "3145960583", birth: "Pangirkiran Dolok, 27/11/2014", parent: "Irwan Syah Siregar / Nurhawani Harahap" },
-                { name: "ERIN SAHRI", gender: "P", nisn: "3147392212", birth: "Pangirkiran Dolok, 12/11/2014", parent: "Muhammad Israk / Rita" },
-                { name: "GONG MATUA SIREGAR", gender: "L", nisn: "3157706063", birth: "Janji Raja, 25/03/2015", parent: "Muhammad Toha Siregar / NURAISYAH HARAHAP" },
-                { name: "LAILA SERLINA HARAHAP", gender: "P", nisn: "3159359390", birth: "Padang Garugur, 23/03/2015", parent: "Ilham Fauzi Harahap / Nursaima Siregar" },
-                { name: "MASLIANI SIREGAR", gender: "P", nisn: "3146715094", birth: "Janji Raja, 01/12/2014", parent: "Arsad Siregar / Maisaroh" },
-                { name: "NUR AZIJAH HARAHAP", gender: "P", nisn: "3151567532", birth: "Janji Raja, 26/06/2015", parent: "Irpan Harahap / Nur 'Ainun Siregar" },
-                { name: "NURUL HAFIZA TAMBA", gender: "P", nisn: "3151959195", birth: "Pangirkiran Dolok, 06/06/2015", parent: "Saparuddin Tamba / Erlina Harahap" },
-                { name: "RAHMAT HORIZON DONGORAN", gender: "L", nisn: "3141172612", birth: "Pangirkiran Dolok, 22/11/2014", parent: "Mara Sutan Dongoran / Tirohima Harahap" },
-                { name: "RAISAH POHAN", gender: "P", nisn: "3151815960", birth: "Pangirkiran Dolok, 12/06/2015", parent: "Abdul Rahman Pohan / Derlina Wahyuni Hasibuan" },
-                { name: "SAFARUDDIN NASUTION", gender: "L", nisn: "3122275257", birth: "SISOMA, 08/02/2012", parent: "ALI ERWIN NASUTION / ERNA HARAHAP" },
+            5: [
+                { jam: "1", senin: "PKN", selasa: "B.INGGRIS", rabu: "B.INDO", kamis: "PJOK", jumat: "B.INDO/P5", sabtu: "B.INGGRIS" },
+                { jam: "2", senin: "PKN", selasa: "IPAS", rabu: "B.INDO", kamis: "PJOK", jumat: "B.INDO/P5", sabtu: "PAI" },
+                { jam: "3", senin: "PKN", selasa: "MTK", rabu: "IPAS", kamis: "PJOK", jumat: "MTK", sabtu: "PAI" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "B.INDO", selasa: "MTK", rabu: "IPAS", kamis: "PJOK/P5", jumat: "MTK/P5", sabtu: "PAI/P5" },
+                { jam: "5", senin: "B.INDO", selasa: "MTK", rabu: "SBDP", kamis: "B.INDO", jumat: "MTK/P5", sabtu: "PAI/P5" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "IPAS", selasa: "PKN", rabu: "SBDP", kamis: "B.INDO", jumat: "", sabtu: "" },
+                { jam: "7", senin: "IPAS", selasa: "PKN/P5", rabu: "SBDP", kamis: "SBDP/P5", jumat: "", sabtu: "" }
             ],
-            "Kelas 6": [
-                { name: "AGUNG GUNAWAN POHAN", gender: "L", nisn: "3131860708", birth: "Pangirkiran Dolok, 15/09/2013", parent: "Toras Pohan / Lannur Siregar" },
-                { name: "AHMAD YUNAN POHAN", gender: "L", nisn: "3148073169", birth: "Pangirkiran Dolok, 19/03/2014", parent: "Yahya Pohan / Nur Azizah Hrp" },
-                { name: "ALDO SAPUTRA SIREGAR", gender: "L", nisn: "3140708324", birth: "Huristak, 07/08/2014", parent: "Parulian Siregar / Nisro Harahap" },
-                { name: "ALI NURDIN SIREGAR", gender: "L", nisn: "3147994334", birth: "Pangirkiran Dolok, 26/02/2014", parent: "Ahmad Rizal SIregar / Ermina Harahap" },
-                { name: "AQILAH AZAHRA NASUTION", gender: "P", nisn: "0144938468", birth: "Aceh Tamiang, 02/02/2014", parent: "Abdurrasyad Hasibuan / Gabena Pohan" },
-                { name: "AZKIA ROMINDA SIREGAR", gender: "P", nisn: "3149592900", birth: "Janji Raja, 24/08/2014", parent: "Sahang / Erna" },
-                { name: "BAYAN PARULIAN SIREGAR", gender: "L", nisn: "3141687112", birth: "Pangirkiran Dolok, 07/04/2014", parent: "Ahmad Rifai Siregar / Jaleha Pohan" },
-                { name: "DERHANA POHAN", gender: "P", nisn: "3143064986", birth: "Pangirkiran Dolok, 15/04/2014", parent: "Ishak Pohan / Mardiani Siregar" },
-                { name: "DHAFITHA NUR AZIZAH HASIBUAN", gender: "P", nisn: "3146204793", birth: "Pasir Batu, 15/03/2014", parent: "Sutan Darwis Hasibuan / Hotmaida Pohan" },
-                { name: "DZUL FAKHRI TAMBA", gender: "L", nisn: "3141193712", birth: "Pangirkiran Dolok, 26/06/2014", parent: "Usman Tamba / Nurhadawiyah Siregar" },
-                { name: "FERIYANTO", gender: "L", nisn: "3146454267", birth: "Pangirkiran Dolok, 22/04/2014", parent: "Muliyono / Masnuro" },
-                { name: "FITRI HANDAYANI HARAHAP", gender: "P", nisn: "3145237455", birth: "Pangirkiran Dolok, 27/06/2014", parent: "Adian Harahap / Murtina Siregar" },
-                { name: "INDAH DWI FITRI POHAN", gender: "P", nisn: "3140797113", birth: "Pangirkiran Dolok, 28/07/2014", parent: "Sahala Pohan / Aisah" },
-                { name: "ISAR MARTUA POHAN", gender: "L", nisn: "3130460800", birth: "Pangirkiran Dolok, 27/12/2013", parent: "Imran Pohan / Marni Marbun" },
-                { name: "ISRA AMALIA RIZKY SIREGAR", gender: "P", nisn: "3146955442", birth: "Janji Raja, 27/05/2014", parent: "Umar Dani Siregar / Sariam Harahap" },
-                { name: "NURSAHADA HARAHAP", gender: "P", nisn: "0124966809", birth: "Sibadar, 22/12/2012", parent: "Sehat Harahap / Nurhotna Siregar" },
-                { name: "PUTRI ASYIPA DONGORAN", gender: "P", nisn: "3140395552", birth: "Pangirkiran Dolok, 11/08/2014", parent: "Rosuluddin Dongoran / Tetti Herawati Harahap" },
-                { name: "RAFIQI HAMLAN SIREGAR", gender: "L", nisn: "3133839630", birth: "Pangirkiran Dolok, 19/09/2013", parent: "Ahmad Rohim Siregar / Katija Namora Harahap" },
-                { name: "RINI HARAHAP", gender: "P", nisn: "3141670240", birth: "Pangirkiran Dolok, 07/03/2014", parent: "Arsad Harahap / Parida Simamora" },
-                { name: "SALSABILA NADIFA POHAN", gender: "P", nisn: "3146431101", birth: "Pangirkiran Dolok, 17/04/2014", parent: "Erwin Pohan / Mardiani Siregar" },
-                { name: "UMMI HIDAYAH POHAN", gender: "P", nisn: "3134277679", birth: "Pangirkiran Dolok, 12/12/2013", parent: "Melki Pohan / Junaida Siregar" },
-                { name: "YAHDIL PRATAMA HARAHAP", gender: "L", nisn: "3144647978", birth: "Pangirkiran Dolok, 09/03/2014", parent: "Ruslan Harahap / Aini Harahap" },
+            6: [
+                { jam: "1", senin: "PJOK", selasa: "MTK", rabu: "B.INDO", kamis: "B.INGGRIS", jumat: "MTK", sabtu: "IPAS" },
+                { jam: "2", senin: "PJOK", selasa: "MTK", rabu: "B.INDO", kamis: "B.INGGRIS", jumat: "MTK", sabtu: "IPAS" },
+                { jam: "3", senin: "PJOK", selasa: "MTK", rabu: "B.INDO", kamis: "SBDP", jumat: "MTK", sabtu: "IPAS" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "4", senin: "PJOK", selasa: "B.INDO", rabu: "IPAS", kamis: "PAI", jumat: "IPAS", sabtu: "B.INDO" },
+                { jam: "5", senin: "PKN", selasa: "B.INDO", rabu: "IPAS", kamis: "PAI", jumat: "SBDP", sabtu: "B.INDO" },
+                { jam: "ISTIRAHAT", senin: "", selasa: "", rabu: "", kamis: "", jumat: "", sabtu: "" },
+                { jam: "6", senin: "PKN", selasa: "SBDP", rabu: "PKN", kamis: "PAI", jumat: "", sabtu: "" },
+                { jam: "7", senin: "PKN", selasa: "SBDP", rabu: "PKN", kamis: "PAI", jumat: "", sabtu: "" }
             ]
         };
 
-        const statsData = [
-            { year: "2021/2022", L: 6, P: 10 },
-            { year: "2022/2023", L: 10, P: 10 },
-            { year: "2023/2024", L: 12, P: 13 },
-            { year: "2024/2025", L: 5, P: 13 },
-            { year: "2025/2026", L: 12, P: 9 },
-        ];
+        // --- FUNGSI SISWA ---
+        const modal = document.getElementById("studentModal");
+        const modalTitle = document.getElementById("modalClassTitle");
+        const modalCount = document.getElementById("modalCount");
+        const modalList = document.getElementById("modalList");
 
-        const facilities = [
-            { id: 1, name: "Ruang Belajar", desc: "Kelas yang nyaman dan kondusif." },
-            { id: 2, name: "Ruang Guru", desc: "Tempat guru berdiskusi dan bekerja." },
-            { id: 3, name: "Perpustakaan", desc: "Koleksi buku lengkap untuk siswa." },
-            { id: 4, name: "Lab Komputer", desc: "Sarana belajar teknologi." },
-            { id: 5, name: "Toilet Bersih", desc: "Fasilitas sanitasi yang terjaga." },
-            { id: 6, name: "Lapangan Olahraga", desc: "Untuk kegiatan fisik dan upacara." },
-            { id: 7, name: "Ruang UKS", desc: "Layanan kesehatan pertama siswa." },
-        ];
+        function openModal(classNumber) {
+            const students = studentData[classNumber];
+            modalTitle.innerText = `Daftar Siswa Kelas ${classNumber}`;
+            modalCount.innerText = `Jumlah: ${students.length} Siswa`;
+            modalList.innerHTML = "";
+            students.forEach(name => {
+                const li = document.createElement("li"); 
+                li.textContent = name;
+                modalList.appendChild(li);
+            });
+            modal.style.display = "flex";
+        }
+        function closeModal() { modal.style.display = "none"; }
 
-        const extracurriculars = [
-            { id: 1, name: "Olahraga", desc: "Mengembangkan fisik dan sportivitas." },
-            { id: 2, name: "Seni Tari", desc: "Melestarikan budaya melalui tarian." },
-            { id: 3, name: "Pramuka", desc: "Membentuk karakter disiplin dan mandiri." },
-        ];
+        // --- FUNGSI SARPRAS ---
+        const sarprasModal = document.getElementById("sarprasModal");
+        function openSarprasModal(id) {
+            const data = sarprasData[id];
+            document.getElementById("sarprasTitle").innerText = data.title;
+            document.getElementById("sarprasDesc").innerText = data.desc;
+            document.getElementById("sarprasImg").src = data.img;
+            sarprasModal.style.display = "flex";
+        }
+        function closeSarprasModal() { sarprasModal.style.display = "none"; }
 
-        const rosterData = {
-            "Kelas 1": [
-                {jam: 1, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
-                {jam: 2, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
-                {jam: 3, sen: "PAI", sel: "MTK", rab: "PKN/P5", kam: "MTK", jum: "PJOK", sab: "B.ING"},
-                {jam: 4, sen: "PAI", sel: "MTK", rab: "B.INDO", kam: "MTK/P5", jum: "PJOK/P5", sab: "B.ING"},
-                {jam: 5, sen: "PAI", sel: "SBDP", rab: "B.INDO", kam: "B.INDO", jum: "SBDP", sab: "SBDP/P5"},
-                {jam: 6, sen: "PAI/P5", sel: "SBDP", rab: "B.INDO/P5", kam: "B.INDO/P5", jum: "-", sab: "-"},
-            ],
-            "Kelas 2": [
-                {jam: 1, sen: "PKN", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO"},
-                {jam: 2, sen: "PKN", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO/P5"},
-                {jam: 3, sen: "PKN/P5", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO/P5"},
-                {jam: 4, sen: "B.INDO", sel: "PJOK/P5", rab: "MTK", kam: "B.ING", jum: "PAI/P5", sab: "SBDP"},
-                {jam: 5, sen: "B.INDO", sel: "PKN", rab: "MTK", kam: "B.ING", jum: "SBDP", sab: "SBDP/P5"},
-                {jam: 6, sen: "B.INDO", sel: "PKN", rab: "MTK/P5", kam: "SBDP", jum: "-", sab: "-"},
-            ],
-            "Kelas 3": [
-                {jam: 1, sen: "MTK", sel: "PKN", rab: "PKN", kam: "SBDP", jum: "PKN", sab: "PJOK"},
-                {jam: 2, sen: "MTK", sel: "PKN", rab: "PKN", kam: "SBDP", jum: "PKN", sab: "PJOK"},
-                {jam: 3, sen: "MTK", sel: "B.ING", rab: "B.INDO", kam: "MTK", jum: "PKN", sab: "PJOK"},
-                {jam: 4, sen: "IPAS", sel: "B.ING", rab: "PAI", kam: "B.INDO", jum: "SBDP", sab: "PJOK"},
-                {jam: 5, sen: "IPAS", sel: "MTK", rab: "PAI", kam: "B.INDO", jum: "SBDP", sab: "B.INDO"},
-                {jam: 6, sen: "B.INDO", sel: "MTK", rab: "PAI", kam: "IPAS", jum: "-", sab: "-"},
-                {jam: 7, sen: "B.INDO", sel: "MTK", rab: "PAI", kam: "IPAS", jum: "-", sab: "-"},
-            ],
-            "Kelas 4": [
-                {jam: 1, sen: "B.ING", sel: "MTK", rab: "PJOK", kam: "PKN", jum: "IPAS", sab: "SBDP"},
-                {jam: 2, sen: "B.ING", sel: "MTK", rab: "PJOK", kam: "PKN/P5", jum: "IPAS", sab: "SBDP/P5"},
-                {jam: 3, sen: "PKN", sel: "MTK", rab: "PJOK", kam: "B.INDO", jum: "MTK", sab: "B.INDO"},
-                {jam: 4, sen: "PKN", sel: "PAI", rab: "PJOK/P5", kam: "B.INDO/P5", jum: "MTK", sab: "B.INDO"},
-                {jam: 5, sen: "PKN", sel: "PAI", rab: "B.INDO", kam: "IPAS", jum: "MTK/P5", sab: "B.INDO"},
-                {jam: 6, sen: "SBDP", sel: "PAI", rab: "B.INDO", kam: "IPAS", jum: "-", sab: "-"},
-                {jam: 7, sen: "SBDP", sel: "PAI/P5", rab: "B.INDO/P5", kam: "IPAS", jum: "-", sab: "-"},
-            ],
-            "Kelas 5": [
-                {jam: 1, sen: "PKN", sel: "B.ING", rab: "B.INDO", kam: "PJOK", jum: "B.INDO/P5", sab: "B.ING"},
-                {jam: 2, sen: "PKN", sel: "IPAS", rab: "B.INDO", kam: "PJOK", jum: "B.INDO/P5", sab: "PAI"},
-                {jam: 3, sen: "PKN", sel: "MTK", rab: "IPAS", kam: "PJOK", jum: "MTK", sab: "PAI"},
-                {jam: 4, sen: "B.INDO", sel: "MTK", rab: "IPAS", kam: "PJOK/P5", jum: "MTK", sab: "PAI"},
-                {jam: 5, sen: "B.INDO", sel: "MTK", rab: "SBDP", kam: "B.INDO", jum: "MTK/P5", sab: "PAI/P5"},
-                {jam: 6, sen: "IPAS", sel: "PKN", rab: "SBDP", kam: "B.INDO", jum: "-", sab: "-"},
-                {jam: 7, sen: "IPAS", sel: "PKN/P5", rab: "SBDP", kam: "SBDP/P5", jum: "-", sab: "-"},
-            ],
-            "Kelas 6": [
-                {jam: 1, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "B.ING", jum: "MTK", sab: "IPAS"},
-                {jam: 2, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "B.ING", jum: "MTK", sab: "IPAS"},
-                {jam: 3, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "SBDP", jum: "MTK", sab: "IPAS"},
-                {jam: 4, sen: "PJOK", sel: "B.INDO", rab: "IPAS", kam: "PAI", jum: "IPAS", sab: "B.INDO"},
-                {jam: 5, sen: "PKN", sel: "B.INDO", rab: "IPAS", kam: "PAI", jum: "SBDP", sab: "B.INDO"},
-                {jam: 6, sen: "PKN", sel: "SBDP", rab: "PKN", kam: "PAI", jum: "-", sab: "-"},
-                {jam: 7, sen: "PKN", sel: "SBDP", rab: "PKN", kam: "PAI", jum: "-", sab: "-"},
-            ],
-        };
+        // --- FUNGSI GURU ---
+        const guruModal = document.getElementById("guruModal");
+        function openGuruModal(id) {
+            const data = guruData[id];
+            document.getElementById("guruModalImg").src = data.img;
+            document.getElementById("guruModalName").innerText = data.name;
+            document.getElementById("guruModalRole").innerText = data.role;
+            document.getElementById("guruModalTtl").innerText = data.ttl;
+            document.getElementById("guruModalEdu").innerText = data.edu;
+            document.getElementById("guruModalOrigin").innerText = data.origin;
+            document.getElementById("guruModalAddress").innerText = data.address;
+            guruModal.style.display = "flex";
+        }
+        function closeGuruModal() { guruModal.style.display = "none"; }
 
-        const calendar2025 = [
-            {date: "1-12 Juli 2025", event: "Libur Semester Genap"},
-            {date: "14 Juli 2025", event: "Hari Pertama Sekolah"},
-            {date: "14-16 Juli 2025", event: "MPLS"},
-            {date: "17 Agt 2025", event: "HUT Kemerdekaan RI"},
-            {date: "5 Sep 2025", event: "Maulid Nabi Muhammad SAW"},
-            {date: "15-20 Sep 2025", event: "Ujian Tengah Semester"},
-            {date: "22-25 Sep 2025", event: "ANBK Tahap 1"},
-            {date: "29-30 Sep 2025", event: "ANBK Tahap 2"},
-            {date: "1-2 Okt 2025", event: "ANBK Tahap 2 (Lanjutan)"},
-            {date: "8-13 Des 2025", event: "Ujian Semester Ganjil"},
-            {date: "20 Des 2025", event: "Penerimaan Raport"},
-            {date: "22-31 Des 2025", event: "Libur Semester Ganjil"},
-            {date: "25-26 Des 2025", event: "Hari Raya Natal & Cuti Bersama"}
-        ];
+        // --- FUNGSI JADWAL ---
+        const scheduleModal = document.getElementById("scheduleModal");
+        const scheduleTitle = document.getElementById("scheduleModalTitle");
+        const scheduleBody = document.getElementById("scheduleTableBody");
 
-        const calendar2026 = [
-            {date: "1 Jan 2026", event: "Tahun Baru Masehi 2026"},
-            {date: "2-3 Jan 2026", event: "Libur Semester Ganjil"},
-            {date: "5 Jan 2026", event: "Hari Pertama Semester Genap"},
-            {date: "16 Jan 2026", event: "Isra Mikraj Nabi Muhammad SAW"},
-            {date: "17 Feb 2026", event: "Tahun Baru Imlek"},
-            {date: "16-21 Feb 2026", event: "Libur Awal Ramadhan 1447H"},
-            {date: "2-7 Mar 2026", event: "Ujian Tengah Semester"},
-            {date: "9-14 Mar 2026", event: "Kegiatan Ramadhan/Keagamaan"},
-            {date: "16-18 Mar 2026", event: "Libur Ramadhan 1447H"},
-            {date: "19 Mar 2026", event: "Libur Idul Fitri & Nyepi"},
-            {date: "20-25 Mar 2026", event: "Libur Hari Raya Idul Fitri 1447H"},
-            {date: "26 Mar 2026", event: "Hari Pertama Sekolah Pasca Idul Fitri"},
-            {date: "3 Apr 2026", event: "Wafat Yesus Kristus"},
-            {date: "1 Mei 2026", event: "Hari Buruh"},
-            {date: "14 Mei 2026", event: "Kenaikan Yesus Kristus"},
-            {date: "18-23 Mei 2026", event: "ASSP Kelas VI"},
-            {date: "26-28 Mei 2026", event: "Libur Khusus Idul Adha 1447H"},
-            {date: "27 Mei 2026", event: "Hari Raya Idul Adha 1447H"},
-            {date: "31 Mei 2026", event: "Hari Raya Waisak"},
-            {date: "1 Juni 2026", event: "Hari Lahir Pancasila"},
-            {date: "2 Juni 2026", event: "Pengumuman Kelulusan"},
-            {date: "8-13 Juni 2026", event: "Ujian Semester Genap"},
-            {date: "16 Juni 2026", event: "Tahun Baru Hijriah 1448H"},
-            {date: "20 Juni 2026", event: "Penerimaan Raport"},
-            {date: "22-30 Juni 2026", event: "Libur Semester Genap"}
-        ];
+        function openScheduleModal(kelasId) {
+            const schedule = scheduleData[kelasId];
+            scheduleTitle.innerText = `Jadwal Pelajaran Kelas ${kelasId}`;
+            scheduleBody.innerHTML = "";
+            schedule.forEach(row => {
+                const tr = document.createElement("tr"); 
+                tr.innerHTML = `<td>${row.jam}</td><td>${row.senin}</td><td>${row.selasa}</td><td>${row.rabu}</td><td>${row.kamis}</td><td>${row.jumat}</td><td>${row.sabtu}</td>`;
+                scheduleBody.appendChild(tr);
+            });
+            scheduleModal.style.display = "flex";
+        }
+        function closeScheduleModal() { scheduleModal.style.display = "none"; }
 
-        const newsData = [
-            {
-                id: 1,
-                title: "Peringatan Maulid Nabi Muhammad SAW 1447 H",
-                date: "5 September 2025",
-                category: "Kegiatan",
-                content: "SD Negeri 0207 Pangirkiran mengadakan peringatan Maulid Nabi dengan berbagai lomba keagamaan seperti Adzan, Hafalan Surat Pendek, dan Ceramah Cilik. Kegiatan ini bertujuan menanamkan kecintaan kepada Rasulullah SAW sejak dini.",
-                image: "https://placehold.co/600x400?text=Maulid+Nabi"
-            },
-            {
-                id: 2,
-                title: "Pengumuman Libur Semester Ganjil",
-                date: "20 Desember 2025",
-                category: "Pengumuman",
-                content: "Diberitahukan kepada seluruh siswa dan wali murid bahwa libur semester ganjil dimulai pada tanggal 22 Desember 2025 sampai dengan 3 Januari 2026. Masuk kembali pada tanggal 5 Januari 2026.",
-                image: "https://placehold.co/600x400?text=Pengumuman"
-            },
-            {
-                id: 3,
-                title: "Juara 1 Lomba Lari Tingkat Kecamatan",
-                date: "17 Agustus 2025",
-                category: "Prestasi",
-                content: "Selamat kepada Ananda Ahmad Ali yang telah berhasil meraih Juara 1 dalam Lomba Lari 100m tingkat Kecamatan Barumun Tengah dalam rangka HUT RI ke-80.",
-                image: "https://placehold.co/600x400?text=Prestasi+Siswa"
-            }
-        ];
+        // --- FUNGSI BERITA ---
+        const newsModal = document.getElementById("newsModal");
+        const newsTitle = document.getElementById("newsModalTitle");
+        const newsDate = document.getElementById("newsModalDate");
+        const newsBody = document.getElementById("newsModalBody");
 
-        const galleryData = [
-            { id: 1, title: "Upacara Bendera Senin", category: "Rutin", image: "https://placehold.co/800x600?text=Upacara+Bendera" },
-            { id: 2, title: "Kegiatan Pramuka", category: "Ekskul", image: "https://placehold.co/800x600?text=Pramuka" },
-            { id: 3, title: "Belajar di Kelas", category: "KBM", image: "https://placehold.co/800x600?text=Belajar+di+Kelas" },
-            { id: 4, title: "Senam Pagi Bersama", category: "Olahraga", image: "https://placehold.co/800x600?text=Senam+Pagi" },
-            { id: 5, title: "Latihan Tari Daerah", category: "Seni", image: "https://placehold.co/800x600?text=Tari+Daerah" },
-            { id: 6, title: "Gotong Royong Jumat Bersih", category: "Lingkungan", image: "https://placehold.co/800x600?text=Jumat+Bersih" },
-            { id: 7, title: "Kegiatan Sholat Dhuha Berjamaah", category: "Keagamaan", image: "https://placehold.co/800x600?text=Sholat+Dhuha" },
-            { id: 8, title: "Rapat Dewan Guru", category: "Guru", image: "https://placehold.co/800x600?text=Rapat+Guru" },
-        ];
+        function openNewsModal(newsId) {
+            const data = newsData[newsId];
+            newsTitle.innerText = data.title;
+            newsDate.innerText = data.date;
+            newsBody.innerText = data.body;
+            newsModal.style.display = "flex";
+        }
+        function closeNewsModal() { newsModal.style.display = "none"; }
 
-        // --- ICONS (Safe Inline Definition) ---
-        const Icon = ({ name, className }) => {
-            const icons = {
-                school: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="m4 6 8-4 8 4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M14 22v-4a2 2 0 1 0-4 0v4"/><path d="M18 5v17"/><path d="M6 5v17"/><circle cx="12" cy="9" r="2"/>
-                    </svg>
-                ),
-                "map-pin": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
-                ),
-                users: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                ),
-                clock: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                ),
-                award: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                    </svg>
-                ),
-                "calendar-days": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>
-                    </svg>
-                ),
-                "building-2": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>
-                    </svg>
-                ),
-                info: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-                    </svg>
-                ),
-                menu: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
-                    </svg>
-                ),
-                x: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M18 6 6 18"/><path d="m6 6 18 12"/>
-                    </svg>
-                ),
-                "external-link": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
-                    </svg>
-                ),
-                "book-open": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                ),
-                mail: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
-                ),
-                "file-text": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/>
-                    </svg>
-                ),
-                newspaper: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>
-                    </svg>
-                ),
-                "check-circle": (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                ),
-                phone: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                ),
-                image: (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                    </svg>
-                )
-            };
-            
-            return icons[name] || null;
-        };
+        // --- TUTUP MODAL ---
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+            if (event.target == sarprasModal) closeSarprasModal();
+            if (event.target == guruModal) closeGuruModal();
+            if (event.target == scheduleModal) closeScheduleModal();
+            if (event.target == newsModal) closeNewsModal();
+        }
 
-        // --- COMPONENTS ---
-
-        const Modal = ({ isOpen, onClose, title, children }) => {
-            if (!isOpen) return null;
-            return (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={onClose}>
-                    <div className="bg-white rounded-lg max-w-4xl w-full p-6 relative animate-fade-in shadow-2xl" onClick={e => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-10">
-                            <Icon name="x" className="w-6 h-6" />
-                        </button>
-                        {title && <h3 className="text-2xl font-bold mb-4 text-red-900 border-b pb-2">{title}</h3>}
-                        <div className="overflow-y-auto max-h-[85vh] custom-content">
-                            {children}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        
-        // Komponen Berita Card
-        const NewsCard = ({ news, onClick }) => (
-            <div onClick={() => onClick(news)} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all cursor-pointer group border border-gray-100 flex flex-col h-full">
-                <div className="h-48 relative overflow-hidden">
-                    <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                    <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-2 py-1 rounded">
-                        {news.category}
-                    </div>
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                    <div className="text-gray-500 text-xs mb-2 flex items-center gap-1">
-                        <Icon name="calendar-days" className="w-3 h-3" /> {news.date}
-                    </div>
-                    <h4 className="font-bold text-lg text-gray-800 mb-2 leading-tight group-hover:text-red-600 transition-colors">
-                        {news.title}
-                    </h4>
-                    <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
-                        {news.content}
-                    </p>
-                    <button className="text-red-600 font-semibold text-sm hover:underline self-start">
-                        Baca Selengkapnya &rarr;
-                    </button>
-                </div>
-            </div>
-        );
-
-        const SectionTitle = ({ title, subtitle }) => (
-            <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold text-gray-800 uppercase tracking-wide">{title}</h2>
-                <div className="w-20 h-1 bg-red-600 mx-auto mt-2"></div>
-                {subtitle && <p className="text-gray-600 mt-2 max-w-2xl mx-auto">{subtitle}</p>}
-            </div>
-        );
-
-        const App = () => {
-            const [activeTab, setActiveTab] = useState("Profil");
-            const [selectedTeacher, setSelectedTeacher] = useState(null);
-            const [selectedStudent, setSelectedStudent] = useState(null);
-            const [selectedFacility, setSelectedFacility] = useState(null);
-            const [selectedExtra, setSelectedExtra] = useState(null);
-            const [selectedNews, setSelectedNews] = useState(null);
-            const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
-            const [selectedClass, setSelectedClass] = useState("Kelas 1");
-            const [activeRosterClass, setActiveRosterClass] = useState("Kelas 1");
-
-            const renderContent = () => {
-                switch(activeTab) {
-                    case "Profil":
-                        return (
-                            <div className="space-y-12 animate-fade-in">
-                                {/* Karakteristik */}
-                                <div className="bg-white p-8 rounded-xl shadow-sm border-l-4 border-red-600">
-                                    <h3 className="text-2xl font-bold text-red-900 mb-4 flex items-center gap-2">
-                                        <Icon name="school" className="w-6 h-6" /> Karakteristik Sekolah
-                                    </h3>
-                                    <div className="text-gray-700 leading-relaxed mb-4 space-y-3">
-                                        <p>
-                                            SD Negeri 0207 Pangirkiran beralamat di Desa Pangirkiran Dolok, Kecamatan Barumun Tengah, Kabupaten Padang Lawas. 
-                                            Secara geografis, sekolah ini terletak di daerah dataran tinggi yang sejuk.
-                                        </p>
-                                        <p>
-                                            Tenaga Pendidik di sekolah ini alumni sarjana dari Perguruan tinggi dan sudah tersertifikasi. 
-                                            Siswa di SD Negeri 0207 Pangirkiran berasal dari Desa Pangirkiran Dolok dan Desa Janji Raja yang berjumlah kurang lebih 117 orang.
-                                        </p>
-                                        <p>
-                                            Kegiatan KBM berlangsung selama 6 (enam) Hari senin sampai dengan Sabtu, dan memiliki kegiatan Ekstrakurikuler Pramuka, Seni, dan Olah Raga.
-                                            Sekolah ini berstatus negeri dengan NPSN 10207504. Berdiri sejak tahun 1977 dan memiliki akreditasi C.
-                                        </p>
-                                        <p className="bg-red-50 p-3 rounded-lg border border-red-100">
-                                            <strong className="text-red-800 block mb-1">Kurikulum Merdeka</strong>
-                                            SD Negeri 0207 Pangirkiran menerapkan Kurikulum Merdeka yang berfokus pada pengembangan karakter Profil Pelajar Pancasila.
-                                        </p>
-                                    </div>
-                                    <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
-                                        <div className="flex items-center gap-2"><Icon name="map-pin" className="w-4 h-4 text-red-500" /> Desa Pangirkiran Dolok & Desa Janji Raja</div>
-                                        <div className="flex items-center gap-2"><Icon name="users" className="w-4 h-4 text-red-500" /> ±117 Siswa</div>
-                                        <div className="flex items-center gap-2"><Icon name="clock" className="w-4 h-4 text-red-500" /> KBM Senin - Sabtu</div>
-                                        <div className="flex items-center gap-2"><Icon name="book-open" className="w-4 h-4 text-red-500" /> Kurikulum Merdeka</div>
-                                        <div className="flex items-center gap-2 md:col-span-2"><Icon name="award" className="w-4 h-4 text-red-500" /> Akreditasi C (NPSN: 10207504) • Est. 1977</div>
-                                    </div>
-                                </div>
-                                
-                                {/* Visi Misi */}
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="bg-red-900 text-white p-8 rounded-xl shadow-lg">
-                                        <h3 className="text-xl font-bold mb-4 border-b border-red-700 pb-2">Visi Sekolah</h3>
-                                        <p className="italic text-lg text-center leading-relaxed">
-                                            "Terwujudnya Peserta Didik Yang Akhlak Mulia Berilmu Berprestasi Dan Berwawasan Global"
-                                        </p>
-                                    </div>
-                                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                                        <h3 className="text-xl font-bold mb-4 text-red-900 border-b pb-2">Misi Sekolah</h3>
-                                        <ol className="list-decimal list-inside space-y-3 text-gray-700">
-                                            <li>Menanamkan keimanan dan ketakwaan melalui pengamalan ajaran agama.</li>
-                                            <li>Mengoptimalkan proses belajar dan bimbingan.</li>
-                                            <li>Mengembangkan minat bakat dan potensi Peserta Didik.</li>
-                                            <li>Menjalin Kerjasama yang Harmonis Antar warga Sekolah dan Lembaga Lain yang Terkait.</li>
-                                        </ol>
-                                    </div>
-                                </div>
-
-                                {/* Statistik */}
-                                <div className="bg-white p-8 rounded-xl shadow-sm">
-                                    <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">Statistik Penerimaan Siswa (5 Tahun Terakhir)</h3>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-sm text-left text-gray-500">
-                                            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
-                                                <tr>
-                                                    <th className="px-6 py-3">Tahun Ajaran</th>
-                                                    <th className="px-6 py-3 text-center">Laki-laki</th>
-                                                    <th className="px-6 py-3 text-center">Perempuan</th>
-                                                    <th className="px-6 py-3 text-center">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {statsData.map((stat, idx) => (
-                                                    <tr key={idx} className="bg-white border-b hover:bg-gray-50">
-                                                        <td className="px-6 py-4 font-medium text-gray-900">{stat.year}</td>
-                                                        <td className="px-6 py-4 text-center text-red-600 font-bold">{stat.L}</td>
-                                                        <td className="px-6 py-4 text-center text-pink-600 font-bold">{stat.P}</td>
-                                                        <td className="px-6 py-4 text-center font-bold">{stat.L + stat.P}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    case "Profil GTK":
-                        return (
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in">
-                                {teacherData.map((teacher, idx) => (
-                                    <div 
-                                        key={idx} 
-                                        onClick={() => setSelectedTeacher(teacher)}
-                                        className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100"
-                                    >
-                                        {/* PERBAIKAN: Mengubah h-40 menjadi h-72 untuk rasio portrait, dan menambahkan object-top */}
-                                        <div className="h-72 bg-gray-200 relative overflow-hidden">
-                                            <img 
-                                                src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
-                                                alt={teacher.name} 
-                                                onError={(e) => {
-                                                    e.target.onerror = null; 
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
-                                                }}
-                                                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                                                <span className="text-white font-bold px-4 py-1 bg-red-600 rounded-full text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Profil</span>
-                                            </div>
-                                        </div>
-                                        <div className="p-4 text-center">
-                                            <h4 className="font-bold text-gray-800 text-sm md:text-base line-clamp-1">{teacher.name}</h4>
-                                            <p className="text-xs text-red-600 mt-1 font-semibold">{teacher.role}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        );
-                    case "Siswa":
-                        return (
-                            <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
-                                <div className="md:col-span-1 space-y-2">
-                                    <h3 className="font-bold text-gray-700 mb-4 px-2">Pilih Kelas</h3>
-                                    {Object.keys(studentData).map(cls => (
-                                        <button 
-                                            key={cls}
-                                            onClick={() => setSelectedClass(cls)}
-                                            className={`w-full text-left px-4 py-3 rounded-lg flex justify-between items-center transition-all ${selectedClass === cls ? 'bg-red-600 text-white shadow-md' : 'bg-white hover:bg-gray-100 text-gray-700'}`}
-                                        >
-                                            <span>{cls}</span>
-                                            <span className={`text-xs px-2 py-1 rounded-full ${selectedClass === cls ? 'bg-white text-red-600' : 'bg-gray-200 text-gray-600'}`}>
-                                                {studentData[cls].length} Siswa
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="md:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                    <h3 className="text-xl font-bold text-red-900 mb-6 border-b pb-4 flex items-center gap-2">
-                                        <Icon name="users" className="w-5 h-5" /> Daftar Siswa {selectedClass}
-                                    </h3>
-                                    <div className="overflow-y-auto max-h-[600px]">
-                                        <ul className="grid md:grid-cols-2 gap-3">
-                                            {studentData[selectedClass].map((student, idx) => (
-                                                <li 
-                                                    key={idx} 
-                                                    onClick={() => setSelectedStudent(student)}
-                                                    className="flex items-center gap-3 p-3 hover:bg-red-50 border border-gray-100 rounded-lg transition-colors cursor-pointer group"
-                                                >
-                                                    <div className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs font-bold group-hover:bg-red-600 group-hover:text-white transition-colors">
-                                                        {idx + 1}
-                                                    </div>
-                                                    <span className="text-sm font-medium text-gray-700">{student.name}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <p className="text-xs text-gray-400 mt-4 italic">* Klik nama siswa untuk melihat detail lengkap.</p>
-                                </div>
-                            </div>
-                        );
-                    case "Akademik":
-                        return (
-                            <div className="space-y-12 animate-fade-in">
-                                {/* Roster */}
-                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                    <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                                        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                            <Icon name="calendar-days" className="w-6 h-6 text-red-600" /> Jadwal Pelajaran
-                                        </h3>
-                                        <select 
-                                            value={activeRosterClass} 
-                                            onChange={(e) => setActiveRosterClass(e.target.value)}
-                                            className="mt-4 md:mt-0 px-4 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-red-500 outline-none"
-                                        >
-                                            {Object.keys(rosterData).map(k => <option key={k} value={k}>{k}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-sm text-center border-collapse">
-                                            <thead>
-                                                <tr className="bg-red-600 text-white">
-                                                    <th className="p-3 border border-red-700">Jam</th>
-                                                    <th className="p-3 border border-red-700">Senin</th>
-                                                    <th className="p-3 border border-red-700">Selasa</th>
-                                                    <th className="p-3 border border-red-700">Rabu</th>
-                                                    <th className="p-3 border border-red-700">Kamis</th>
-                                                    <th className="p-3 border border-red-700">Jumat</th>
-                                                    <th className="p-3 border border-red-700">Sabtu</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {rosterData[activeRosterClass].map((row, idx) => (
-                                                    <tr key={idx} className="even:bg-gray-50 hover:bg-red-50">
-                                                        <td className="p-3 border text-gray-500 font-bold">{row.jam}</td>
-                                                        <td className="p-3 border">{row.sen}</td>
-                                                        <td className="p-3 border">{row.sel}</td>
-                                                        <td className="p-3 border">{row.rab}</td>
-                                                        <td className="p-3 border">{row.kam}</td>
-                                                        <td className="p-3 border">{row.jum}</td>
-                                                        <td className="p-3 border">{row.sab}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                {/* Calendar */}
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                        <h3 className="font-bold text-lg mb-4 text-red-900 border-b pb-2">Kalender 2025</h3>
-                                        <ul className="space-y-4">
-                                            {calendar2025.map((c, i) => (
-                                                <li key={i} className="flex gap-4">
-                                                    <div className="w-24 text-right text-xs font-bold text-gray-500 pt-1">{c.date}</div>
-                                                    <div className="flex-1 pb-4 border-l-2 border-red-200 pl-4 relative">
-                                                        <div className="absolute -left-[5px] top-1.5 w-2 h-2 bg-red-600 rounded-full"></div>
-                                                        <p className="text-sm font-medium">{c.event}</p>
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                        <h3 className="font-bold text-lg mb-4 text-green-900 border-b pb-2">Kalender 2026</h3>
-                                        <ul className="space-y-4">
-                                            {calendar2026.map((c, i) => (
-                                                <li key={i} className="flex gap-4">
-                                                    <div className="w-24 text-right text-xs font-bold text-gray-500 pt-1">{c.date}</div>
-                                                    <div className="flex-1 pb-4 border-l-2 border-green-200 pl-4 relative">
-                                                        <div className="absolute -left-[5px] top-1.5 w-2 h-2 bg-green-600 rounded-full"></div>
-                                                        <p className="text-sm font-medium">{c.event}</p>
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    case "Fasilitas":
-                        return (
-                            <div className="space-y-12 animate-fade-in">
-                                <div>
-                                    <h3 className="text-xl font-bold mb-6 text-gray-800">Sarana & Prasarana</h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        {facilities.map((fac) => (
-                                            <div 
-                                                key={fac.id}
-                                                onClick={() => setSelectedFacility(fac)}
-                                                className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all cursor-pointer text-center group border border-gray-100"
-                                            >
-                                                <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-red-600 group-hover:text-white transition-colors">
-                                                    <Icon name="building-2" className="w-8 h-8" />
-                                                </div>
-                                                <h4 className="font-bold text-gray-800">{fac.name}</h4>
-                                                <p className="text-xs text-gray-500 mt-2">Klik untuk foto</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <h3 className="text-xl font-bold mb-6 text-gray-800">Ekstrakurikuler</h3>
-                                    <div className="grid md:grid-cols-3 gap-6">
-                                        {extracurriculars.map((ex) => (
-                                            <div 
-                                                key={ex.id}
-                                                onClick={() => setSelectedExtra(ex)}
-                                                className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md h-48"
-                                            >
-                                                <div className="absolute inset-0 bg-gray-800">
-                                                    <img src={`https://placehold.co/600x400?text=${ex.name}`} alt={ex.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
-                                                </div>
-                                                <div className="absolute bottom-0 left-0 p-6 text-white">
-                                                    <h4 className="text-xl font-bold mb-1">{ex.name}</h4>
-                                                    <p className="text-sm opacity-90">{ex.desc}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    case "PPDB":
-                        return (
-                            <div className="space-y-8 animate-fade-in">
-                                <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg shadow-sm">
-                                    <h3 className="text-2xl font-bold text-red-900 mb-2 flex items-center gap-2">
-                                        <Icon name="file-text" className="w-6 h-6" />
-                                        Penerimaan Peserta Didik Baru (PPDB)
-                                    </h3>
-                                    <p className="text-gray-700 mt-2">
-                                        SD Negeri 0207 Pangirkiran membuka kesempatan bagi putra-putri Bapak/Ibu untuk bergabung menjadi bagian dari keluarga besar kami.
-                                        Mari wujudkan generasi cerdas dan berakhlak mulia bersama kami.
-                                    </p>
-                                    <div className="mt-4 flex gap-3">
-                                        <button className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow">
-                                            Daftar Sekarang
-                                        </button>
-                                        <button className="bg-white text-red-600 border border-red-600 px-6 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors">
-                                            Download Brosur
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                        <h4 className="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Persyaratan Pendaftaran</h4>
-                                        <ul className="space-y-3 text-gray-700">
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Mengisi Formulir Pendaftaran</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Fotokopi Akta Kelahiran (2 Lembar)</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Fotokopi Kartu Keluarga (2 Lembar)</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Fotokopi KTP Orang Tua (Ayah & Ibu)</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Pas Foto 3x4 (2 Lembar)</span>
-                                            </li>
-                                            <li className="flex items-start gap-2">
-                                                <Icon name="check-circle" className="w-5 h-5 text-green-500 mt-0.5" />
-                                                <span>Ijazah TK/PAUD (Jika Ada)</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                                        <h4 className="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Alur & Jadwal</h4>
-                                        <div className="space-y-4">
-                                            <div className="flex gap-4">
-                                                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">1</div>
-                                                <div>
-                                                    <h5 className="font-bold text-gray-800">Pengambilan Formulir</h5>
-                                                    <p className="text-sm text-gray-600">1 - 30 Mei 2025 (Di Sekolah)</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4">
-                                                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">2</div>
-                                                <div>
-                                                    <h5 className="font-bold text-gray-800">Pengembalian Berkas</h5>
-                                                    <p className="text-sm text-gray-600">2 - 10 Juni 2025</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4">
-                                                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">3</div>
-                                                <div>
-                                                    <h5 className="font-bold text-gray-800">Seleksi Administrasi</h5>
-                                                    <p className="text-sm text-gray-600">11 - 15 Juni 2025</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4">
-                                                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">4</div>
-                                                <div>
-                                                    <h5 className="font-bold text-gray-800">Pengumuman Diterima</h5>
-                                                    <p className="text-sm text-gray-600">20 Juni 2025</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="bg-gray-50 p-6 rounded-xl text-center">
-                                    <h4 className="font-bold text-lg mb-2">Butuh Informasi Lebih Lanjut?</h4>
-                                    <p className="text-gray-600 mb-4">Silakan hubungi panitia PPDB kami melalui kontak berikut:</p>
-                                    <div className="flex justify-center gap-4 flex-wrap">
-                                        <a href="#" className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm text-gray-700 hover:text-red-600">
-                                            <Icon name="phone" className="w-4 h-4" /> Ibu Guru A (0812-xxxx-xxxx)
-                                        </a>
-                                        <a href="#" className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm text-gray-700 hover:text-red-600">
-                                            <Icon name="phone" className="w-4 h-4" /> Bapak Guru B (0813-xxxx-xxxx)
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    case "Galeri":
-                        return (
-                            <div className="animate-fade-in space-y-6">
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                    {galleryData.map(item => (
-                                        <div 
-                                            key={item.id} 
-                                            className="group relative cursor-pointer overflow-hidden rounded-xl shadow-md aspect-square bg-gray-100"
-                                            onClick={() => setSelectedGalleryImage(item)}
-                                        >
-                                            <img 
-                                                src={item.image} 
-                                                alt={item.title} 
-                                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                                <span className="text-xs text-red-200 font-semibold mb-1 uppercase tracking-wider">{item.category}</span>
-                                                <h4 className="text-white font-bold text-sm leading-tight">{item.title}</h4>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        );
-                    case "Berita & Pengumuman":
-                        return (
-                            <div className="animate-fade-in space-y-6">
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {newsData.map(news => (
-                                        <NewsCard key={news.id} news={news} onClick={setSelectedNews} />
-                                    ))}
-                                </div>
-                            </div>
-                        );
-                }
-            };
-
-            return (
-                <div className="min-h-screen flex flex-col hero-pattern">
-                    {/* Header */}
-                    <nav className="bg-white shadow-md sticky top-0 z-40 border-b border-gray-200">
-                        <div className="container mx-auto px-4">
-                            <div className="flex justify-between items-center h-20">
-                                <div className="flex items-center gap-3">
-                                    <img src="logo-padang-lawas.jpg" onError={(e) => e.target.style.display='none'} className="h-10 w-auto" alt="Logo Palas"/>
-                                    <div className="leading-tight">
-                                        <h1 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">SD NEGERI 0207</h1>
-                                        <p className="text-xs text-red-600 font-semibold tracking-wider">PANGIRKIRAN</p>
-                                    </div>
-                                </div>
-                                <div className="hidden lg:flex gap-6">
-                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
-                                        <button 
-                                            key={menu} 
-                                            onClick={() => setActiveTab(menu)}
-                                            className={`text-sm font-medium transition-colors border-b-2 py-1 ${activeTab === menu ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
-                                        >
-                                            {menu === "Berita & Pengumuman" ? "Berita" : menu}
-                                        </button>
-                                    ))}
-                                </div>
-                                {/* Mobile Menu Button would go here */}
-                                <div className="lg:hidden">
-                                     <button className="text-gray-600"><Icon name="menu" className="w-6 h-6" /></button>
-                                </div>
-                            </div>
-                            {/* Mobile menu list could go here */}
-                            <div className="lg:hidden flex overflow-x-auto gap-4 py-2 scrollbar-hide">
-                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
-                                    <button 
-                                        key={menu} 
-                                        onClick={() => setActiveTab(menu)}
-                                        className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold ${activeTab === menu ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600'}`}
-                                    >
-                                        {menu}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </nav>
-
-                    {/* Banner Hero */}
-                    {activeTab === "Profil" && (
-                        <div className="relative h-[400px] w-full bg-gray-900 flex items-center justify-center overflow-hidden">
-                            <img 
-                                src="banner-sekolah.jpg" 
-                                onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = "https://placehold.co/1200x400/1e3a8a/ffffff?text=SD+Negeri+0207+Pangirkiran";
-                                }}
-                                className="absolute inset-0 w-full h-full object-cover opacity-90" 
-                                alt="Sekolah"
-                            />
-                            {/* PERBAIKAN: Layer merah transparan halus tipis */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-red-900/60 via-red-500/10 to-transparent"></div>
-                            
-                            <div className="relative z-10 container mx-auto px-4 text-center text-white h-full flex flex-col justify-center">
-                                
-                                {/* Logos for Desktop (Absolute Positioning) */}
-                                <img src="logo-padang-lawas.jpg" onError={(e) => e.target.style.display='none'} className="hidden md:block absolute left-8 top-1/2 -translate-y-1/2 h-40 w-auto drop-shadow-lg bg-white rounded-full p-2 transition-transform hover:scale-110" alt="Logo Padang Lawas" />
-                                <img src="logo-tutwuri.png" onError={(e) => e.target.style.display='none'} className="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 h-40 w-auto drop-shadow-lg bg-white rounded-full p-2 transition-transform hover:scale-110" alt="Logo Tutwuri" />
-
-                                {/* Logos for Mobile (Flex) */}
-                                <div className="md:hidden flex justify-center items-center gap-6 mb-8">
-                                    <img src="logo-padang-lawas.jpg" onError={(e) => e.target.style.display='none'} className="h-24 w-auto drop-shadow-lg bg-white rounded-full p-1" alt="Logo Padang Lawas" />
-                                    <img src="logo-tutwuri.png" onError={(e) => e.target.style.display='none'} className="h-24 w-auto drop-shadow-lg bg-white rounded-full p-1" alt="Logo Tutwuri" />
-                                </div>
-
-                                <div className="md:px-32">
-                                    <h2 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-md tracking-wide">SD NEGERI 0207 PANGIRKIRAN</h2>
-                                    <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto italic font-light">"Terwujudnya Peserta Didik Yang Akhlak Mulia Berilmu Berprestasi Dan Berwawasan Global"</p>
-                                </div>
-                                
-                                <div className="mt-8 flex gap-3 justify-center">
-                                    <a href="#sambutan" className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl">Sambutan Kepala Sekolah</a>
-                                    <a href="#kontak" className="px-6 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl">Hubungi Kami</a>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Main Content */}
-                    <main className="container mx-auto px-4 py-12 flex-grow">
-                        {/* Sambutan (Only on Profil tab) */}
-                        {activeTab === "Profil" && (
-                            <section id="sambutan" className="mb-16 scroll-mt-24">
-                                <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
-                                    <div className="md:w-1/3 bg-red-50 relative h-[500px] md:h-auto">
-                                        <img 
-                                            src="nuraini.jpg" 
-                                            onError={(e) => {
-                                                e.target.onerror = null; 
-                                                e.target.src = "https://placehold.co/400x500/e2e8f0/1e293b?text=Foto+Kepsek";
-                                            }}
-                                            className="absolute inset-0 w-full h-full object-cover object-top" 
-                                            alt="Kepala Sekolah"
-                                        />
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-900 to-transparent p-6 pt-20">
-                                            <h3 className="text-white font-bold text-xl">Nuraini Nasution, S.Pd.I</h3>
-                                            <p className="text-red-200 text-sm">Kepala Sekolah</p>
-                                        </div>
-                                    </div>
-                                    <div className="md:w-2/3 p-8 md:p-12">
-                                        <h2 className="text-3xl font-bold text-gray-800 mb-6 relative inline-block">
-                                            Sambutan Kepala Sekolah
-                                            <span className="absolute bottom-0 left-0 w-1/2 h-1 bg-red-600 rounded-full"></span>
-                                        </h2>
-                                        <div className="space-y-4 text-gray-600 leading-relaxed text-justify">
-                                            <p className="font-semibold text-gray-800">Assalamu'alaikum Warahmatullahi Wabarakatuh,</p>
-                                            <p>
-                                                Puji syukur kita panjatkan kehadirat Allah SWT atas segala limpahan rahmat dan karunia-Nya, sehingga kita masih diberi kesempatan untuk terus berkarya dalam dunia pendidikan. 
-                                                Selamat datang di Website Resmi SD Negeri 0207 Pangirkiran. Website ini kami hadirkan sebagai media informasi dan komunikasi antara sekolah, orang tua, siswa, dan masyarakat luas.
-                                            </p>
-                                            <p>
-                                                Di era digitalisasi saat ini, keterbukaan informasi menjadi hal yang sangat penting. Melalui website ini, kami berupaya memberikan gambaran utuh mengenai profil sekolah, visi dan misi, kegiatan kesiswaan, serta berbagai prestasi yang telah diraih. 
-                                                Kami berkomitmen untuk mencetak generasi penerus bangsa yang tidak hanya cerdas secara intelektual, tetapi juga memiliki karakter yang kuat, berakhlak mulia, dan berwawasan global sesuai dengan nilai-nilai Profil Pelajar Pancasila.
-                                            </p>
-                                            <p>
-                                                Kami menyadari bahwa kemajuan sekolah tidak lepas dari dukungan dan kerjasama yang baik dari seluruh pihak. Oleh karena itu, kami mengajak Bapak/Ibu Wali Murid, Komite Sekolah, dan masyarakat sekitar untuk terus bersinergi membangun pendidikan yang berkualitas di SD Negeri 0207 Pangirkiran. 
-                                                Mari kita bimbing anak-anak kita untuk menjadi pribadi yang mandiri, kreatif, dan bertaqwa kepada Tuhan Yang Maha Esa.
-                                            </p>
-                                            <p>
-                                                Semoga website ini dapat memberikan manfaat yang seluas-luasnya. Kami juga sangat mengharapkan masukan dan saran yang membangun demi kemajuan sekolah kita tercinta ini di masa mendatang.
-                                            </p>
-                                            <p className="font-semibold text-gray-800">
-                                                Wassalamu'alaikum Warahmatullahi Wabarakatuh.
-                                            </p>
-                                            <blockquote className="border-l-4 border-red-500 pl-4 italic text-gray-500 my-4 bg-gray-50 p-4 rounded-r-lg">
-                                                "Pimpinan yang berkomitmen untuk meningkatkan kualitas pendidikan dan karakter siswa."
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        )}
-
-                        <SectionTitle 
-                            title={activeTab} 
-                            subtitle={
-                                activeTab === "Profil GTK" ? "Mengenal Tenaga Pendidik Profesional Kami" :
-                                activeTab === "Siswa" ? "Data Peserta Didik Tahun Ajaran 2025/2026" :
-                                activeTab === "Akademik" ? "Jadwal, Kalender Pendidikan & Informasi" :
-                                activeTab === "Fasilitas" ? "Sarana Penunjang Kegiatan Belajar Mengajar" :
-                                activeTab === "PPDB" ? "Informasi Penerimaan Peserta Didik Baru" :
-                                activeTab === "Galeri" ? "Dokumentasi Kegiatan dan Aktivitas Sekolah" :
-                                activeTab === "Berita & Pengumuman" ? "Kabar Terbaru & Informasi Penting Sekolah" : ""
-                            } 
-                        />
-
-                        {renderContent()}
-
-                        {/* Modals */}
-                        <Modal isOpen={selectedTeacher} onClose={() => setSelectedTeacher(null)} title="Profil Pendidik">
-                            {selectedTeacher && (
-                                <div className="text-center md:text-left md:flex gap-6">
-                                    <img 
-                                        src={selectedTeacher.image || `https://ui-avatars.com/api/?name=${selectedTeacher.name}&background=random&size=256`} 
-                                        onError={(e) => {
-                                            e.target.onerror = null; 
-                                            e.target.src = `https://ui-avatars.com/api/?name=${selectedTeacher.name}&background=random&size=256`;
-                                        }}
-                                        // PERBAIKAN: Menambahkan object-top pada modal juga
-                                        className="w-32 h-32 rounded-full mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover object-top border-4 border-white" 
-                                    />
-                                    <div className="space-y-3 flex-1">
-                                        <div><span className="text-xs text-gray-500 block uppercase">Nama Lengkap</span><span className="font-bold text-lg">{selectedTeacher.name}</span></div>
-                                        <div><span className="text-xs text-gray-500 block uppercase">Jabatan</span><span className="text-red-600 font-medium">{selectedTeacher.role}</span></div>
-                                        <div className="grid grid-cols-2 gap-2 mt-4 bg-gray-50 p-3 rounded text-left">
-                                            <div><span className="text-xs text-gray-500 block">NIP</span><span className="text-sm font-medium">{selectedTeacher.nip || "-"}</span></div>
-                                            <div><span className="text-xs text-gray-500 block">NUPTK</span><span className="text-sm font-medium">{selectedTeacher.nuptk || "-"}</span></div>
-                                            <div className="col-span-2"><span className="text-xs text-gray-500 block">Tempat, Tgl Lahir</span><span className="text-sm font-medium">{selectedTeacher.birth || "-"}</span></div>
-                                            <div><span className="text-xs text-gray-500 block">Pendidikan</span><span className="text-sm font-medium">{selectedTeacher.education}</span></div>
-                                            <div><span className="text-xs text-gray-500 block">Sertifikasi</span><span className="text-sm font-medium">{selectedTeacher.certification || "-"}</span></div>
-                                            <div className="col-span-2"><span className="text-xs text-gray-500 block">Universitas/Asal Sekolah</span><span className="text-sm font-medium">{selectedTeacher.university || "-"}</span></div>
-                                            <div className="col-span-2"><span className="text-xs text-gray-500 block">Alamat</span><span className="text-sm font-medium">{selectedTeacher.address}</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </Modal>
-
-                        <Modal isOpen={selectedStudent} onClose={() => setSelectedStudent(null)} title="Profil Siswa">
-                            {selectedStudent && (
-                                <div className="text-center md:text-left md:flex gap-6">
-                                    <img 
-                                        src={`https://ui-avatars.com/api/?name=${selectedStudent.name}&background=random&size=256&color=fff&background=dc2626`} 
-                                        className="w-32 h-32 rounded-full mx-auto md:mx-0 shadow-lg mb-4 md:mb-0" 
-                                    />
-                                    <div className="space-y-3 flex-1">
-                                        <div><span className="text-xs text-gray-500 block uppercase">Nama Lengkap</span><span className="font-bold text-lg">{selectedStudent.name}</span></div>
-                                        <div className="grid grid-cols-2 gap-2 mt-4 bg-gray-50 p-3 rounded text-left">
-                                            <div><span className="text-xs text-gray-500 block">Jenis Kelamin</span><span className="text-sm font-medium">{selectedStudent.gender || "-"}</span></div>
-                                            <div><span className="text-xs text-gray-500 block">NISN</span><span className="text-sm font-medium">{selectedStudent.nisn || "-"}</span></div>
-                                            <div className="col-span-2"><span className="text-xs text-gray-500 block">Tempat, Tanggal Lahir</span><span className="text-sm font-medium">{selectedStudent.birth || "-"}</span></div>
-                                            <div className="col-span-2"><span className="text-xs text-gray-500 block">Nama Orang Tua</span><span className="text-sm font-medium">{selectedStudent.parent || "-"}</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </Modal>
-
-                        <Modal isOpen={selectedFacility} onClose={() => setSelectedFacility(null)} title="Detail Fasilitas">
-                            {selectedFacility && (
-                                <div>
-                                    <img src={`https://placehold.co/600x400?text=${selectedFacility.name.replace(" ", "+")}`} className="w-full rounded-lg mb-4 shadow-md" alt={selectedFacility.name} />
-                                    <p className="text-gray-700">{selectedFacility.desc}</p>
-                                </div>
-                            )}
-                        </Modal>
-                        
-                        <Modal isOpen={selectedExtra} onClose={() => setSelectedExtra(null)} title="Kegiatan Ekstrakurikuler">
-                            {selectedExtra && (
-                                <div>
-                                    <img src={`https://placehold.co/600x400?text=${selectedExtra.name}`} className="w-full rounded-lg mb-4 shadow-md" alt={selectedExtra.name} />
-                                    <p className="text-gray-700">{selectedExtra.desc}</p>
-                                    <div className="mt-4 p-4 bg-red-50 rounded-lg text-sm text-red-800">
-                                        <Icon name="info" className="inline w-4 h-4 mr-2" />
-                                        Jadwal latihan akan diinformasikan oleh pembina masing-masing.
-                                    </div>
-                                </div>
-                            )}
-                        </Modal>
-
-                         <Modal isOpen={selectedNews} onClose={() => setSelectedNews(null)} title="Detail Berita">
-                            {selectedNews && (
-                                <div className="space-y-4">
-                                    <img src={selectedNews.image} className="w-full rounded-lg shadow-md h-64 object-cover" alt={selectedNews.title} />
-                                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                                        <Icon name="calendar-days" className="w-4 h-4" /> {selectedNews.date}
-                                        <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">{selectedNews.category}</span>
-                                    </div>
-                                    <h4 className="text-xl font-bold text-gray-900">{selectedNews.title}</h4>
-                                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                        {selectedNews.content}
-                                    </div>
-                                </div>
-                            )}
-                        </Modal>
-
-                        <Modal isOpen={selectedGalleryImage} onClose={() => setSelectedGalleryImage(null)} title="">
-                            {selectedGalleryImage && (
-                                <div>
-                                    <img src={selectedGalleryImage.image} className="w-full rounded-lg mb-4 shadow-md" alt={selectedGalleryImage.title} />
-                                    <h4 className="font-bold text-lg text-center text-gray-800">{selectedGalleryImage.title}</h4>
-                                    <p className="text-center text-gray-500 text-sm">{selectedGalleryImage.category}</p>
-                                </div>
-                            )}
-                        </Modal>
-
-                    </main>
-
-                    {/* Footer */}
-                    <footer id="kontak" className="bg-gray-900 text-gray-300 py-12">
-                        <div className="container mx-auto px-4">
-                            <div className="grid md:grid-cols-3 gap-8 mb-8">
-                                <div>
-                                    <h4 className="text-white font-bold text-lg mb-4">SD NEGERI 0207 PANGIRKIRAN</h4>
-                                    <p className="text-sm mb-4">Membangun generasi cerdas, berkarakter, dan berakhlak mulia.</p>
-                                    <div className="space-y-2 text-sm">
-                                        <div className="flex items-start gap-2">
-                                            <Icon name="map-pin" className="w-5 h-5 mt-1 text-red-500" />
-                                            <span>Desa Pangirkiran Dolok, Kec. Barumun Tengah, Kab. Padang Lawas, Sumatera Utara.</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Icon name="mail" className="w-5 h-5 text-red-500" />
-                                            <a href="mailto:sdn0211pangirkiran@gmail.com" className="hover:text-white">sdn0211pangirkiran@gmail.com</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 className="text-white font-bold text-lg mb-4">Tautan Penting</h4>
-                                    <ul className="space-y-2 text-sm">
-                                        <li><a href="https://kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Kemendikdasmen</a></li>
-                                        <li><a href="https://dapo.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Dapodik</a></li>
-                                        <li><a href="https://guru.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Platform Merdeka Mengajar</a></li>
-                                        <li><a href="https://gtk.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Info GTK</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="text-white font-bold text-lg mb-4">Lokasi Kami</h4>
-                                    <div className="rounded-lg overflow-hidden h-40 border border-gray-700">
-                                        <iframe 
-                                            width="100%" 
-                                            height="100%" 
-                                            frameBorder="0" 
-                                            scrolling="no" 
-                                            marginHeight="0" 
-                                            marginWidth="0" 
-                                            src="https://maps.google.com/maps?q=1.366409,99.795892&hl=id&z=14&output=embed">
-                                        </iframe>
-                                    </div>
-                                    <a href="https://maps.google.com/maps?q=1.366409,99.795892" target="_blank" className="text-xs text-red-400 mt-2 block hover:underline">Buka di Google Maps</a>
-                                </div>
-                            </div>
-                            <div className="border-t border-gray-800 pt-8 text-center text-sm">
-                                <p>&copy; 2025 SD Negeri 0207 Pangirkiran. All rights reserved.</p>
-                                <p className="text-xs text-gray-500 mt-2">Pengelola Situs: Sofyan Tanjung</p>
-                            </div>
-                        </div>
-                    </footer>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // --- Mobile Menu ---
+        function toggleMenu() {
+            const nav = document.getElementById("navLinks");
+            nav.classList.toggle("active");
+        }
+        function closeMenu() {
+            document.getElementById("navLinks").classList.remove("active");
+        }
     </script>
 </body>
 </html>
