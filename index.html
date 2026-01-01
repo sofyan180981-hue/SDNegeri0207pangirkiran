@@ -524,7 +524,7 @@
             },
             { 
                 id: 2, 
-                title: "Ekskul", 
+                title: "Polisi Cilik", 
                 category: "Ekskul", 
                 image: "kegiatan1.jpg",
                 images: ["kegiatan1.jpg", "https://placehold.co/600x400?text=Latihan+Pocil", "https://placehold.co/600x400?text=Lomba+Pocil"]
@@ -538,24 +538,24 @@
             },
             { 
                 id: 4, 
-                title: "Akademik", 
+                title: "Pemberian Hadiah Juara Kelas", 
                 category: "Akademik", 
                 image: "kegiatan7.jpg",
                 images: ["kegiatan7.jpg", "https://placehold.co/600x400?text=Juara+Kelas+1", "https://placehold.co/600x400?text=Juara+Umum"]
             },
             { 
                 id: 5, 
-                title: "HUT-RI", 
+                title: "Karnaval HUTRI", 
                 category: "HUT-RI", 
                 image: "Kegiatan.jpg",
-                images: ["Kegiatan.jpg", "hutri1.jpg", "hutri2.jpg", "hutri3.jpg"]
+                images: ["Kegiatan.jpg", "https://placehold.co/600x400?text=Pawai+Adat", "https://placehold.co/600x400?text=Marching+Band"]
             },
             { 
                 id: 6, 
-                title: "Pramuka Gudep 02115-02116", 
+                title: "Pramuka Gudep 02116", 
                 category: "Ekskul", 
                 image: "Pramuka.jpg",
-                images: ["Pramuka.jpg", "Pramuka3.jpg", "Pramuka2.jpg", "Pramuka1.jpg", "Pramuka4.jpg"]
+                images: ["Pramuka.jpg", "https://placehold.co/600x400?text=Api+Unggun", "https://placehold.co/600x400?text=Tali+Temali"]
             },
             { 
                 id: 7, 
@@ -570,13 +570,6 @@
                 category: "Alumni", 
                 image: "Alumni.jpg",
                 images: ["Alumni.jpg", "https://placehold.co/600x400?text=Reuni+Akbar", "https://placehold.co/600x400?text=Foto+Bersama"]
-            },
-            { 
-                id: 9, 
-                title: "Kegiatan Guru", 
-                category: "Guru", 
-                image: "Alumni.jpg",
-                images: ["guru1.jpg", "guru2.jpg", "guru3.jpg"]
             },
         ];
 
@@ -739,6 +732,8 @@
             const [selectedExtra, setSelectedExtra] = useState(null);
             const [selectedNews, setSelectedNews] = useState(null);
             const [selectedGalleryImage, setSelectedGalleryImage] = useState(null);
+            // State baru untuk fitur zoom foto
+            const [zoomedImage, setZoomedImage] = useState(null);
             const [selectedClass, setSelectedClass] = useState("Kelas 1");
             const [activeRosterClass, setActiveRosterClass] = useState("Kelas 1");
 
@@ -1421,9 +1416,13 @@
                                                 <div key={index} className="relative rounded-lg overflow-hidden shadow-md bg-gray-100 group">
                                                     <img 
                                                         src={img} 
-                                                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                                                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105 cursor-zoom-in" 
                                                         alt={`${selectedGalleryImage.title} - ${index + 1}`} 
+                                                        onClick={() => setZoomedImage(img)}
                                                     />
+                                                    <div className="absolute inset-0 pointer-events-none bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                                        <Icon name="image" className="text-white opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 drop-shadow-md" />
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -1441,6 +1440,27 @@
                         </Modal>
 
                     </main>
+
+                    {/* Lightbox Zoom Overlay */}
+                    {zoomedImage && (
+                        <div 
+                            className="fixed inset-0 z-[100] bg-black bg-opacity-95 flex items-center justify-center p-4 animate-fade-in cursor-zoom-out"
+                            onClick={() => setZoomedImage(null)}
+                        >
+                            <button 
+                                className="absolute top-6 right-6 text-white hover:text-red-500 transition-colors z-[101]"
+                                onClick={() => setZoomedImage(null)}
+                            >
+                                <Icon name="x" className="w-10 h-10" />
+                            </button>
+                            <img 
+                                src={zoomedImage} 
+                                alt="Zoomed View" 
+                                className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                                onClick={(e) => e.stopPropagation()} 
+                            />
+                        </div>
+                    )}
 
                     {/* Footer */}
                     <footer id="kontak" className="bg-gray-900 text-gray-300 py-12">
