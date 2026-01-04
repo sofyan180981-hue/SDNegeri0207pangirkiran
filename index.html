@@ -369,7 +369,7 @@
             { year: "2022/2023", L: 10, P: 10 },
             { year: "2023/2024", L: 12, P: 13 },
             { year: "2024/2025", L: 5, P: 13 },
-            { year: "2025/2026", L: 12, P: 10 },
+            { year: "2025/2026", L: 12, P: 9 },
         ];
 
         const facilities = [
@@ -524,17 +524,17 @@
             },
             { 
                 id: 2, 
-                title: "Ekstrakurikuler Olaharaga", 
-                category: "Ekskul Olaharaga", 
-                image: "ekskul1.jpg",
-                images: ["ekskul4.jpg", "ekskul2.jpg", "ekskul1.jpg", "ekskul3.jpg"]
+                title: "Polisi Cilik", 
+                category: "Ekskul", 
+                image: "kegiatan1.jpg",
+                images: ["kegiatan1.jpg", "https://placehold.co/600x400?text=Latihan+Pocil", "https://placehold.co/600x400?text=Lomba+Pocil"]
             },
             { 
                 id: 3, 
                 title: "Kegiatan ANBK", 
                 category: "ANBK", 
                 image: "kegiatan3.jpg",
-                images: ["kegiatan3.jpg", "anbk1.jpg", "anbk2.jpg"]
+                images: ["kegiatan3.jpg", "https://placehold.co/600x400?text=Siswa+ANBK", "https://placehold.co/600x400?text=Pengawas+ANBK"]
             },
             { 
                 id: 4, 
@@ -545,24 +545,24 @@
             },
             { 
                 id: 5, 
-                title: "Kegiatan HUT-RI", 
+                title: "Karnaval HUTRI", 
                 category: "HUT-RI", 
                 image: "Kegiatan.jpg",
-                images: ["Kegiatan.jpg", "hutri1.jpg", "hutri2.jpg"]
+                images: ["Kegiatan.jpg", "hutri1.jpg", "hutri2.jpg", "hutri3.jpg"]
             },
             { 
                 id: 6, 
-                title: "Pramuka Gudep 02115-02116", 
-                category: "Ekskul Pramuka", 
+                title: "Pramuka Gudep 02116", 
+                category: "Ekskul", 
                 image: "Pramuka.jpg",
-                images: ["Pramuka.jpg", "Pramuka1.jpg", "Pramuka2.jpg", "Pramuka4.jpg"]
+                images: ["Pramuka.jpg", "Pramuka3.jpg", "Pramuka2.jpg", "Pramuka1.jpg", "Pramuka4.jpg"]
             },
             { 
                 id: 7, 
                 title: "Kegiatan Sholat Dhuha Berjamaah", 
                 category: "Keagamaan", 
                 image: "kegiatan2.jpg",
-                images: ["kegiatan2.jpg", "agama1.jpg", "agama2.jpg"]
+                images: ["kegiatan2.jpg", "https://placehold.co/600x400?text=Ceramah+Agama", "https://placehold.co/600x400?text=Siswa+Sholat"]
             },
             { 
                 id: 8, 
@@ -573,10 +573,10 @@
             },
             { 
                 id: 9, 
-                title: "Galeri Guru", 
+                title: "Kegiatan Guru", 
                 category: "Guru", 
-                image: "guru1.jpg",
-                images: ["guru1.jpg", "guru2.jpg", "guru3.jpg", "guru4.jpg"]
+                image: "Alumni.jpg",
+                images: ["guru1.jpg", "guru2.jpg", "guru3.jpg"]
             },
         ];
 
@@ -837,8 +837,8 @@
                                         onClick={() => setSelectedTeacher(teacher)}
                                         className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100"
                                     >
-                                        {/* PERBAIKAN: Mengubah h-40 menjadi h-72 untuk rasio portrait, dan menambahkan object-top */}
-                                        <div className="h-72 bg-gray-200 relative overflow-hidden">
+                                        {/* PERBAIKAN: Menggunakan aspect-[3/4] agar foto menjadi model portrait proporsional (tidak terpotong ekstrem) */}
+                                        <div className="aspect-[3/4] w-full bg-gray-200 relative overflow-hidden">
                                             <img 
                                                 src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
                                                 alt={teacher.name} 
@@ -846,7 +846,8 @@
                                                     e.target.onerror = null; 
                                                     e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
                                                 }}
-                                                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                                                /* PERBAIKAN: Menggunakan object-center agar fokus foto di tengah wajah */
+                                                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                                                 <span className="text-white font-bold px-4 py-1 bg-red-600 rounded-full text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Profil</span>
@@ -1333,8 +1334,8 @@
                                             e.target.onerror = null; 
                                             e.target.src = `https://ui-avatars.com/api/?name=${selectedTeacher.name}&background=random&size=256`;
                                         }}
-                                        // PERBAIKAN: Menambahkan object-top pada modal juga
-                                        className="w-32 h-32 rounded-full mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover object-top border-4 border-white" 
+                                        // PERBAIKAN: Menyesuaikan foto di modal juga agar konsisten
+                                        className="w-32 h-40 rounded-lg mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover object-center border-4 border-white" 
                                     />
                                     <div className="space-y-3 flex-1">
                                         <div><span className="text-xs text-gray-500 block uppercase">Nama Lengkap</span><span className="font-bold text-lg">{selectedTeacher.name}</span></div>
