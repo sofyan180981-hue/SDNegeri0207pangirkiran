@@ -46,9 +46,29 @@
 <body class="bg-gray-50 text-gray-800">
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const { useState, useEffect } = React;
         
+        // --- FIREBASE SETUP ---
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdn-0207-default';
+        
+        let db;
+        let auth;
+        let app;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error("Firebase init error:", error);
+        }
+
         // --- DATA ---
 
         const teacherData = [
@@ -62,7 +82,7 @@
                 certification: "Guru Kelas",
                 university: "STIT PL GUNUNG TUA",
                 address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "nuraini1.jpg" // Placeholder if file exists, or fallback
+                image: "nuraini1.jpg" 
             },
             { 
                 name: "Warda Kembang Bunga Harahap", 
@@ -224,7 +244,7 @@
 
         // Helper function to create student objects
         const createStudent = (name) => ({ 
-            name: name.toUpperCase(), // Memastikan nama otomatis jadi huruf besar
+            name: name.toUpperCase(), 
             gender: "-", 
             nisn: "-", 
             birth: "-", 
@@ -276,7 +296,7 @@
                 { name: "ALI ANSOR POHAN", gender: "L", nisn: "3168569900", birth: "PANGIRKIRAN DOLOK, 03/10/2016", parent: "YAHYA POHAN / NUR AZIZAH HARAHAP" },
                 { name: "ALWY SYAHPUTRA HARAHAP", gender: "L", nisn: "3175035371", birth: "BARA BATU, 16/09/2017", parent: "MARADOLI HARAHAP / LANNIARI SIREGAR" },
                 { name: "AMIN SYAH PUTRA SIREGAR", gender: "L", nisn: "3171868158", birth: "BOGOR, 11/12/2017", parent: "SAIDI SIREGAR / UMMI KALSUM POHAN" },
-                { name: "AMIRUDDIN HARAHAP", gender: "L", nisn: "3177730401", birth: "PANGIRKIRAN DOLOK, 23/03/2017", parent: "ADIAN HARAHAP / MURTINA SIREGAR" },
+                { name: "AMRUDDIN HARAHAP", gender: "L", nisn: "3177730401", birth: "PANGIRKIRAN DOLOK, 23/03/2017", parent: "ADIAN HARAHAP / MURTINA SIREGAR" },
                 { name: "ARSYA ADE MUHARRAM", gender: "L", nisn: "3171724918", birth: "SIBUHUAN, 21/09/2017", parent: "IRWANSYAH PUTRA / ROSITA WAHYUNI POHAN" },
                 { name: "AYDIL ASMAN HARAHAP", gender: "L", nisn: "3179801618", birth: "PANGIRKIRAN DOLOK, 08/07/2017", parent: "ARIPIN HARAHAP / TIAPESA WANITA SIREGAR" },
                 { name: "DARLENA HARAHAP", gender: "P", nisn: "3172149443", birth: "PANGIRKIRAN DOLOK, 23/04/2017", parent: "TAUFIK HARAHAP / NUR ALIYAH HASIBUAN" },
@@ -444,47 +464,47 @@
         };
 
         const calendar2025 = [
-            {date: "1-12 Juli 2025", event: "Libur Semester Genap"},
-            {date: "14 Juli 2025", event: "Hari Pertama Sekolah"},
-            {date: "14-16 Juli 2025", event: "MPLS"},
-            {date: "17 Agt 2025", event: "HUT Kemerdekaan RI"},
-            {date: "5 Sep 2025", event: "Maulid Nabi Muhammad SAW"},
-            {date: "15-20 Sep 2025", event: "Ujian Tengah Semester"},
-            {date: "22-25 Sep 2025", event: "ANBK Tahap 1"},
-            {date: "29-30 Sep 2025", event: "ANBK Tahap 2"},
-            {date: "1-2 Okt 2025", event: "ANBK Tahap 2 (Lanjutan)"},
-            {date: "8-13 Des 2025", event: "Ujian Semester Ganjil"},
-            {date: "20 Des 2025", event: "Penerimaan Raport"},
-            {date: "22-31 Des 2025", event: "Libur Semester Ganjil"},
-            {date: "25-26 Des 2025", event: "Hari Raya Natal & Cuti Bersama"}
+            {date: "1-12 Juli 2026", event: "Libur Semester Genap"},
+            {date: "13 Juli 2026", event: "Hari Pertama Sekolah"},
+            {date: "14-16 Juli 2026", event: "MPLS"},
+            {date: "17 Agt 2026", event: "HUT Kemerdekaan RI"},
+            {date: "5 Sep 2026", event: "Maulid Nabi Muhammad SAW"},
+            {date: "15-20 Sep 2026", event: "Ujian Tengah Semester"},
+            {date: "22-25 Sep 2026", event: "ANBK Tahap 1"},
+            {date: "29-30 Sep 2026", event: "ANBK Tahap 2"},
+            {date: "1-2 Okt 2026", event: "ANBK Tahap 2 (Lanjutan)"},
+            {date: "8-13 Des 2026", event: "Ujian Semester Ganjil"},
+            {date: "20 Des 2026", event: "Penerimaan Raport"},
+            {date: "22-31 Des 2026", event: "Libur Semester Ganjil"},
+            {date: "25-26 Des 2026", event: "Hari Raya Natal & Cuti Bersama"}
         ];
 
         const calendar2026 = [
-            {date: "1 Jan 2026", event: "Tahun Baru Masehi 2026"},
-            {date: "2-3 Jan 2026", event: "Libur Semester Ganjil"},
-            {date: "5 Jan 2026", event: "Hari Pertama Semester Genap"},
-            {date: "16 Jan 2026", event: "Isra Mikraj Nabi Muhammad SAW"},
-            {date: "17 Feb 2026", event: "Tahun Baru Imlek"},
-            {date: "16-21 Feb 2026", event: "Libur Awal Ramadhan 1447H"},
-            {date: "2-7 Mar 2026", event: "Ujian Tengah Semester"},
-            {date: "9-14 Mar 2026", event: "Kegiatan Ramadhan/Keagamaan"},
-            {date: "16-18 Mar 2026", event: "Libur Ramadhan 1447H"},
-            {date: "19 Mar 2026", event: "Libur Idul Fitri & Nyepi"},
-            {date: "20-25 Mar 2026", event: "Libur Hari Raya Idul Fitri 1447H"},
-            {date: "26 Mar 2026", event: "Hari Pertama Sekolah Pasca Idul Fitri"},
-            {date: "3 Apr 2026", event: "Wafat Yesus Kristus"},
-            {date: "1 Mei 2026", event: "Hari Buruh"},
-            {date: "14 Mei 2026", event: "Kenaikan Yesus Kristus"},
-            {date: "18-23 Mei 2026", event: "ASSP Kelas VI"},
-            {date: "26-28 Mei 2026", event: "Libur Khusus Idul Adha 1447H"},
-            {date: "27 Mei 2026", event: "Hari Raya Idul Adha 1447H"},
-            {date: "31 Mei 2026", event: "Hari Raya Waisak"},
-            {date: "1 Juni 2026", event: "Hari Lahir Pancasila"},
-            {date: "2 Juni 2026", event: "Pengumuman Kelulusan"},
-            {date: "8-13 Juni 2026", event: "Ujian Semester Genap"},
-            {date: "16 Juni 2026", event: "Tahun Baru Hijriah 1448H"},
-            {date: "20 Juni 2026", event: "Penerimaan Raport"},
-            {date: "22-30 Juni 2026", event: "Libur Semester Genap"}
+            {date: "1 Jan 2027", event: "Tahun Baru Masehi 2027"},
+            {date: "2-3 Jan 2027", event: "Libur Semester Ganjil"},
+            {date: "5 Jan 2027", event: "Hari Pertama Semester Genap"},
+            {date: "16 Jan 2027", event: "Isra Mikraj Nabi Muhammad SAW"},
+            {date: "17 Feb 2027", event: "Tahun Baru Imlek"},
+            {date: "16-21 Feb 2027", event: "Libur Awal Ramadhan 1448H"},
+            {date: "2-7 Mar 2027", event: "Ujian Tengah Semester"},
+            {date: "9-14 Mar 2027", event: "Kegiatan Ramadhan/Keagamaan"},
+            {date: "16-18 Mar 2027", event: "Libur Ramadhan 1448H"},
+            {date: "19 Mar 2027", event: "Libur Idul Fitri & Nyepi"},
+            {date: "20-25 Mar 2027", event: "Libur Hari Raya Idul Fitri 1448H"},
+            {date: "26 Mar 2027", event: "Hari Pertama Sekolah Pasca Idul Fitri"},
+            {date: "3 Apr 2027", event: "Wafat Yesus Kristus"},
+            {date: "1 Mei 2027", event: "Hari Buruh"},
+            {date: "14 Mei 2027", event: "Kenaikan Yesus Kristus"},
+            {date: "18-23 Mei 2027", event: "ASSP Kelas VI"},
+            {date: "26-28 Mei 2027", event: "Libur Khusus Idul Adha 1448H"},
+            {date: "27 Mei 2027", event: "Hari Raya Idul Adha 1448H"},
+            {date: "31 Mei 2027", event: "Hari Raya Waisak"},
+            {date: "1 Juni 2027", event: "Hari Lahir Pancasila"},
+            {date: "2 Juni 2027", event: "Pengumuman Kelulusan"},
+            {date: "8-13 Juni 2027", event: "Ujian Semester Genap"},
+            {date: "16 Juni 2027", event: "Tahun Baru Hijriah 1449H"},
+            {date: "20 Juni 2027", event: "Penerimaan Raport"},
+            {date: "22-30 Juni 2027", event: "Libur Semester Genap"}
         ];
 
         const newsData = [
@@ -672,6 +692,11 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                         <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
                     </svg>
+                ),
+                trash: (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                        <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
                 )
             };
             
@@ -743,6 +768,159 @@
             const [zoomedImage, setZoomedImage] = useState(null);
             const [selectedClass, setSelectedClass] = useState("Kelas 1");
             const [activeRosterClass, setActiveRosterClass] = useState("Kelas 1");
+
+            // State untuk PPDB
+            const [showPPDBForm, setShowPPDBForm] = useState(false);
+            const [ppdbData, setPpdbData] = useState({
+                nama: "",
+                nik: "",
+                tempatLahir: "",
+                tanggalLahir: "",
+                jenisKelamin: "L",
+                namaOrtu: "",
+                noHp: "",
+                alamat: ""
+            });
+            // State untuk Data Pendaftar (Admin View)
+            const [ppdbSubmissions, setPpdbSubmissions] = useState([]);
+            
+            // State untuk Modal Konfirmasi Hapus
+            const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+            const [itemToDelete, setItemToDelete] = useState(null);
+
+            const [user, setUser] = useState(null);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+
+            useEffect(() => {
+                if (!auth) return;
+                
+                const initAuth = async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                };
+                initAuth();
+                const unsubscribe = onAuthStateChanged(auth, setUser);
+                return () => unsubscribe();
+            }, []);
+
+            // EFFECT BARU: Mengambil data PPDB dari Firestore secara Realtime
+            useEffect(() => {
+                if (activeTab === "Data PPDB" && user) {
+                    try {
+                        const q = query(
+                            collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), 
+                            orderBy('createdAt', 'desc')
+                        );
+                        
+                        const unsubscribe = onSnapshot(q, (snapshot) => {
+                            const submissions = snapshot.docs.map(doc => ({
+                                id: doc.id,
+                                ...doc.data()
+                            }));
+                            setPpdbSubmissions(submissions);
+                        }, (error) => {
+                            console.error("Error fetching data:", error);
+                        });
+
+                        return () => unsubscribe();
+                    } catch (err) {
+                        console.error("Setup listener failed", err);
+                    }
+                }
+            }, [activeTab, user]);
+
+            const handlePpdbChange = (e) => {
+                const { name, value } = e.target;
+                setPpdbData(prev => ({...prev, [name]: value}));
+            };
+
+            const handlePpdbSubmit = async (e) => {
+                e.preventDefault();
+                if (!auth.currentUser) return;
+                setIsSubmitting(true);
+
+                try {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), {
+                        ...ppdbData,
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Reset form and show success
+                    const successMessage = document.createElement('div');
+                    successMessage.className = "fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50 animate-fade-in";
+                    successMessage.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <div>
+                                <strong>Pendaftaran Berhasil!</strong><br/>
+                                Terima kasih, ${ppdbData.nama}. Data Anda telah tersimpan di database.
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successMessage);
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 5000);
+
+                    setShowPPDBForm(false);
+                    // Pindah ke tab Data PPDB agar user bisa melihat datanya
+                    setActiveTab("Data PPDB");
+                    
+                    setPpdbData({
+                        nama: "",
+                        nik: "",
+                        tempatLahir: "",
+                        tanggalLahir: "",
+                        jenisKelamin: "L",
+                        namaOrtu: "",
+                        noHp: "",
+                        alamat: ""
+                    });
+                } catch (error) {
+                    console.error("Error adding document: ", error);
+                    alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+                }
+                setIsSubmitting(false);
+            };
+
+            // FUNGSI BARU: Menyiapkan penghapusan
+            const confirmDelete = (id) => {
+                setItemToDelete(id);
+                setDeleteModalOpen(true);
+            };
+
+            // FUNGSI BARU: Eksekusi penghapusan data
+            const executeDelete = async () => {
+                if (itemToDelete) {
+                    try {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations', itemToDelete));
+                        setDeleteModalOpen(false);
+                        setItemToDelete(null);
+                        
+                        // Show success message
+                        const successMessage = document.createElement('div');
+                        successMessage.className = "fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded shadow-lg z-50 animate-fade-in";
+                        successMessage.innerHTML = `
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                <div>
+                                    <strong>Data Dihapus!</strong><br/>
+                                    Data pendaftar berhasil dihapus dari database.
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(successMessage);
+                        setTimeout(() => {
+                            successMessage.remove();
+                        }, 3000);
+                    } catch (error) {
+                        console.error("Error deleting document: ", error);
+                    }
+                }
+            };
 
             const renderContent = () => {
                 switch(activeTab) {
@@ -837,7 +1015,6 @@
                                         onClick={() => setSelectedTeacher(teacher)}
                                         className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100"
                                     >
-                                        {/* PERBAIKAN: Menggunakan aspect-[3/4] agar foto menjadi model portrait proporsional (tidak terpotong ekstrem) */}
                                         <div className="aspect-[3/4] w-full bg-gray-200 relative overflow-hidden">
                                             <img 
                                                 src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
@@ -846,7 +1023,6 @@
                                                     e.target.onerror = null; 
                                                     e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
                                                 }}
-                                                /* PERBAIKAN: Menggunakan object-center agar fokus foto di tengah wajah */
                                                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
@@ -1027,7 +1203,147 @@
                                 </div>
                             </div>
                         );
+                    case "Data PPDB":
+                        return (
+                            <div className="space-y-8 animate-fade-in">
+                                <div className="text-center">
+                                    <h3 className="text-2xl font-bold text-gray-800">Data Pendaftar PPDB</h3>
+                                    <p className="text-gray-600">Data berikut diambil langsung dari database sekolah.</p>
+                                </div>
+
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left">
+                                            <thead className="bg-gray-50 text-gray-700 uppercase font-bold border-b">
+                                                <tr>
+                                                    <th className="px-6 py-3">No</th>
+                                                    <th className="px-6 py-3">Nama Siswa</th>
+                                                    <th className="px-6 py-3">L/P</th>
+                                                    <th className="px-6 py-3">TTL</th>
+                                                    <th className="px-6 py-3">Nama Orang Tua</th>
+                                                    <th className="px-6 py-3">No. HP</th>
+                                                    <th className="px-6 py-3">Waktu Daftar</th>
+                                                    <th className="px-6 py-3 text-center">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100">
+                                                {ppdbSubmissions.length === 0 ? (
+                                                    <tr>
+                                                        <td colSpan="8" className="px-6 py-8 text-center text-gray-500 italic">
+                                                            Belum ada data pendaftar. Silakan isi formulir di menu PPDB.
+                                                        </td>
+                                                    </tr>
+                                                ) : (
+                                                    ppdbSubmissions.map((data, idx) => (
+                                                        <tr key={data.id} className="hover:bg-gray-50 transition-colors">
+                                                            <td className="px-6 py-4 font-medium text-gray-900">{idx + 1}</td>
+                                                            <td className="px-6 py-4 font-bold text-gray-800">{data.nama}</td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`px-2 py-1 rounded text-xs font-bold ${data.jenisKelamin === 'L' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>
+                                                                    {data.jenisKelamin}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                {data.tempatLahir}, {data.tanggalLahir}
+                                                            </td>
+                                                            <td className="px-6 py-4">{data.namaOrtu}</td>
+                                                            <td className="px-6 py-4 font-mono text-gray-600">{data.noHp}</td>
+                                                            <td className="px-6 py-4 text-xs text-gray-500">
+                                                                {data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('id-ID') : 'Baru saja'}
+                                                            </td>
+                                                            <td className="px-6 py-4 text-center">
+                                                                <button 
+                                                                    onClick={() => confirmDelete(data.id)}
+                                                                    className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-full transition-colors"
+                                                                    title="Hapus Data"
+                                                                >
+                                                                    <Icon name="trash" className="w-5 h-5" />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="bg-gray-50 px-6 py-3 border-t text-xs text-gray-500 flex justify-between items-center">
+                                        <span>Total Pendaftar: <strong>{ppdbSubmissions.length}</strong></span>
+                                        <span className="italic">Data diperbarui secara otomatis (Realtime)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
                     case "PPDB":
+                        if (showPPDBForm) {
+                            return (
+                                <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg animate-fade-in border border-gray-200">
+                                    <div className="flex items-center gap-3 mb-6 border-b pb-4">
+                                        <button onClick={() => setShowPPDBForm(false)} className="text-gray-500 hover:text-red-600">
+                                            <Icon name="x" className="w-6 h-6" />
+                                        </button>
+                                        <h3 className="text-2xl font-bold text-gray-800">Formulir Pendaftaran</h3>
+                                    </div>
+                                    
+                                    <form onSubmit={handlePpdbSubmit} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap Calon Siswa</label>
+                                            <input type="text" name="nama" required value={ppdbData.nama} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" placeholder="Sesuai Akta Kelahiran" />
+                                        </div>
+                                        
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">NIK</label>
+                                                <input type="number" name="nik" required value={ppdbData.nik} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" placeholder="Nomor Induk Kependudukan" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                                                <select name="jenisKelamin" value={ppdbData.jenisKelamin} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none">
+                                                    <option value="L">Laki-laki</option>
+                                                    <option value="P">Perempuan</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                                <input type="text" name="tempatLahir" required value={ppdbData.tempatLahir} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                                <input type="date" name="tanggalLahir" required value={ppdbData.tanggalLahir} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Orang Tua / Wali</label>
+                                            <input type="text" name="namaOrtu" required value={ppdbData.namaOrtu} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Nomor HP / WhatsApp</label>
+                                            <input type="tel" name="noHp" required value={ppdbData.noHp} onChange={handlePpdbChange} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none" placeholder="Contoh: 081234567890" />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                            <textarea name="alamat" required value={ppdbData.alamat} onChange={handlePpdbChange} rows="3" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"></textarea>
+                                        </div>
+
+                                        <div className="pt-4 flex gap-3">
+                                            <button type="button" onClick={() => setShowPPDBForm(false)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors">Batal</button>
+                                            <button 
+                                                type="submit" 
+                                                disabled={isSubmitting}
+                                                className={`flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-md ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                            >
+                                                {isSubmitting ? 'Sedang Mengirim...' : 'Kirim Pendaftaran'}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            );
+                        }
                         return (
                             <div className="space-y-8 animate-fade-in">
                                 <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg shadow-sm">
@@ -1040,7 +1356,10 @@
                                         Mari wujudkan generasi cerdas dan berakhlak mulia bersama kami.
                                     </p>
                                     <div className="mt-4 flex gap-3">
-                                        <button className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow">
+                                        <button 
+                                            onClick={() => setShowPPDBForm(true)}
+                                            className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow"
+                                        >
                                             Daftar Sekarang
                                         </button>
                                         <button className="bg-white text-red-600 border border-red-600 px-6 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors">
@@ -1087,28 +1406,36 @@
                                                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">1</div>
                                                 <div>
                                                     <h5 className="font-bold text-gray-800">Pengambilan Formulir</h5>
-                                                    <p className="text-sm text-gray-600">1 - 30 Mei 2025 (Di Sekolah)</p>
+                                                    <p className="text-sm text-gray-600">1 - 30 Mei 2026 (Di Sekolah)</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
                                                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">2</div>
                                                 <div>
                                                     <h5 className="font-bold text-gray-800">Pengembalian Berkas</h5>
-                                                    <p className="text-sm text-gray-600">2 - 10 Juni 2025</p>
+                                                    <p className="text-sm text-gray-600">2 - 10 Juni 2026</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
                                                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">3</div>
                                                 <div>
                                                     <h5 className="font-bold text-gray-800">Seleksi Administrasi</h5>
-                                                    <p className="text-sm text-gray-600">11 - 15 Juni 2025</p>
+                                                    <p className="text-sm text-gray-600">11 - 15 Juni 2026</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
                                                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">4</div>
                                                 <div>
                                                     <h5 className="font-bold text-gray-800">Pengumuman Diterima</h5>
-                                                    <p className="text-sm text-gray-600">20 Juni 2025</p>
+                                                    <p className="text-sm text-gray-600">20 Juni 2026</p>
+                                                </div>
+                                            </div>
+                                            {/* Menambahkan jadwal Hari Pertama Sekolah */}
+                                            <div className="flex gap-4">
+                                                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold flex-shrink-0">5</div>
+                                                <div>
+                                                    <h5 className="font-bold text-gray-800">Hari Pertama Sekolah</h5>
+                                                    <p className="text-sm text-gray-600">13 Juli 2026</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1184,7 +1511,7 @@
                                     </div>
                                 </div>
                                 <div className="hidden lg:flex gap-6">
-                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Data PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                         <button 
                                             key={menu} 
                                             onClick={() => setActiveTab(menu)}
@@ -1201,7 +1528,7 @@
                             </div>
                             {/* Mobile menu list could go here */}
                             <div className="lg:hidden flex overflow-x-auto gap-4 py-2 scrollbar-hide">
-                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Data PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                     <button 
                                         key={menu} 
                                         onClick={() => setActiveTab(menu)}
@@ -1447,6 +1774,37 @@
                             )}
                         </Modal>
 
+                        {/* Modal Konfirmasi Hapus Data */}
+                        {deleteModalOpen && (
+                            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60] p-4 animate-fade-in">
+                                <div className="bg-white rounded-lg max-w-sm w-full p-6 shadow-2xl">
+                                    <div className="text-center mb-6">
+                                        <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <Icon name="trash" className="w-8 h-8" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900">Hapus Data?</h3>
+                                        <p className="text-gray-500 text-sm mt-2">
+                                            Apakah Anda yakin ingin menghapus data pendaftar ini? Tindakan ini tidak dapat dibatalkan.
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button 
+                                            onClick={() => setDeleteModalOpen(false)}
+                                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button 
+                                            onClick={executeDelete}
+                                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow"
+                                        >
+                                            Ya, Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                     </main>
 
                     {/* Lightbox Zoom Overlay */}
@@ -1491,10 +1849,11 @@
                                 <div>
                                     <h4 className="text-white font-bold text-lg mb-4">Tautan Penting</h4>
                                     <ul className="space-y-2 text-sm">
-                                        <li><a href="https://kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Kemendikdasmen</a></li>
                                         <li><a href="https://dapo.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Dapodik</a></li>
-                                        <li><a href="https://guru.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Platform Merdeka Mengajar</a></li>
+                                        <li><a href="https://gurudikdas.dikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Guru Dikdas</a></li>
+                                        <li><a href="https://kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Kemendikdasmen</a></li>
                                         <li><a href="https://gtk.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Info GTK</a></li>
+                                        <li><a href="https://guru.kemendikdasmen.go.id/" target="_blank" className="hover:text-red-400 flex items-center gap-2"><Icon name="external-link" className="w-3 h-3" /> Platform Merdeka Mengajar</a></li>
                                     </ul>
                                 </div>
                                 <div>
