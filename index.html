@@ -54,8 +54,15 @@
         const { useState, useEffect } = React;
         
         // --- FIREBASE SETUP ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdn-0207-default';
+       const firebaseConfig = {
+  apiKey: "AIzaSyCNVdt1xEiF-Wdw0BpxYzugoG-k7WNmDWg",
+  authDomain: "ppdb-sdn0207.firebaseapp.com",
+  projectId: "ppdb-sdn0207",
+  storageBucket: "ppdb-sdn0207.firebasestorage.app",
+  messagingSenderId: "878716678494",
+  appId: "1:878716678494:web:3624c8f636231609f39fcf"
+};
+;
         
         let db;
         let auth;
