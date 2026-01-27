@@ -54,18 +54,8 @@
         const { useState, useEffect } = React;
         
         // --- FIREBASE SETUP ---
-        // Konfigurasi Firebase Pribadi Anda
-        const firebaseConfig = {
-          apiKey: "AIzaSyCNVdt1xEiF-Wdw0BpxYzugoG-k7WNmDWg",
-          authDomain: "ppdb-sdn0207.firebaseapp.com",
-          projectId: "ppdb-sdn0207",
-          storageBucket: "ppdb-sdn0207.firebasestorage.app",
-          messagingSenderId: "878716678494",
-          appId: "1:878716678494:web:3624c8f636231609f39fcf"
-        };
-
-        // App ID untuk path database (bisa disesuaikan jika ingin pakai ID lain)
-        const appId = 'sdn-0207-custom'; 
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdn-0207-default';
         
         let db;
         let auth;
@@ -75,7 +65,6 @@
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-            console.log("Firebase initialized with custom config");
         } catch (error) {
             console.error("Firebase init error:", error);
         }
@@ -401,6 +390,77 @@
                 { name: "UMMI HIDAYAH POHAN", gender: "P", nisn: "3134277679", birth: "Pangirkiran Dolok, 12/12/2013", parent: "Melki Pohan / Junaida Siregar" },
                 { name: "YAHDIL PRATAMA HARAHAP", gender: "L", nisn: "3144647978", birth: "Pangirkiran Dolok, 09/03/2014", parent: "Ruslan Harahap / Aini Harahap" },
             ]
+        };
+
+        const facilities = [
+            { id: 1, name: "Ruang Belajar", desc: "Kelas yang nyaman dan kondusif." },
+            { id: 2, name: "Ruang Guru", desc: "Tempat guru berdiskusi dan bekerja." },
+            { id: 3, name: "Perpustakaan", desc: "Koleksi buku lengkap untuk siswa." },
+            { id: 4, name: "Lab Komputer", desc: "Sarana belajar teknologi." },
+            { id: 5, name: "Toilet Bersih", desc: "Fasilitas sanitasi yang terjaga." },
+            { id: 6, name: "Lapangan Olahraga", desc: "Untuk kegiatan fisik dan upacara." },
+            { id: 7, name: "Ruang UKS", desc: "Layanan kesehatan pertama siswa." },
+        ];
+
+        const extracurriculars = [
+            { id: 1, name: "Olahraga", desc: "Mengembangkan fisik dan sportivitas." },
+            { id: 2, name: "Seni Tari", desc: "Melestarikan budaya melalui tarian." },
+            { id: 3, name: "Pramuka", desc: "Membentuk karakter disiplin dan mandiri." },
+        ];
+
+        const rosterData = {
+            "Kelas 1": [
+                {jam: 1, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
+                {jam: 2, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
+                {jam: 3, sen: "PAI", sel: "MTK", rab: "PKN/P5", kam: "MTK", jum: "PJOK", sab: "B.ING"},
+                {jam: 4, sen: "PAI", sel: "MTK", rab: "B.INDO", kam: "MTK/P5", jum: "PJOK/P5", sab: "B.ING"},
+                {jam: 5, sen: "PAI", sel: "SBDP", rab: "B.INDO", kam: "B.INDO", jum: "SBDP", sab: "SBDP/P5"},
+                {jam: 6, sen: "PAI/P5", sel: "SBDP", rab: "B.INDO/P5", kam: "B.INDO/P5", jum: "-", sab: "-"},
+            ],
+            "Kelas 2": [
+                {jam: 1, sen: "PKN", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO"},
+                {jam: 2, sen: "PKN", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO/P5"},
+                {jam: 3, sen: "PKN/P5", sel: "PJOK", rab: "B.INDO", kam: "MTK", jum: "PAI", sab: "B.INDO/P5"},
+                {jam: 4, sen: "B.INDO", sel: "PJOK/P5", rab: "MTK", kam: "B.ING", jum: "PAI/P5", sab: "SBDP"},
+                {jam: 5, sen: "B.INDO", sel: "PKN", rab: "MTK", kam: "B.ING", jum: "SBDP", sab: "SBDP/P5"},
+                {jam: 6, sen: "B.INDO", sel: "PKN", rab: "MTK/P5", kam: "SBDP", jum: "-", sab: "-"},
+            ],
+            "Kelas 3": [
+                {jam: 1, sen: "MTK", sel: "PKN", rab: "PKN", kam: "SBDP", jum: "PKN", sab: "PJOK"},
+                {jam: 2, sen: "MTK", sel: "PKN", rab: "PKN", kam: "SBDP", jum: "PKN", sab: "PJOK"},
+                {jam: 3, sen: "MTK", sel: "B.ING", rab: "B.INDO", kam: "MTK", jum: "PKN", sab: "PJOK"},
+                {jam: 4, sen: "IPAS", sel: "B.ING", rab: "PAI", kam: "B.INDO", jum: "SBDP", sab: "PJOK"},
+                {jam: 5, sen: "IPAS", sel: "MTK", rab: "PAI", kam: "B.INDO", jum: "SBDP", sab: "B.INDO"},
+                {jam: 6, sen: "B.INDO", sel: "MTK", rab: "PAI", kam: "IPAS", jum: "-", sab: "-"},
+                {jam: 7, sen: "B.INDO", sel: "MTK", rab: "PAI", kam: "IPAS", jum: "-", sab: "-"},
+            ],
+            "Kelas 4": [
+                {jam: 1, sen: "B.ING", sel: "MTK", rab: "PJOK", kam: "PKN", jum: "IPAS", sab: "SBDP"},
+                {jam: 2, sen: "B.ING", sel: "MTK", rab: "PJOK", kam: "PKN/P5", jum: "IPAS", sab: "SBDP/P5"},
+                {jam: 3, sen: "PKN", sel: "MTK", rab: "PJOK", kam: "B.INDO", jum: "MTK", sab: "B.INDO"},
+                {jam: 4, sen: "PKN", sel: "PAI", rab: "PJOK/P5", kam: "B.INDO/P5", jum: "MTK", sab: "B.INDO"},
+                {jam: 5, sen: "PKN", sel: "PAI", rab: "B.INDO", kam: "IPAS", jum: "MTK/P5", sab: "B.INDO"},
+                {jam: 6, sen: "SBDP", sel: "PAI", rab: "B.INDO", kam: "IPAS", jum: "-", sab: "-"},
+                {jam: 7, sen: "SBDP", sel: "PAI/P5", rab: "B.INDO/P5", kam: "IPAS", jum: "-", sab: "-"},
+            ],
+            "Kelas 5": [
+                {jam: 1, sen: "PKN", sel: "B.ING", rab: "B.INDO", kam: "PJOK", jum: "B.INDO/P5", sab: "B.ING"},
+                {jam: 2, sen: "PKN", sel: "IPAS", rab: "B.INDO", kam: "PJOK", jum: "B.INDO/P5", sab: "PAI"},
+                {jam: 3, sen: "PKN", sel: "MTK", rab: "IPAS", kam: "PJOK", jum: "MTK", sab: "PAI"},
+                {jam: 4, sen: "B.INDO", sel: "MTK", rab: "IPAS", kam: "PJOK/P5", jum: "MTK", sab: "PAI"},
+                {jam: 5, sen: "B.INDO", sel: "MTK", rab: "SBDP", kam: "B.INDO", jum: "MTK/P5", sab: "PAI/P5"},
+                {jam: 6, sen: "IPAS", sel: "PKN", rab: "SBDP", kam: "B.INDO", jum: "-", sab: "-"},
+                {jam: 7, sen: "IPAS", sel: "PKN/P5", rab: "SBDP", kam: "SBDP/P5", jum: "-", sab: "-"},
+            ],
+            "Kelas 6": [
+                {jam: 1, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "B.ING", jum: "MTK", sab: "IPAS"},
+                {jam: 2, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "B.ING", jum: "MTK", sab: "IPAS"},
+                {jam: 3, sen: "PJOK", sel: "MTK", rab: "B.INDO", kam: "SBDP", jum: "MTK", sab: "IPAS"},
+                {jam: 4, sen: "PJOK", sel: "B.INDO", rab: "IPAS", kam: "PAI", jum: "IPAS", sab: "B.INDO"},
+                {jam: 5, sen: "PKN", sel: "B.INDO", rab: "IPAS", kam: "PAI", jum: "SBDP", sab: "B.INDO"},
+                {jam: 6, sen: "PKN", sel: "SBDP", rab: "PKN", kam: "PAI", jum: "-", sab: "-"},
+                {jam: 7, sen: "PKN", sel: "SBDP", rab: "PKN", kam: "PAI", jum: "-", sab: "-"},
+            ],
         };
 
         const calendar2025 = [
@@ -735,12 +795,10 @@
                 if (!auth) return;
                 
                 const initAuth = async () => {
-                    // Since we are using a specific/custom firebaseConfig, the environment token (__initial_auth_token)
-                    // will likely mismatch. We should default to anonymous login for this demo.
-                    try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
                         await signInAnonymously(auth);
-                    } catch (err) {
-                        console.error("Auth error:", err);
                     }
                 };
                 initAuth();
@@ -750,35 +808,27 @@
 
             // EFFECT BARU: Mengambil data PPDB dari Firestore secara Realtime
             useEffect(() => {
-                if (activeTab === "Data PPDB") {
-                     if (db && user) {
-                        try {
-                            const q = query(
-                                collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), 
-                                orderBy('createdAt', 'desc')
-                            );
-                            
-                            const unsubscribe = onSnapshot(q, (snapshot) => {
-                                const submissions = snapshot.docs.map(doc => ({
-                                    id: doc.id,
-                                    ...doc.data()
-                                }));
-                                setPpdbSubmissions(submissions);
-                            }, (error) => {
-                                console.error("Error fetching data:", error);
-                            });
+                if (activeTab === "Data PPDB" && user) {
+                    try {
+                        const q = query(
+                            collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), 
+                            orderBy('createdAt', 'desc')
+                        );
+                        
+                        const unsubscribe = onSnapshot(q, (snapshot) => {
+                            const submissions = snapshot.docs.map(doc => ({
+                                id: doc.id,
+                                ...doc.data()
+                            }));
+                            setPpdbSubmissions(submissions);
+                        }, (error) => {
+                            console.error("Error fetching data:", error);
+                        });
 
-                            return () => unsubscribe();
-                        } catch (err) {
-                            console.error("Setup listener failed", err);
-                        }
-                     } else {
-                        // LocalStorage fallback
-                        const localData = JSON.parse(localStorage.getItem('ppdb_registrations') || '[]');
-                        // Sort by date desc (mock)
-                        localData.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                        setPpdbSubmissions(localData);
-                     }
+                        return () => unsubscribe();
+                    } catch (err) {
+                        console.error("Setup listener failed", err);
+                    }
                 }
             }, [activeTab, user]);
 
@@ -789,33 +839,14 @@
 
             const handlePpdbSubmit = async (e) => {
                 e.preventDefault();
+                if (!auth.currentUser) return;
                 setIsSubmitting(true);
 
-                // Create data object
-                const newData = {
-                    ...ppdbData,
-                    createdAt: { seconds: Date.now() / 1000 }, // Mock Firestore timestamp
-                    id: 'local_' + Date.now()
-                };
-
                 try {
-                    if (db && auth && auth.currentUser) {
-                        // Firestore
-                         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), {
-                            ...ppdbData,
-                            createdAt: serverTimestamp()
-                        });
-                    } else {
-                        // LocalStorage Fallback
-                        const currentData = JSON.parse(localStorage.getItem('ppdb_registrations') || '[]');
-                        const updatedData = [newData, ...currentData];
-                        localStorage.setItem('ppdb_registrations', JSON.stringify(updatedData));
-                        
-                        // If current view is Data PPDB, update state immediately (though logic usually separates them)
-                        if (activeTab === "Data PPDB") {
-                            setPpdbSubmissions(updatedData);
-                        }
-                    }
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), {
+                        ...ppdbData,
+                        createdAt: serverTimestamp()
+                    });
 
                     // Reset form and show success
                     const successMessage = document.createElement('div');
@@ -825,7 +856,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                             <div>
                                 <strong>Pendaftaran Berhasil!</strong><br/>
-                                Terima kasih, ${ppdbData.nama}. Data Anda telah tersimpan.
+                                Terima kasih, ${ppdbData.nama}. Data Anda telah tersimpan di database.
                             </div>
                         </div>
                     `;
@@ -865,16 +896,7 @@
             const executeDelete = async () => {
                 if (itemToDelete) {
                     try {
-                        if (db && auth && auth.currentUser && !itemToDelete.startsWith('local_')) {
-                             await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations', itemToDelete));
-                        } else {
-                            // Local Storage Delete
-                             const currentData = JSON.parse(localStorage.getItem('ppdb_registrations') || '[]');
-                             const updatedData = currentData.filter(item => item.id !== itemToDelete);
-                             localStorage.setItem('ppdb_registrations', JSON.stringify(updatedData));
-                             setPpdbSubmissions(updatedData);
-                        }
-
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations', itemToDelete));
                         setDeleteModalOpen(false);
                         setItemToDelete(null);
                         
@@ -886,7 +908,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                                 <div>
                                     <strong>Data Dihapus!</strong><br/>
-                                    Data pendaftar berhasil dihapus.
+                                    Data pendaftar berhasil dihapus dari database.
                                 </div>
                             </div>
                         `;
@@ -1227,9 +1249,7 @@
                                                             <td className="px-6 py-4">{data.namaOrtu}</td>
                                                             <td className="px-6 py-4 font-mono text-gray-600">{data.noHp}</td>
                                                             <td className="px-6 py-4 text-xs text-gray-500">
-                                                                {data.createdAt && typeof data.createdAt === 'object' && 'seconds' in data.createdAt 
-                                                                    ? new Date(data.createdAt.seconds * 1000).toLocaleString('id-ID') 
-                                                                    : 'Baru saja'}
+                                                                {data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('id-ID') : 'Baru saja'}
                                                             </td>
                                                             <td className="px-6 py-4 text-center">
                                                                 <button 
