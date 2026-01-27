@@ -1010,20 +1010,32 @@
 
             // FUNGSI JADWAL
             const handleSaveSchedule = async () => {
-                if (!auth.currentUser) return alert("Koneksi terputus.");
-                if (!isAdmin) return alert("Akses ditolak.");
-                const confirmSave = confirm("Simpan perubahan jadwal?");
+                if (!auth.currentUser) return alert("Koneksi terputus. Silakan refresh halaman.");
+                if (!isAdmin) return alert("Akses ditolak. Anda bukan admin.");
+                const confirmSave = confirm("Apakah Anda yakin ingin menyimpan perubahan jadwal ini secara permanen?");
                 if (!confirmSave) return;
                 try {
+                    // Validasi: pastikan rosterData tidak kosong
+                    if (!rosterData || Object.keys(rosterData).length === 0) {
+                        throw new Error("Data jadwal kosong atau tidak valid.");
+                    }
+
                     const savePromises = Object.keys(rosterData).map(className => {
+                        // Pastikan nama kelas valid sebagai ID dokumen
+                        if (!className) return Promise.resolve();
+                        
                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'roster', className);
+                        // Gunakan setDoc dengan { merge: true } jika ingin lebih aman, tapi di sini kita overwrite full list
                         return setDoc(docRef, { items: rosterData[className] });
                     });
+
                     await Promise.all(savePromises);
-                    alert("Jadwal berhasil disimpan!");
+                    alert("Jadwal berhasil disimpan ke database!");
                     setIsEditingSchedule(false);
                 } catch (e) {
-                    alert("Gagal menyimpan jadwal.");
+                    console.error("Error saving roster:", e);
+                    // Tampilkan pesan error yang lebih detail kepada user
+                    alert("Gagal menyimpan jadwal. Detail error: " + (e.message || "Kesalahan tidak diketahui"));
                 }
             };
 
