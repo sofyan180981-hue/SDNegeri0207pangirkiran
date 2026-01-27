@@ -49,13 +49,12 @@
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Update import: Menambahkan setDoc untuk menyimpan data jadwal
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const { useState, useEffect } = React;
         
         // --- FIREBASE SETUP ---
-        // PENTING: Untuk penggunaan di GitHub/Hosting sendiri, isi data di bawah ini!
-        // Data ini bisa didapatkan dari Firebase Console -> Project Settings -> General -> Your Apps
         const manualConfig = {
             apiKey: "AIzaSyCm6KUtiBdOYrflSf8lf-Y1BD9hPfC1qII",
             authDomain: "ppdb-5ec66.firebaseapp.com",
@@ -66,7 +65,6 @@
             measurementId: "G-ZLHMHPGXZ6"
         };
 
-        // Menggunakan config otomatis jika di environment khusus, atau fallback ke manualConfig untuk GitHub
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : manualConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdn-0207-default';
         
@@ -127,7 +125,7 @@
                 certification: "-",
                 university: "SPG Swasta Widyasana",
                 address: "Desa Binanga, Kec.Barumun Tengah",
-                image: "adanan.jpg"
+                image: "adanan.jpg" 
             },
             { 
                 name: "Sofyan Tanjung", 
@@ -139,7 +137,7 @@
                 certification: "Pendidikan Jasmani Olahraga dan Kesehatan",
                 university: "Universitas Negeri Medan",
                 address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "sofyan.jpg"
+                image: "sofyan.jpg" 
             },
             { 
                 name: "Tirohima Harahap", 
@@ -151,7 +149,7 @@
                 certification: "Guru Kelas",
                 university: "STIT PL GUNUNG TUA",
                 address: "Desa Pangirkiran Dolok, Kecamatan Barumun Tengah",
-                image: "tirohima.jpg"
+                image: "tirohima.jpg" 
             },
             { 
                 name: "Rokimah Siregar", 
@@ -163,7 +161,7 @@
                 certification: "Guru Kelas",
                 university: "STAIS Dairi Sidikalang",
                 address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "rokimah.jpg"
+                image: "rokimah.jpg" 
             },
             { 
                 name: "Hotmaida Pohan", 
@@ -175,7 +173,7 @@
                 certification: "Guru Kelas",
                 university: "Universitas Negeri Medan",
                 address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "hotma.jpg"
+                image: "hotma.jpg" 
             },
             { 
                 name: "Rosmina Tamba", 
@@ -187,7 +185,7 @@
                 certification: "Pendidikan Agama Islam",
                 university: "IAIN Padangsidimpuan",
                 address: "Desa Gulangan, Kec. Sihapas Barumun",
-                image: "rosmina.jpg"
+                image: "rosmina.jpg" 
             },
             { 
                 name: "Nora Hanifah Pane", 
@@ -199,7 +197,7 @@
                 certification: "Guru PAUD",
                 university: "Universitas Muhammadiah Sumatera Utara",
                 address: "Desa Padang Matinggi, Kec. Barumun Tengah",
-                image: "nora.jpg"
+                image: "nora.jpg" 
             },
             { 
                 name: "Rukiatul Marjulia Ujung", 
@@ -211,7 +209,7 @@
                 certification: "Guru Kelas",
                 university: "Universitas NU Sumatera Utara",
                 address: "Desa Padang Matinggi, Kec. Barumun Tengah",
-                image: "rukiatul.jpg"
+                image: "rukiatul.jpg" 
             },
             { 
                 name: "Syaroh Silitonga", 
@@ -223,7 +221,7 @@
                 certification: "-",
                 university: "IAIN Padangsidimpuan",
                 address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "syaroh.jpg"
+                image: "syaroh.jpg" 
             },
             { 
                 name: "Siti Hoyriya Harahap", 
@@ -235,7 +233,7 @@
                 certification: "-",
                 university: "UIN Syekh Ali Hasan Ahmad Addary Padangsidimpuan",
                 address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "hoiriyah.jpg"
+                image: "hoiriyah.jpg" 
             },
             { 
                 name: "Romaito Harahap", 
@@ -247,7 +245,7 @@
                 certification: "-",
                 university: "Institut Pendidikan Tapanuli Selatan",
                 address: "Desa Pangirkiran Dolok",
-                image: "romaito.jpg"
+                image: "romaito.jpg" 
             },
             { 
                 name: "Muhammad Johan Pohan", 
@@ -259,7 +257,7 @@
                 certification: "-",
                 university: "SMA Negeri 1 Barumun Tengah",
                 address: "Desa Pangirkiran Dolok, Kec. Barumun Tengah",
-                image: "johan.jpg"
+                image: "johan.jpg" 
             },
         ];
 
@@ -856,6 +854,73 @@
                 }
             }, [activeTab, user]);
 
+            // EFFECT BARU: Mengambil data JADWAL (ROSTER) dari Firestore secara Realtime
+            useEffect(() => {
+                // Fetch hanya jika tab Akademik aktif untuk efisiensi
+                if (activeTab === "Akademik") {
+                    try {
+                        // Mengambil koleksi 'roster'
+                        const q = collection(db, 'artifacts', appId, 'public', 'data', 'roster');
+                        const unsubscribe = onSnapshot(q, (snapshot) => {
+                            if (snapshot.empty) {
+                                // Jika data kosong (belum pernah disimpan), pakai initialRosterData
+                                return;
+                            }
+                            
+                            // Salin data awal
+                            const newRoster = { ...initialRosterData };
+                            
+                            // Update dengan data dari database
+                            snapshot.docs.forEach(doc => {
+                                // ID dokumen adalah nama kelas (misal: "Kelas 1")
+                                if (doc.exists()) {
+                                    newRoster[doc.id] = doc.data().items;
+                                }
+                            });
+                            
+                            setRosterData(newRoster);
+                        }, (err) => {
+                            console.error("Gagal mengambil jadwal:", err);
+                        });
+                        
+                        return () => unsubscribe();
+                    } catch (err) {
+                        console.error("Error setting up roster listener", err);
+                    }
+                }
+            }, [activeTab]);
+
+            // FUNGSI BARU: Menyimpan Jadwal ke Database
+            const handleSaveSchedule = async () => {
+                if (!auth.currentUser) {
+                    alert("Koneksi terputus. Silakan refresh halaman.");
+                    return;
+                }
+                
+                if (!isAdmin) {
+                    alert("Akses ditolak. Anda bukan admin.");
+                    return;
+                }
+
+                const confirmSave = confirm("Apakah Anda yakin ingin menyimpan perubahan jadwal ini secara permanen?");
+                if (!confirmSave) return;
+
+                // Simpan semua kelas ke database
+                try {
+                    const savePromises = Object.keys(rosterData).map(className => {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'roster', className);
+                        return setDoc(docRef, { items: rosterData[className] });
+                    });
+
+                    await Promise.all(savePromises);
+                    alert("Jadwal berhasil disimpan ke database!");
+                    setIsEditingSchedule(false);
+                } catch (e) {
+                    console.error("Error saving roster:", e);
+                    alert("Gagal menyimpan jadwal. Silakan coba lagi.");
+                }
+            };
+
             const handlePpdbChange = (e) => {
                 const { name, value } = e.target;
                 setPpdbData(prev => ({...prev, [name]: value}));
@@ -1008,7 +1073,7 @@
                                         <p>
                                             Tenaga Pendidik di sekolah ini alumni sarjana dari Perguruan tinggi dan sudah tersertifikasi. 
                                             Siswa di SD Negeri 0207 Pangirkiran berasal dari Desa Pangirkiran Dolok dan Desa Janji Raja yang berjumlah kurang lebih 117 orang.
-                                        </p>	
+                                        </p>    
                                         <p>
                                             Kegiatan KBM berlangsung selama 6 (enam) Hari senin sampai dengan Sabtu, dan memiliki kegiatan Ekstrakurikuler Pramuka, Seni, dan Olah Raga.
                                             Sekolah ini berstatus negeri dengan NPSN 10207504. Berdiri sejak tahun 1977 dan memiliki akreditasi C.
@@ -1159,7 +1224,14 @@
                                         <div className="flex gap-2 items-center mt-4 md:mt-0">
                                             {isAdmin && (
                                                 <button 
-                                                    onClick={() => setIsEditingSchedule(!isEditingSchedule)}
+                                                    onClick={() => {
+                                                        // LOGIKA BARU: Jika sedang mengedit, klik = Simpan. Jika tidak, klik = Edit.
+                                                        if (isEditingSchedule) {
+                                                            handleSaveSchedule();
+                                                        } else {
+                                                            setIsEditingSchedule(true);
+                                                        }
+                                                    }}
                                                     className={`px-3 py-2 rounded text-sm font-semibold transition-colors flex items-center gap-2 ${isEditingSchedule ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-yellow-500 text-white hover:bg-yellow-600'}`}
                                                 >
                                                     {isEditingSchedule ? (
@@ -1214,7 +1286,7 @@
                                             </tbody>
                                         </table>
                                         {isEditingSchedule && (
-                                            <p className="text-xs text-red-500 mt-2 italic">* Anda sedang dalam mode edit. Ubah langsung pada tabel di atas.</p>
+                                            <p className="text-xs text-red-500 mt-2 italic">* Anda sedang dalam mode edit. Ubah langsung pada tabel di atas dan klik 'Simpan Jadwal' untuk menyimpan.</p>
                                         )}
                                     </div>
                                 </div>
