@@ -844,7 +844,13 @@
 
             const handlePpdbSubmit = async (e) => {
                 e.preventDefault();
-                if (!auth.currentUser) return;
+                
+                // PERBAIKAN: Cek koneksi auth sebelum proses
+                if (!auth || !auth.currentUser) {
+                    alert("Maaf, pendaftaran tidak dapat diproses karena Database belum terhubung.\n\nCatatan Teknis: Jika Anda menjalankan website ini di GitHub/Hosting pribadi, Anda harus memasukkan konfigurasi Firebase (API Key) Anda sendiri ke dalam kode script.");
+                    return;
+                }
+
                 setIsSubmitting(true);
 
                 try {
@@ -1346,8 +1352,8 @@
                                             <button type="button" onClick={() => setShowPPDBForm(false)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors">Batal</button>
                                             <button 
                                                 type="submit" 
-                                                disabled={isSubmitting || !user}
-                                                className={`flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-md ${isSubmitting || !user ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                                disabled={isSubmitting}
+                                                className={`flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-md ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                                             >
                                                 {isSubmitting ? 'Sedang Mengirim...' : 'Kirim Pendaftaran'}
                                             </button>
