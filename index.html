@@ -54,7 +54,20 @@
         const { useState, useEffect } = React;
         
         // --- FIREBASE SETUP ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        // PENTING: Untuk penggunaan di GitHub/Hosting sendiri, isi data di bawah ini!
+        // Data ini bisa didapatkan dari Firebase Console -> Project Settings -> General -> Your Apps
+        const manualConfig = {
+            apiKey: "AIzaSyCm6KUtiBdOYrflSf8lf-Y1BD9hPfC1qII",
+            authDomain: "ppdb-5ec66.firebaseapp.com",
+            projectId: "ppdb-5ec66",
+            storageBucket: "ppdb-5ec66.firebasestorage.app",
+            messagingSenderId: "244653808258",
+            appId: "1:244653808258:web:1b6dccdc2eaf0f90fd329b",
+            measurementId: "G-ZLHMHPGXZ6"
+        };
+
+        // Menggunakan config otomatis jika di environment khusus, atau fallback ke manualConfig untuk GitHub
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : manualConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdn-0207-default';
         
         let db;
