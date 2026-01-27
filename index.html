@@ -49,8 +49,9 @@
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // Update import: Menambahkan fungsi updateDoc untuk edit data
+        // Update import: Menambahkan fungsi Storage untuk upload foto
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         const { useState, useEffect } = React;
         
@@ -71,11 +72,13 @@
         let db;
         let auth;
         let app;
+        let storage;
 
         try {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
+            storage = getStorage(app); // Inisialisasi Storage
         } catch (error) {
             console.error("Firebase init error:", error);
         }
@@ -862,6 +865,7 @@
 
             // State Input Form Sementara
             const [formData, setFormData] = useState({});
+            const [fileToUpload, setFileToUpload] = useState(null); // State khusus untuk file
 
             const [user, setUser] = useState(null);
             const [isSubmitting, setIsSubmitting] = useState(false);
@@ -961,20 +965,40 @@
 
             // --- FUNGSI ADMIN TAMBAH/HAPUS ---
 
-            const handleAddItem = async (collectionName, data, setModal) => {
+            // FUNGSI ADMIN TAMBAH ITEM (Updated with Image Upload)
+            const handleAddItem = async (collectionName, data, setModal, file) => {
                 if (!auth.currentUser) return alert("Koneksi terputus.");
                 setIsSubmitting(true);
                 try {
+                    let finalData = { ...data };
+                    
+                    // Jika ada file yang dipilih, upload dulu
+                    if (file) {
+                        try {
+                            const storageRef = ref(storage, `uploads/${collectionName}/${Date.now()}_${file.name}`);
+                            const snapshot = await uploadBytes(storageRef, file);
+                            const downloadURL = await getDownloadURL(snapshot.ref);
+                            finalData.image = downloadURL; // Override/Set image URL
+                        } catch (uploadError) {
+                            console.error("Upload error:", uploadError);
+                            alert("Gagal mengupload gambar. Pastikan Firebase Storage sudah diaktifkan di Console.");
+                            setIsSubmitting(false);
+                            return;
+                        }
+                    }
+
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', collectionName), {
-                        ...data,
+                        ...finalData,
                         createdAt: serverTimestamp()
                     });
+                    
                     setModal(false);
                     setFormData({});
+                    setFileToUpload(null); // Reset file
                     alert("Data berhasil ditambahkan!");
                 } catch (e) {
                     console.error(e);
-                    alert("Gagal menambahkan data.");
+                    alert("Gagal menyimpan data ke database.");
                 }
                 setIsSubmitting(false);
             };
@@ -2087,37 +2111,49 @@
                         {/* --- MODAL FORM ADMIN --- */}
                         
                         {/* 1. Tambah Berita */}
-                        <Modal isOpen={showAddNewsModal} onClose={() => setShowAddNewsModal(false)} title="Tambah Berita">
-                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('news', formData, setShowAddNewsModal); }}>
+                        <Modal isOpen={showAddNewsModal} onClose={() => { setShowAddNewsModal(false); setFileToUpload(null); }} title="Tambah Berita">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('news', formData, setShowAddNewsModal, fileToUpload); }}>
                                 <div><label className="block text-sm font-bold mb-1">Judul</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, title: e.target.value})} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Tanggal</label><input type="text" className="w-full border p-2 rounded" placeholder="Contoh: 12 Januari 2026" required onChange={e => setFormData({...formData, date: e.target.value})} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Kategori</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, category: e.target.value})} /></div>
-                                <div><label className="block text-sm font-bold mb-1">URL Gambar</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Gambar (Pilih File atau Paste URL)</label>
+                                    <input type="file" className="w-full border p-2 rounded mb-2" onChange={(e) => setFileToUpload(e.target.files[0])} />
+                                    <input type="text" className="w-full border p-2 rounded text-sm text-gray-600" placeholder="Atau paste URL gambar..." onChange={e => setFormData({...formData, image: e.target.value})} />
+                                </div>
                                 <div><label className="block text-sm font-bold mb-1">Isi Berita</label><textarea className="w-full border p-2 rounded h-32" required onChange={e => setFormData({...formData, content: e.target.value})}></textarea></div>
                                 <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
                             </form>
                         </Modal>
 
                         {/* 2. Tambah Galeri */}
-                        <Modal isOpen={showAddGalleryModal} onClose={() => setShowAddGalleryModal(false)} title="Tambah Foto Galeri">
-                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('gallery', formData, setShowAddGalleryModal); }}>
+                        <Modal isOpen={showAddGalleryModal} onClose={() => { setShowAddGalleryModal(false); setFileToUpload(null); }} title="Tambah Foto Galeri">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('gallery', formData, setShowAddGalleryModal, fileToUpload); }}>
                                 <div><label className="block text-sm font-bold mb-1">Judul Kegiatan</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, title: e.target.value})} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Kategori</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, category: e.target.value})} /></div>
-                                <div><label className="block text-sm font-bold mb-1">URL Foto Utama</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Foto Utama (Upload / URL)</label>
+                                    <input type="file" className="w-full border p-2 rounded mb-2" onChange={(e) => setFileToUpload(e.target.files[0])} />
+                                    <input type="text" className="w-full border p-2 rounded text-sm text-gray-600" placeholder="Atau paste URL..." onChange={e => setFormData({...formData, image: e.target.value})} />
+                                </div>
                                 <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
                             </form>
                         </Modal>
 
                         {/* 3. Tambah Guru */}
-                        <Modal isOpen={showAddTeacherModal} onClose={() => setShowAddTeacherModal(false)} title="Tambah Data Guru">
-                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('teachers', formData, setShowAddTeacherModal); }}>
+                        <Modal isOpen={showAddTeacherModal} onClose={() => { setShowAddTeacherModal(false); setFileToUpload(null); }} title="Tambah Data Guru">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('teachers', formData, setShowAddTeacherModal, fileToUpload); }}>
                                 <div><label className="block text-sm font-bold mb-1">Nama Lengkap</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, name: e.target.value})} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Jabatan</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, role: e.target.value})} /></div>
                                 <div className="grid grid-cols-2 gap-2">
                                     <div><label className="block text-sm font-bold mb-1">NIP</label><input type="text" className="w-full border p-2 rounded" onChange={e => setFormData({...formData, nip: e.target.value})} /></div>
                                     <div><label className="block text-sm font-bold mb-1">NUPTK</label><input type="text" className="w-full border p-2 rounded" onChange={e => setFormData({...formData, nuptk: e.target.value})} /></div>
                                 </div>
-                                <div><label className="block text-sm font-bold mb-1">URL Foto</label><input type="text" className="w-full border p-2 rounded" placeholder="Kosongkan jika tidak ada" onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <div>
+                                    <label className="block text-sm font-bold mb-1">Foto (Upload / URL)</label>
+                                    <input type="file" className="w-full border p-2 rounded mb-2" onChange={(e) => setFileToUpload(e.target.files[0])} />
+                                    <input type="text" className="w-full border p-2 rounded text-sm text-gray-600" placeholder="Kosongkan jika tidak ada" onChange={e => setFormData({...formData, image: e.target.value})} />
+                                </div>
                                 <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
                             </form>
                         </Modal>
