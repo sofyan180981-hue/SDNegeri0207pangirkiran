@@ -408,7 +408,8 @@
             { id: 3, name: "Pramuka", desc: "Membentuk karakter disiplin dan mandiri." },
         ];
 
-        const rosterData = {
+        // Ubah const rosterData menjadi initialRosterData untuk state
+        const initialRosterData = {
             "Kelas 1": [
                 {jam: 1, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
                 {jam: 2, sen: "PKN", sel: "B.INDO", rab: "PKN", kam: "B.INDO", jum: "PJOK", sab: "MTK"},
@@ -769,6 +770,11 @@
             const [selectedClass, setSelectedClass] = useState("Kelas 1");
             const [activeRosterClass, setActiveRosterClass] = useState("Kelas 1");
 
+            // --- STATE BARU: JADWAL & ADMIN ---
+            const [rosterData, setRosterData] = useState(initialRosterData);
+            const [isAdmin, setIsAdmin] = useState(false);
+            const [isEditingSchedule, setIsEditingSchedule] = useState(false);
+
             // State untuk PPDB
             const [showPPDBForm, setShowPPDBForm] = useState(false);
             const [ppdbData, setPpdbData] = useState({
@@ -940,6 +946,36 @@
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
             };
 
+            // --- FUNGSI ADMIN ---
+            const handleAdminLogin = () => {
+                const password = prompt("Masukkan Password Admin (Demo: admin123):");
+                if (password === "admin123") {
+                    setIsAdmin(true);
+                    alert("Login Berhasil! Anda sekarang dalam mode Admin. Silakan buka menu 'Akademik' untuk mengubah jadwal.");
+                } else if (password !== null) {
+                    alert("Password salah.");
+                }
+            };
+
+            const handleLogout = () => {
+                setIsAdmin(false);
+                setIsEditingSchedule(false);
+                alert("Anda telah logout dari mode Admin.");
+            };
+
+            const handleRosterChange = (classKey, index, dayKey, newValue) => {
+                setRosterData(prevData => {
+                    const newData = { ...prevData };
+                    const newClassSchedule = [...newData[classKey]];
+                    newClassSchedule[index] = {
+                        ...newClassSchedule[index],
+                        [dayKey]: newValue
+                    };
+                    newData[classKey] = newClassSchedule;
+                    return newData;
+                });
+            };
+
             const renderContent = () => {
                 switch(activeTab) {
                     case "Profil":
@@ -1106,13 +1142,27 @@
                                         <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
                                             <Icon name="calendar-days" className="w-6 h-6 text-red-600" /> Jadwal Pelajaran
                                         </h3>
-                                        <select 
-                                            value={activeRosterClass} 
-                                            onChange={(e) => setActiveRosterClass(e.target.value)}
-                                            className="mt-4 md:mt-0 px-4 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-red-500 outline-none"
-                                        >
-                                            {Object.keys(rosterData).map(k => <option key={k} value={k}>{k}</option>)}
-                                        </select>
+                                        <div className="flex gap-2 items-center mt-4 md:mt-0">
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={() => setIsEditingSchedule(!isEditingSchedule)}
+                                                    className={`px-3 py-2 rounded text-sm font-semibold transition-colors flex items-center gap-2 ${isEditingSchedule ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-yellow-500 text-white hover:bg-yellow-600'}`}
+                                                >
+                                                    {isEditingSchedule ? (
+                                                        <><Icon name="check-circle" className="w-4 h-4" /> Simpan Jadwal</>
+                                                    ) : (
+                                                        <><Icon name="file-text" className="w-4 h-4" /> Edit Jadwal</>
+                                                    )}
+                                                </button>
+                                            )}
+                                            <select 
+                                                value={activeRosterClass} 
+                                                onChange={(e) => setActiveRosterClass(e.target.value)}
+                                                className="px-4 py-2 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-red-500 outline-none"
+                                            >
+                                                {Object.keys(rosterData).map(k => <option key={k} value={k}>{k}</option>)}
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-sm text-center border-collapse">
@@ -1131,16 +1181,27 @@
                                                 {rosterData[activeRosterClass].map((row, idx) => (
                                                     <tr key={idx} className="even:bg-gray-50 hover:bg-red-50">
                                                         <td className="p-3 border text-gray-500 font-bold">{row.jam}</td>
-                                                        <td className="p-3 border">{row.sen}</td>
-                                                        <td className="p-3 border">{row.sel}</td>
-                                                        <td className="p-3 border">{row.rab}</td>
-                                                        <td className="p-3 border">{row.kam}</td>
-                                                        <td className="p-3 border">{row.jum}</td>
-                                                        <td className="p-3 border">{row.sab}</td>
+                                                        {['sen', 'sel', 'rab', 'kam', 'jum', 'sab'].map((day) => (
+                                                            <td key={day} className="p-3 border">
+                                                                {isEditingSchedule ? (
+                                                                    <input 
+                                                                        type="text" 
+                                                                        value={row[day]} 
+                                                                        onChange={(e) => handleRosterChange(activeRosterClass, idx, day, e.target.value)}
+                                                                        className="w-full p-1 border rounded text-center focus:ring-2 focus:ring-red-500 outline-none bg-white"
+                                                                    />
+                                                                ) : (
+                                                                    row[day]
+                                                                )}
+                                                            </td>
+                                                        ))}
                                                     </tr>
                                                 ))}
                                             </tbody>
                                         </table>
+                                        {isEditingSchedule && (
+                                            <p className="text-xs text-red-500 mt-2 italic">* Anda sedang dalam mode edit. Ubah langsung pada tabel di atas.</p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -1890,9 +1951,31 @@
                                     <a href="https://maps.google.com/maps?q=1.366409,99.795892" target="_blank" className="text-xs text-red-400 mt-2 block hover:underline">Buka di Google Maps</a>
                                 </div>
                             </div>
-                            <div className="border-t border-gray-800 pt-8 text-center text-sm">
-                                <p>&copy; 2025 SD Negeri 0207 Pangirkiran. All rights reserved.</p>
-                                <p className="text-xs text-gray-500 mt-2">Pengelola Situs: Sofyan Tanjung</p>
+                            <div className="border-t border-gray-800 pt-8 text-center text-sm flex flex-col md:flex-row justify-between items-center">
+                                <div>
+                                    <p>&copy; 2025 SD Negeri 0207 Pangirkiran. All rights reserved.</p>
+                                    <p className="text-xs text-gray-500 mt-2">Pengelola Situs: Sofyan Tanjung</p>
+                                </div>
+                                <div className="mt-4 md:mt-0">
+                                    {!isAdmin ? (
+                                        <button 
+                                            onClick={handleAdminLogin}
+                                            className="text-xs text-gray-600 hover:text-white underline transition-colors"
+                                        >
+                                            Login Admin
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs text-green-500 font-semibold">Mode Admin Aktif</span>
+                                            <button 
+                                                onClick={handleLogout}
+                                                className="text-xs text-red-400 hover:text-red-300 underline transition-colors"
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </footer>
