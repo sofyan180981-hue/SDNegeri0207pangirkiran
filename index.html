@@ -811,8 +811,7 @@
                 if (activeTab === "Data PPDB" && user) {
                     try {
                         const q = query(
-                            collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), 
-                            orderBy('createdAt', 'desc')
+                            collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations')
                         );
                         
                         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -820,6 +819,12 @@
                                 id: doc.id,
                                 ...doc.data()
                             }));
+                            // Sort in client side to avoid index requirement
+                            submissions.sort((a, b) => {
+                                const timeA = a.createdAt ? a.createdAt.seconds : 0;
+                                const timeB = b.createdAt ? b.createdAt.seconds : 0;
+                                return timeB - timeA;
+                            });
                             setPpdbSubmissions(submissions);
                         }, (error) => {
                             console.error("Error fetching data:", error);
@@ -922,6 +927,13 @@
                 }
             };
 
+            // Fungsi Navigasi Cepat ke Pendaftaran
+            const handleGoToRegistration = () => {
+                setActiveTab("PPDB");
+                setShowPPDBForm(true);
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+            };
+
             const renderContent = () => {
                 switch(activeTab) {
                     case "Profil":
@@ -940,7 +952,7 @@
                                         <p>
                                             Tenaga Pendidik di sekolah ini alumni sarjana dari Perguruan tinggi dan sudah tersertifikasi. 
                                             Siswa di SD Negeri 0207 Pangirkiran berasal dari Desa Pangirkiran Dolok dan Desa Janji Raja yang berjumlah kurang lebih 117 orang.
-                                        </p>
+                                        </p>	
                                         <p>
                                             Kegiatan KBM berlangsung selama 6 (enam) Hari senin sampai dengan Sabtu, dan memiliki kegiatan Ekstrakurikuler Pramuka, Seni, dan Olah Raga.
                                             Sekolah ini berstatus negeri dengan NPSN 10207504. Berdiri sejak tahun 1977 dan memiliki akreditasi C.
@@ -1334,8 +1346,8 @@
                                             <button type="button" onClick={() => setShowPPDBForm(false)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors">Batal</button>
                                             <button 
                                                 type="submit" 
-                                                disabled={isSubmitting}
-                                                className={`flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-md ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                                disabled={isSubmitting || !user}
+                                                className={`flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow-md ${isSubmitting || !user ? 'opacity-70 cursor-not-allowed' : ''}`}
                                             >
                                                 {isSubmitting ? 'Sedang Mengirim...' : 'Kirim Pendaftaran'}
                                             </button>
@@ -1357,7 +1369,7 @@
                                     </p>
                                     <div className="mt-4 flex gap-3">
                                         <button 
-                                            onClick={() => setShowPPDBForm(true)}
+                                            onClick={handleGoToRegistration}
                                             className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow"
                                         >
                                             Daftar Sekarang
@@ -1574,7 +1586,7 @@
                                 </div>
                                 
                                 <div className="mt-8 flex gap-3 justify-center">
-                                    <a href="#sambutan" className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl">Sambutan Kepala Sekolah</a>
+                                    <button onClick={handleGoToRegistration} className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl text-white">Daftar PPDB Online</button>
                                     <a href="#kontak" className="px-6 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl">Hubungi Kami</a>
                                 </div>
                             </div>
