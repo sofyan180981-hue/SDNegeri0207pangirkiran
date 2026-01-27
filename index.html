@@ -964,7 +964,7 @@
                 const password = prompt("Masukkan Password Admin (Demo: admin123):");
                 if (password === "admin123") {
                     setIsAdmin(true);
-                    alert("Login Berhasil! Anda sekarang dalam mode Admin. Silakan buka menu 'Akademik' untuk mengubah jadwal.");
+                    alert("Login Berhasil! Menu 'Data PPDB' dan fitur edit jadwal kini aktif.");
                 } else if (password !== null) {
                     alert("Password salah.");
                 }
@@ -973,7 +973,8 @@
             const handleLogout = () => {
                 setIsAdmin(false);
                 setIsEditingSchedule(false);
-                alert("Anda telah logout dari mode Admin.");
+                if (activeTab === "Data PPDB") setActiveTab("Profil"); // Redirect jika sedang di tab admin
+                alert("Anda telah logout.");
             };
 
             const handleRosterChange = (classKey, index, dayKey, newValue) => {
@@ -1603,7 +1604,7 @@
                                     </div>
                                 </div>
                                 <div className="hidden lg:flex gap-6">
-                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Data PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                         <button 
                                             key={menu} 
                                             onClick={() => setActiveTab(menu)}
@@ -1620,7 +1621,7 @@
                             </div>
                             {/* Mobile menu list could go here */}
                             <div className="lg:hidden flex overflow-x-auto gap-4 py-2 scrollbar-hide">
-                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", "Data PPDB", "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                     <button 
                                         key={menu} 
                                         onClick={() => setActiveTab(menu)}
@@ -1736,6 +1737,7 @@
                                 activeTab === "Akademik" ? "Jadwal, Kalender Pendidikan & Informasi" :
                                 activeTab === "Fasilitas" ? "Sarana Penunjang Kegiatan Belajar Mengajar" :
                                 activeTab === "PPDB" ? "Informasi Penerimaan Peserta Didik Baru" :
+                                activeTab === "Data PPDB" ? "Halaman Khusus Admin - Data Pendaftar" : 
                                 activeTab === "Galeri" ? "Dokumentasi Kegiatan dan Aktivitas Sekolah" :
                                 activeTab === "Berita & Pengumuman" ? "Kabar Terbaru & Informasi Penting Sekolah" : ""
                             } 
