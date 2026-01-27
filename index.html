@@ -49,8 +49,8 @@
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // Update import: Menambahkan setDoc untuk menyimpan data jadwal
-        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Update import: Menambahkan fungsi updateDoc untuk edit data
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const { useState, useEffect } = React;
         
@@ -80,7 +80,7 @@
             console.error("Firebase init error:", error);
         }
 
-        // --- DATA ---
+        // --- DATA AWAL (FALLBACK) ---
 
         const statsData = [
             { year: "2021/2022", L: 6, P: 10 },
@@ -90,8 +90,9 @@
             { year: "2025/2026", L: 12, P: 9 },
         ];
 
-        const teacherData = [
+        const initialTeacherData = [
             { 
+                id: "t1",
                 name: "Nuraini Nasution, S.Pd.I", 
                 role: "Kepala Sekolah", 
                 nip: "197004121993082001", 
@@ -104,6 +105,7 @@
                 image: "nuraini1.jpg" 
             },
             { 
+                id: "t2",
                 name: "Warda Kembang Bunga Harahap", 
                 role: "Guru Kelas 3", 
                 nip: "197101031992022001", 
@@ -116,6 +118,7 @@
                 image: "warda.jpg"
             },
             { 
+                id: "t3",
                 name: "Adanan Siregar", 
                 role: "Guru SBK", 
                 nip: "196709121992031005", 
@@ -128,6 +131,7 @@
                 image: "adanan.jpg" 
             },
             { 
+                id: "t4",
                 name: "Sofyan Tanjung", 
                 role: "Guru Mapel PJOK", 
                 nip: "198109182010011021", 
@@ -140,6 +144,7 @@
                 image: "sofyan.jpg" 
             },
             { 
+                id: "t5",
                 name: "Tirohima Harahap", 
                 role: "Guru Kelas 1", 
                 nip: "197611242008012002", 
@@ -152,6 +157,7 @@
                 image: "tirohima.jpg" 
             },
             { 
+                id: "t6",
                 name: "Rokimah Siregar", 
                 role: "Guru Kelas 2", 
                 nip: "196908132007012006", 
@@ -164,6 +170,7 @@
                 image: "rokimah.jpg" 
             },
             { 
+                id: "t7",
                 name: "Hotmaida Pohan", 
                 role: "Guru Kelas 4", 
                 nip: "198702082023212032", 
@@ -176,6 +183,7 @@
                 image: "hotma.jpg" 
             },
             { 
+                id: "t8",
                 name: "Rosmina Tamba", 
                 role: "Guru Mapel PAI", 
                 nip: "198810252023212015", 
@@ -188,6 +196,7 @@
                 image: "rosmina.jpg" 
             },
             { 
+                id: "t9",
                 name: "Nora Hanifah Pane", 
                 role: "Guru Kelas 6", 
                 nip: "-", 
@@ -200,6 +209,7 @@
                 image: "nora.jpg" 
             },
             { 
+                id: "t10",
                 name: "Rukiatul Marjulia Ujung", 
                 role: "Guru Kelas 5", 
                 nip: "-", 
@@ -212,6 +222,7 @@
                 image: "rukiatul.jpg" 
             },
             { 
+                id: "t11",
                 name: "Syaroh Silitonga", 
                 role: "Guru Mapel B.Ing", 
                 nip: "-", 
@@ -224,6 +235,7 @@
                 image: "syaroh.jpg" 
             },
             { 
+                id: "t12",
                 name: "Siti Hoyriya Harahap", 
                 role: "Guru P5", 
                 nip: "-", 
@@ -236,6 +248,7 @@
                 image: "hoiriyah.jpg" 
             },
             { 
+                id: "t13",
                 name: "Romaito Harahap", 
                 role: "Guru Mapel Seni Tari", 
                 nip: "-", 
@@ -248,6 +261,7 @@
                 image: "romaito.jpg" 
             },
             { 
+                id: "t14",
                 name: "Muhammad Johan Pohan", 
                 role: "Penjaga Sekolah", 
                 nip: "-", 
@@ -519,9 +533,9 @@
             {date: "22-30 Juni 2027", event: "Libur Semester Genap"}
         ];
 
-        const newsData = [
+        const initialNewsData = [
             {
-                id: 1,
+                id: "n1",
                 title: "Pelaksanaan ANBK Kelas 5 Tahun 2025",
                 date: "22 September 2025",
                 category: "Kegiatan",
@@ -529,7 +543,7 @@
                 image: "https://placehold.co/600x400?text=ANBK+2025"
             },
             {
-                id: 2,
+                id: "n2",
                 title: "Pengumuman Libur Semester Ganjil",
                 date: "20 Desember 2025",
                 category: "Pengumuman",
@@ -537,7 +551,7 @@
                 image: "https://placehold.co/600x400?text=Pengumuman"
             },
             {
-                id: 3,
+                id: "n3",
                 title: "Juara 1 Lomba Lari Tingkat Kecamatan",
                 date: "17 Agustus 2025",
                 category: "Prestasi",
@@ -546,65 +560,65 @@
             }
         ];
 
-        const galleryData = [
+        const initialGalleryData = [
             { 
-                id: 1, 
+                id: "g1", 
                 title: "Upacara Bendera Senin", 
                 category: "Rutin", 
                 image: "upacara.jpg",
                 images: ["upacara.jpg", "https://placehold.co/600x400?text=Petugas+Upacara", "https://placehold.co/600x400?text=Barisan+Siswa"] 
             },
             { 
-                id: 2, 
+                id: "g2", 
                 title: "Polisi Cilik", 
                 category: "Ekskul", 
                 image: "kegiatan1.jpg",
                 images: ["kegiatan1.jpg", "https://placehold.co/600x400?text=Latihan+Pocil", "https://placehold.co/600x400?text=Lomba+Pocil"]
             },
             { 
-                id: 3, 
+                id: "g3", 
                 title: "Kegiatan ANBK", 
                 category: "ANBK", 
                 image: "kegiatan3.jpg",
                 images: ["kegiatan3.jpg", "https://placehold.co/600x400?text=Siswa+ANBK", "https://placehold.co/600x400?text=Pengawas+ANBK"]
             },
             { 
-                id: 4, 
+                id: "g4", 
                 title: "Pemberian Hadiah Juara Kelas", 
                 category: "Akademik", 
                 image: "kegiatan7.jpg",
                 images: ["kegiatan7.jpg", "https://placehold.co/600x400?text=Juara+Kelas+1", "https://placehold.co/600x400?text=Juara+Umum"]
             },
             { 
-                id: 5, 
+                id: "g5", 
                 title: "Karnaval HUTRI", 
                 category: "HUT-RI", 
                 image: "Kegiatan.jpg",
                 images: ["Kegiatan.jpg", "hutri1.jpg", "hutri2.jpg", "hutri3.jpg"]
             },
             { 
-                id: 6, 
+                id: "g6", 
                 title: "Pramuka Gudep 02116", 
                 category: "Ekskul", 
                 image: "Pramuka.jpg",
                 images: ["Pramuka.jpg", "Pramuka3.jpg", "Pramuka2.jpg", "Pramuka1.jpg", "Pramuka4.jpg"]
             },
             { 
-                id: 7, 
+                id: "g7", 
                 title: "Kegiatan Sholat Dhuha Berjamaah", 
                 category: "Keagamaan", 
                 image: "kegiatan2.jpg",
                 images: ["kegiatan2.jpg", "https://placehold.co/600x400?text=Ceramah+Agama", "https://placehold.co/600x400?text=Siswa+Sholat"]
             },
             { 
-                id: 8, 
+                id: "g8", 
                 title: "Alumni", 
                 category: "Alumni", 
                 image: "Alumni.jpg",
                 images: ["Alumni.jpg", "https://placehold.co/600x400?text=Reuni+Akbar", "https://placehold.co/600x400?text=Foto+Bersama"]
             },
             { 
-                id: 9, 
+                id: "g9", 
                 title: "Kegiatan Guru", 
                 category: "Guru", 
                 image: "Alumni.jpg",
@@ -709,6 +723,21 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                         <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
                     </svg>
+                ),
+                plus: (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                        <path d="M5 12h14"/><path d="M12 5v14"/>
+                    </svg>
+                ),
+                edit: (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                    </svg>
+                ),
+                download: (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+                    </svg>
                 )
             };
             
@@ -734,28 +763,41 @@
             );
         };
         
-        // Komponen Berita Card
-        const NewsCard = ({ news, onClick }) => (
-            <div onClick={() => onClick(news)} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all cursor-pointer group border border-gray-100 flex flex-col h-full">
-                <div className="h-48 relative overflow-hidden">
-                    <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                    <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-2 py-1 rounded">
-                        {news.category}
+        // Komponen Berita Card dengan Tombol Admin
+        const NewsCard = ({ news, onClick, isAdmin, onDelete }) => (
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all border border-gray-100 flex flex-col h-full relative group">
+                {isAdmin && (
+                    <div className="absolute top-2 left-2 z-10 flex gap-2">
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onDelete(news.id); }} 
+                            className="bg-white text-red-600 p-2 rounded-full shadow-md hover:bg-red-50"
+                            title="Hapus Berita"
+                        >
+                            <Icon name="trash" className="w-4 h-4" />
+                        </button>
                     </div>
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                    <div className="text-gray-500 text-xs mb-2 flex items-center gap-1">
-                        <Icon name="calendar-days" className="w-3 h-3" /> {news.date}
+                )}
+                <div onClick={() => onClick(news)} className="cursor-pointer">
+                    <div className="h-48 relative overflow-hidden">
+                        <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-2 py-1 rounded">
+                            {news.category}
+                        </div>
                     </div>
-                    <h4 className="font-bold text-lg text-gray-800 mb-2 leading-tight group-hover:text-red-600 transition-colors">
-                        {news.title}
-                    </h4>
-                    <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
-                        {news.content}
-                    </p>
-                    <button className="text-red-600 font-semibold text-sm hover:underline self-start">
-                        Baca Selengkapnya &rarr;
-                    </button>
+                    <div className="p-5 flex flex-col flex-1">
+                        <div className="text-gray-500 text-xs mb-2 flex items-center gap-1">
+                            <Icon name="calendar-days" className="w-3 h-3" /> {news.date}
+                        </div>
+                        <h4 className="font-bold text-lg text-gray-800 mb-2 leading-tight group-hover:text-red-600 transition-colors">
+                            {news.title}
+                        </h4>
+                        <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">
+                            {news.content}
+                        </p>
+                        <span className="text-red-600 font-semibold text-sm hover:underline self-start">
+                            Baca Selengkapnya &rarr;
+                        </span>
+                    </div>
                 </div>
             </div>
         );
@@ -781,7 +823,13 @@
             const [selectedClass, setSelectedClass] = useState("Kelas 1");
             const [activeRosterClass, setActiveRosterClass] = useState("Kelas 1");
 
-            // --- STATE BARU: JADWAL & ADMIN ---
+            // --- STATE DATA ---
+            const [news, setNews] = useState(initialNewsData);
+            const [teachers, setTeachers] = useState(initialTeacherData);
+            const [gallery, setGallery] = useState(initialGalleryData);
+            const [documents, setDocuments] = useState([]); // Fitur Download
+
+            // --- STATE ADMIN ---
             const [rosterData, setRosterData] = useState(initialRosterData);
             const [isAdmin, setIsAdmin] = useState(false);
             const [isEditingSchedule, setIsEditingSchedule] = useState(false);
@@ -801,9 +849,19 @@
             // State untuk Data Pendaftar (Admin View)
             const [ppdbSubmissions, setPpdbSubmissions] = useState([]);
             
-            // State untuk Modal Konfirmasi Hapus
+            // State untuk Modal Hapus & Form Admin
             const [deleteModalOpen, setDeleteModalOpen] = useState(false);
             const [itemToDelete, setItemToDelete] = useState(null);
+            const [collectionToDelete, setCollectionToDelete] = useState(null); // news, teachers, gallery, etc.
+
+            // Modal Form Tambah Data
+            const [showAddNewsModal, setShowAddNewsModal] = useState(false);
+            const [showAddGalleryModal, setShowAddGalleryModal] = useState(false);
+            const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
+            const [showAddDocModal, setShowAddDocModal] = useState(false);
+
+            // State Input Form Sementara
+            const [formData, setFormData] = useState({});
 
             const [user, setUser] = useState(null);
             const [isSubmitting, setIsSubmitting] = useState(false);
@@ -823,104 +881,153 @@
                 return () => unsubscribe();
             }, []);
 
-            // EFFECT BARU: Mengambil data PPDB dari Firestore secara Realtime
+            // --- REALTIME LISTENERS UNTUK DATA ADMIN ---
+            
+            // 1. Berita
+            useEffect(() => {
+                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'news'), orderBy('createdAt', 'desc'));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    if (!snapshot.empty) {
+                        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        setNews(items);
+                    }
+                }, (err) => console.log("News listener:", err));
+                return () => unsubscribe();
+            }, []);
+
+            // 2. Galeri
+            useEffect(() => {
+                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'gallery'), orderBy('createdAt', 'desc'));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    if (!snapshot.empty) {
+                        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        setGallery(items);
+                    }
+                }, (err) => console.log("Gallery listener:", err));
+                return () => unsubscribe();
+            }, []);
+
+            // 3. Guru
+            useEffect(() => {
+                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'teachers'));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    if (!snapshot.empty) {
+                        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        setTeachers(items);
+                    }
+                }, (err) => console.log("Teachers listener:", err));
+                return () => unsubscribe();
+            }, []);
+
+            // 5. Dokumen Download
+            useEffect(() => {
+                const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'documents'), orderBy('createdAt', 'desc'));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setDocuments(items);
+                }, (err) => console.log("Documents listener:", err));
+                return () => unsubscribe();
+            }, []);
+
+            // PPDB Listener
             useEffect(() => {
                 if (activeTab === "Data PPDB" && user) {
-                    try {
-                        const q = query(
-                            collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations')
-                        );
-                        
-                        const unsubscribe = onSnapshot(q, (snapshot) => {
-                            const submissions = snapshot.docs.map(doc => ({
-                                id: doc.id,
-                                ...doc.data()
-                            }));
-                            // Sort in client side to avoid index requirement
-                            submissions.sort((a, b) => {
-                                const timeA = a.createdAt ? a.createdAt.seconds : 0;
-                                const timeB = b.createdAt ? b.createdAt.seconds : 0;
-                                return timeB - timeA;
-                            });
-                            setPpdbSubmissions(submissions);
-                        }, (error) => {
-                            console.error("Error fetching data:", error);
-                        });
-
-                        return () => unsubscribe();
-                    } catch (err) {
-                        console.error("Setup listener failed", err);
-                    }
+                    const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'));
+                    const unsubscribe = onSnapshot(q, (snapshot) => {
+                        const submissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        submissions.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                        setPpdbSubmissions(submissions);
+                    });
+                    return () => unsubscribe();
                 }
             }, [activeTab, user]);
 
-            // EFFECT BARU: Mengambil data JADWAL (ROSTER) dari Firestore secara Realtime
+            // Jadwal Listener
             useEffect(() => {
-                // Fetch hanya jika tab Akademik aktif untuk efisiensi
                 if (activeTab === "Akademik") {
-                    try {
-                        // Mengambil koleksi 'roster'
-                        const q = collection(db, 'artifacts', appId, 'public', 'data', 'roster');
-                        const unsubscribe = onSnapshot(q, (snapshot) => {
-                            if (snapshot.empty) {
-                                // Jika data kosong (belum pernah disimpan), pakai initialRosterData
-                                return;
-                            }
-                            
-                            // Salin data awal
+                    const q = collection(db, 'artifacts', appId, 'public', 'data', 'roster');
+                    const unsubscribe = onSnapshot(q, (snapshot) => {
+                        if (!snapshot.empty) {
                             const newRoster = { ...initialRosterData };
-                            
-                            // Update dengan data dari database
                             snapshot.docs.forEach(doc => {
-                                // ID dokumen adalah nama kelas (misal: "Kelas 1")
-                                if (doc.exists()) {
-                                    newRoster[doc.id] = doc.data().items;
-                                }
+                                if (doc.exists()) newRoster[doc.id] = doc.data().items;
                             });
-                            
                             setRosterData(newRoster);
-                        }, (err) => {
-                            console.error("Gagal mengambil jadwal:", err);
-                        });
-                        
-                        return () => unsubscribe();
-                    } catch (err) {
-                        console.error("Error setting up roster listener", err);
-                    }
+                        }
+                    });
+                    return () => unsubscribe();
                 }
             }, [activeTab]);
 
-            // FUNGSI BARU: Menyimpan Jadwal ke Database
+            // --- FUNGSI ADMIN TAMBAH/HAPUS ---
+
+            const handleAddItem = async (collectionName, data, setModal) => {
+                if (!auth.currentUser) return alert("Koneksi terputus.");
+                setIsSubmitting(true);
+                try {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', collectionName), {
+                        ...data,
+                        createdAt: serverTimestamp()
+                    });
+                    setModal(false);
+                    setFormData({});
+                    alert("Data berhasil ditambahkan!");
+                } catch (e) {
+                    console.error(e);
+                    alert("Gagal menambahkan data.");
+                }
+                setIsSubmitting(false);
+            };
+
+            const confirmDeleteGeneric = (id, collectionName) => {
+                setItemToDelete(id);
+                setCollectionToDelete(collectionName);
+                setDeleteModalOpen(true);
+            };
+
+            const executeDeleteGeneric = async () => {
+                if (itemToDelete && collectionToDelete) {
+                    try {
+                        // Cek apakah item adalah data statis (bukan dari DB, id pendek seperti "n1", "t1")
+                        // Data DB biasanya ID panjang acak.
+                        if (itemToDelete.length < 5) {
+                            alert("Data bawaan (demo) tidak dapat dihapus dari database. Silakan tambah data baru.");
+                            setDeleteModalOpen(false);
+                            return;
+                        }
+
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', collectionToDelete, itemToDelete));
+                        setDeleteModalOpen(false);
+                        setItemToDelete(null);
+                        setCollectionToDelete(null);
+                        alert("Data berhasil dihapus.");
+                    } catch (error) {
+                        console.error("Error deleting:", error);
+                        alert("Gagal menghapus data.");
+                    }
+                }
+            };
+
+            // FUNGSI JADWAL
             const handleSaveSchedule = async () => {
-                if (!auth.currentUser) {
-                    alert("Koneksi terputus. Silakan refresh halaman.");
-                    return;
-                }
-                
-                if (!isAdmin) {
-                    alert("Akses ditolak. Anda bukan admin.");
-                    return;
-                }
-
-                const confirmSave = confirm("Apakah Anda yakin ingin menyimpan perubahan jadwal ini secara permanen?");
+                if (!auth.currentUser) return alert("Koneksi terputus.");
+                if (!isAdmin) return alert("Akses ditolak.");
+                const confirmSave = confirm("Simpan perubahan jadwal?");
                 if (!confirmSave) return;
-
-                // Simpan semua kelas ke database
                 try {
                     const savePromises = Object.keys(rosterData).map(className => {
                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'roster', className);
                         return setDoc(docRef, { items: rosterData[className] });
                     });
-
                     await Promise.all(savePromises);
-                    alert("Jadwal berhasil disimpan ke database!");
+                    alert("Jadwal berhasil disimpan!");
                     setIsEditingSchedule(false);
                 } catch (e) {
-                    console.error("Error saving roster:", e);
-                    alert("Gagal menyimpan jadwal. Silakan coba lagi.");
+                    alert("Gagal menyimpan jadwal.");
                 }
             };
 
+            // FUNGSI PPDB
             const handlePpdbChange = (e) => {
                 const { name, value } = e.target;
                 setPpdbData(prev => ({...prev, [name]: value}));
@@ -928,108 +1035,36 @@
 
             const handlePpdbSubmit = async (e) => {
                 e.preventDefault();
-                
-                // PERBAIKAN: Cek koneksi auth sebelum proses
-                if (!auth || !auth.currentUser) {
-                    alert("Maaf, pendaftaran tidak dapat diproses karena Database belum terhubung.\n\nCatatan Teknis: Jika Anda menjalankan website ini di GitHub/Hosting pribadi, Anda harus memasukkan konfigurasi Firebase (API Key) Anda sendiri ke dalam kode script.");
-                    return;
-                }
-
+                if (!auth || !auth.currentUser) return alert("Database belum terhubung.");
                 setIsSubmitting(true);
-
                 try {
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations'), {
                         ...ppdbData,
                         createdAt: serverTimestamp()
                     });
-
-                    // Reset form and show success
-                    const successMessage = document.createElement('div');
-                    successMessage.className = "fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50 animate-fade-in";
-                    successMessage.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            <div>
-                                <strong>Pendaftaran Berhasil!</strong><br/>
-                                Terima kasih, ${ppdbData.nama}. Data Anda telah tersimpan di database.
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(successMessage);
-                    setTimeout(() => {
-                        successMessage.remove();
-                    }, 5000);
-
+                    alert("Pendaftaran Berhasil!");
                     setShowPPDBForm(false);
-                    // Pindah ke tab Data PPDB agar user bisa melihat datanya
-                    setActiveTab("Data PPDB");
-                    
-                    setPpdbData({
-                        nama: "",
-                        nik: "",
-                        tempatLahir: "",
-                        tanggalLahir: "",
-                        jenisKelamin: "L",
-                        namaOrtu: "",
-                        noHp: "",
-                        alamat: ""
-                    });
+                    setActiveTab("PPDB");
+                    setPpdbData({ nama: "", nik: "", tempatLahir: "", tanggalLahir: "", jenisKelamin: "L", namaOrtu: "", noHp: "", alamat: "" });
                 } catch (error) {
-                    console.error("Error adding document: ", error);
-                    alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+                    alert("Gagal menyimpan data.");
                 }
                 setIsSubmitting(false);
             };
 
-            // FUNGSI BARU: Menyiapkan penghapusan
-            const confirmDelete = (id) => {
-                setItemToDelete(id);
-                setDeleteModalOpen(true);
-            };
-
-            // FUNGSI BARU: Eksekusi penghapusan data
-            const executeDelete = async () => {
-                if (itemToDelete) {
-                    try {
-                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'ppdb_registrations', itemToDelete));
-                        setDeleteModalOpen(false);
-                        setItemToDelete(null);
-                        
-                        // Show success message
-                        const successMessage = document.createElement('div');
-                        successMessage.className = "fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded shadow-lg z-50 animate-fade-in";
-                        successMessage.innerHTML = `
-                            <div class="flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                <div>
-                                    <strong>Data Dihapus!</strong><br/>
-                                    Data pendaftar berhasil dihapus dari database.
-                                </div>
-                            </div>
-                        `;
-                        document.body.appendChild(successMessage);
-                        setTimeout(() => {
-                            successMessage.remove();
-                        }, 3000);
-                    } catch (error) {
-                        console.error("Error deleting document: ", error);
-                    }
-                }
-            };
-
-            // Fungsi Navigasi Cepat ke Pendaftaran
+            // Fungsi Navigasi
             const handleGoToRegistration = () => {
                 setActiveTab("PPDB");
                 setShowPPDBForm(true);
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
             };
 
-            // --- FUNGSI ADMIN ---
+            // --- FUNGSI AUTH ---
             const handleAdminLogin = () => {
                 const password = prompt("Masukkan Password Admin (Demo: admin123):");
                 if (password === "admin123") {
                     setIsAdmin(true);
-                    alert("Login Berhasil! Menu 'Data PPDB' dan fitur edit jadwal kini aktif.");
+                    alert("Login Berhasil! Fitur edit aktif.");
                 } else if (password !== null) {
                     alert("Password salah.");
                 }
@@ -1038,7 +1073,7 @@
             const handleLogout = () => {
                 setIsAdmin(false);
                 setIsEditingSchedule(false);
-                if (activeTab === "Data PPDB") setActiveTab("Profil"); // Redirect jika sedang di tab admin
+                if (activeTab === "Data PPDB") setActiveTab("Profil");
                 alert("Anda telah logout.");
             };
 
@@ -1046,10 +1081,7 @@
                 setRosterData(prevData => {
                     const newData = { ...prevData };
                     const newClassSchedule = [...newData[classKey]];
-                    newClassSchedule[index] = {
-                        ...newClassSchedule[index],
-                        [dayKey]: newValue
-                    };
+                    newClassSchedule[index] = { ...newClassSchedule[index], [dayKey]: newValue };
                     newData[classKey] = newClassSchedule;
                     return newData;
                 });
@@ -1141,33 +1173,54 @@
                         );
                     case "Profil GTK":
                         return (
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in">
-                                {teacherData.map((teacher, idx) => (
-                                    <div 
-                                        key={idx} 
-                                        onClick={() => setSelectedTeacher(teacher)}
-                                        className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100"
+                            <div className="space-y-6 animate-fade-in">
+                                {isAdmin && (
+                                    <button 
+                                        onClick={() => setShowAddTeacherModal(true)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 flex items-center gap-2"
                                     >
-                                        <div className="aspect-[3/4] w-full bg-gray-200 relative overflow-hidden">
-                                            <img 
-                                                src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
-                                                alt={teacher.name} 
-                                                onError={(e) => {
-                                                    e.target.onerror = null; 
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
-                                                }}
-                                                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                                                <span className="text-white font-bold px-4 py-1 bg-red-600 rounded-full text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Profil</span>
+                                        <Icon name="plus" className="w-5 h-5" /> Tambah Guru
+                                    </button>
+                                )}
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                    {teachers.map((teacher, idx) => (
+                                        <div 
+                                            key={teacher.id || idx} 
+                                            className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-xl transition-all cursor-pointer group border border-gray-100 relative"
+                                        >
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={(e) => { e.stopPropagation(); confirmDeleteGeneric(teacher.id, 'teachers'); }}
+                                                    className="absolute top-2 right-2 z-10 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
+                                                    title="Hapus"
+                                                >
+                                                    <Icon name="trash" className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            <div 
+                                                onClick={() => setSelectedTeacher(teacher)}
+                                                className="aspect-[3/4] w-full bg-gray-200 relative overflow-hidden"
+                                            >
+                                                <img 
+                                                    src={teacher.image || `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`} 
+                                                    alt={teacher.name} 
+                                                    onError={(e) => {
+                                                        e.target.onerror = null; 
+                                                        e.target.src = `https://ui-avatars.com/api/?name=${teacher.name}&background=random&size=256`;
+                                                    }}
+                                                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                                                    <span className="text-white font-bold px-4 py-1 bg-red-600 rounded-full text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Lihat Profil</span>
+                                                </div>
+                                            </div>
+                                            <div className="p-4 text-center">
+                                                <h4 className="font-bold text-gray-800 text-sm md:text-base line-clamp-1">{teacher.name}</h4>
+                                                <p className="text-xs text-red-600 mt-1 font-semibold">{teacher.role}</p>
                                             </div>
                                         </div>
-                                        <div className="p-4 text-center">
-                                            <h4 className="font-bold text-gray-800 text-sm md:text-base line-clamp-1">{teacher.name}</h4>
-                                            <p className="text-xs text-red-600 mt-1 font-semibold">{teacher.role}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         );
                     case "Siswa":
@@ -1225,7 +1278,6 @@
                                             {isAdmin && (
                                                 <button 
                                                     onClick={() => {
-                                                        // LOGIKA BARU: Jika sedang mengedit, klik = Simpan. Jika tidak, klik = Edit.
                                                         if (isEditingSchedule) {
                                                             handleSaveSchedule();
                                                         } else {
@@ -1237,7 +1289,7 @@
                                                     {isEditingSchedule ? (
                                                         <><Icon name="check-circle" className="w-4 h-4" /> Simpan Jadwal</>
                                                     ) : (
-                                                        <><Icon name="file-text" className="w-4 h-4" /> Edit Jadwal</>
+                                                        <><Icon name="edit" className="w-4 h-4" /> Edit Jadwal</>
                                                     )}
                                                 </button>
                                             )}
@@ -1321,6 +1373,55 @@
                                             ))}
                                         </ul>
                                     </div>
+                                </div>
+                            </div>
+                        );
+                    case "Download":
+                        return (
+                            <div className="space-y-6 animate-fade-in">
+                                {isAdmin && (
+                                    <button 
+                                        onClick={() => setShowAddDocModal(true)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 flex items-center gap-2"
+                                    >
+                                        <Icon name="plus" className="w-5 h-5" /> Tambah Dokumen
+                                    </button>
+                                )}
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                    {documents.length === 0 ? (
+                                        <div className="p-8 text-center text-gray-500">Belum ada dokumen yang tersedia untuk diunduh.</div>
+                                    ) : (
+                                        <table className="w-full text-sm text-left">
+                                            <thead className="bg-gray-50 text-gray-700 uppercase font-bold border-b">
+                                                <tr>
+                                                    <th className="px-6 py-3">Nama Dokumen</th>
+                                                    <th className="px-6 py-3">Keterangan</th>
+                                                    <th className="px-6 py-3 text-center">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100">
+                                                {documents.map((doc, idx) => (
+                                                    <tr key={doc.id || idx} className="hover:bg-gray-50">
+                                                        <td className="px-6 py-4 font-bold text-gray-800 flex items-center gap-2">
+                                                            <Icon name="file-text" className="w-4 h-4 text-red-500" />
+                                                            {doc.title}
+                                                        </td>
+                                                        <td className="px-6 py-4 text-gray-600">{doc.description || "-"}</td>
+                                                        <td className="px-6 py-4 text-center flex justify-center gap-3">
+                                                            <a href={doc.link} target="_blank" className="text-blue-600 hover:underline flex items-center gap-1">
+                                                                <Icon name="download" className="w-4 h-4" /> Download
+                                                            </a>
+                                                            {isAdmin && (
+                                                                <button onClick={() => confirmDeleteGeneric(doc.id, 'documents')} className="text-red-500 hover:text-red-700">
+                                                                    <Icon name="trash" className="w-4 h-4" />
+                                                                </button>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
                                 </div>
                             </div>
                         );
@@ -1418,7 +1519,7 @@
                                                             </td>
                                                             <td className="px-6 py-4 text-center">
                                                                 <button 
-                                                                    onClick={() => confirmDelete(data.id)}
+                                                                    onClick={() => confirmDeleteGeneric(data.id, 'ppdb_registrations')}
                                                                     className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-full transition-colors"
                                                                     title="Hapus Data"
                                                                 >
@@ -1624,13 +1725,30 @@
                     case "Galeri":
                         return (
                             <div className="animate-fade-in space-y-6">
+                                {isAdmin && (
+                                    <button 
+                                        onClick={() => setShowAddGalleryModal(true)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 flex items-center gap-2"
+                                    >
+                                        <Icon name="plus" className="w-5 h-5" /> Tambah Foto
+                                    </button>
+                                )}
                                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                                    {galleryData.map(item => (
+                                    {gallery.map((item, idx) => (
                                         <div 
-                                            key={item.id} 
+                                            key={item.id || idx} 
                                             className="group relative cursor-pointer overflow-hidden rounded-xl shadow-md aspect-square bg-gray-100"
                                             onClick={() => setSelectedGalleryImage(item)}
                                         >
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={(e) => { e.stopPropagation(); confirmDeleteGeneric(item.id, 'gallery'); }}
+                                                    className="absolute top-2 right-2 z-10 bg-red-600 text-white p-1 rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    title="Hapus"
+                                                >
+                                                    <Icon name="trash" className="w-4 h-4" />
+                                                </button>
+                                            )}
                                             <img 
                                                 src={item.image} 
                                                 alt={item.title} 
@@ -1652,9 +1770,23 @@
                     case "Berita & Pengumuman":
                         return (
                             <div className="animate-fade-in space-y-6">
+                                {isAdmin && (
+                                    <button 
+                                        onClick={() => setShowAddNewsModal(true)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 flex items-center gap-2"
+                                    >
+                                        <Icon name="plus" className="w-5 h-5" /> Tambah Berita
+                                    </button>
+                                )}
                                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {newsData.map(news => (
-                                        <NewsCard key={news.id} news={news} onClick={setSelectedNews} />
+                                    {news.map((n, idx) => (
+                                        <NewsCard 
+                                            key={n.id || idx} 
+                                            news={n} 
+                                            onClick={setSelectedNews}
+                                            isAdmin={isAdmin}
+                                            onDelete={(id) => confirmDeleteGeneric(id, 'news')}
+                                        />
                                     ))}
                                 </div>
                             </div>
@@ -1676,7 +1808,7 @@
                                     </div>
                                 </div>
                                 <div className="hidden lg:flex gap-6">
-                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                    {["Profil", "Profil GTK", "Siswa", "Akademik", "Download", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                         <button 
                                             key={menu} 
                                             onClick={() => setActiveTab(menu)}
@@ -1693,7 +1825,7 @@
                             </div>
                             {/* Mobile menu list could go here */}
                             <div className="lg:hidden flex overflow-x-auto gap-4 py-2 scrollbar-hide">
-                                {["Profil", "Profil GTK", "Siswa", "Akademik", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
+                                {["Profil", "Profil GTK", "Siswa", "Akademik", "Download", "PPDB", ...(isAdmin ? ["Data PPDB"] : []), "Galeri", "Berita & Pengumuman", "Fasilitas"].map((menu) => (
                                     <button 
                                         key={menu} 
                                         onClick={() => setActiveTab(menu)}
@@ -1807,6 +1939,7 @@
                                 activeTab === "Profil GTK" ? "Mengenal Tenaga Pendidik Profesional Kami" :
                                 activeTab === "Siswa" ? "Data Peserta Didik Tahun Ajaran 2025/2026" :
                                 activeTab === "Akademik" ? "Jadwal, Kalender Pendidikan & Informasi" :
+                                activeTab === "Download" ? "Unduh Dokumen & Brosur Penting" :
                                 activeTab === "Fasilitas" ? "Sarana Penunjang Kegiatan Belajar Mengajar" :
                                 activeTab === "PPDB" ? "Informasi Penerimaan Peserta Didik Baru" :
                                 activeTab === "Data PPDB" ? "Halaman Khusus Admin - Data Pendaftar" : 
@@ -1817,7 +1950,7 @@
 
                         {renderContent()}
 
-                        {/* Modals */}
+                        {/* Modals Data */}
                         <Modal isOpen={selectedTeacher} onClose={() => setSelectedTeacher(null)} title="Profil Pendidik">
                             {selectedTeacher && (
                                 <div className="text-center md:text-left md:flex gap-6">
@@ -1827,7 +1960,6 @@
                                             e.target.onerror = null; 
                                             e.target.src = `https://ui-avatars.com/api/?name=${selectedTeacher.name}&background=random&size=256`;
                                         }}
-                                        // PERBAIKAN: Menyesuaikan foto di modal juga agar konsisten
                                         className="w-32 h-40 rounded-lg mx-auto md:mx-0 shadow-lg mb-4 md:mb-0 object-cover object-center border-4 border-white" 
                                     />
                                     <div className="space-y-3 flex-1">
@@ -1940,7 +2072,55 @@
                             )}
                         </Modal>
 
-                        {/* Modal Konfirmasi Hapus Data */}
+                        {/* --- MODAL FORM ADMIN --- */}
+                        
+                        {/* 1. Tambah Berita */}
+                        <Modal isOpen={showAddNewsModal} onClose={() => setShowAddNewsModal(false)} title="Tambah Berita">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('news', formData, setShowAddNewsModal); }}>
+                                <div><label className="block text-sm font-bold mb-1">Judul</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, title: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Tanggal</label><input type="text" className="w-full border p-2 rounded" placeholder="Contoh: 12 Januari 2026" required onChange={e => setFormData({...formData, date: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Kategori</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, category: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">URL Gambar</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Isi Berita</label><textarea className="w-full border p-2 rounded h-32" required onChange={e => setFormData({...formData, content: e.target.value})}></textarea></div>
+                                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
+                            </form>
+                        </Modal>
+
+                        {/* 2. Tambah Galeri */}
+                        <Modal isOpen={showAddGalleryModal} onClose={() => setShowAddGalleryModal(false)} title="Tambah Foto Galeri">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('gallery', formData, setShowAddGalleryModal); }}>
+                                <div><label className="block text-sm font-bold mb-1">Judul Kegiatan</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, title: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Kategori</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, category: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">URL Foto Utama</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
+                            </form>
+                        </Modal>
+
+                        {/* 3. Tambah Guru */}
+                        <Modal isOpen={showAddTeacherModal} onClose={() => setShowAddTeacherModal(false)} title="Tambah Data Guru">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('teachers', formData, setShowAddTeacherModal); }}>
+                                <div><label className="block text-sm font-bold mb-1">Nama Lengkap</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Jabatan</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, role: e.target.value})} /></div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div><label className="block text-sm font-bold mb-1">NIP</label><input type="text" className="w-full border p-2 rounded" onChange={e => setFormData({...formData, nip: e.target.value})} /></div>
+                                    <div><label className="block text-sm font-bold mb-1">NUPTK</label><input type="text" className="w-full border p-2 rounded" onChange={e => setFormData({...formData, nuptk: e.target.value})} /></div>
+                                </div>
+                                <div><label className="block text-sm font-bold mb-1">URL Foto</label><input type="text" className="w-full border p-2 rounded" placeholder="Kosongkan jika tidak ada" onChange={e => setFormData({...formData, image: e.target.value})} /></div>
+                                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
+                            </form>
+                        </Modal>
+
+                        {/* 5. Tambah Dokumen */}
+                        <Modal isOpen={showAddDocModal} onClose={() => setShowAddDocModal(false)} title="Tambah Dokumen">
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleAddItem('documents', formData, setShowAddDocModal); }}>
+                                <div><label className="block text-sm font-bold mb-1">Nama Dokumen</label><input type="text" className="w-full border p-2 rounded" required onChange={e => setFormData({...formData, title: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Keterangan Singkat</label><input type="text" className="w-full border p-2 rounded" onChange={e => setFormData({...formData, description: e.target.value})} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Link Download (URL)</label><input type="text" className="w-full border p-2 rounded" placeholder="https://..." required onChange={e => setFormData({...formData, link: e.target.value})} /></div>
+                                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full font-bold">Simpan</button>
+                            </form>
+                        </Modal>
+
+                        {/* Modal Konfirmasi Hapus Generic */}
                         {deleteModalOpen && (
                             <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60] p-4 animate-fade-in">
                                 <div className="bg-white rounded-lg max-w-sm w-full p-6 shadow-2xl">
@@ -1950,22 +2130,12 @@
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900">Hapus Data?</h3>
                                         <p className="text-gray-500 text-sm mt-2">
-                                            Apakah Anda yakin ingin menghapus data pendaftar ini? Tindakan ini tidak dapat dibatalkan.
+                                            Tindakan ini tidak dapat dibatalkan.
                                         </p>
                                     </div>
                                     <div className="flex gap-3">
-                                        <button 
-                                            onClick={() => setDeleteModalOpen(false)}
-                                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors"
-                                        >
-                                            Batal
-                                        </button>
-                                        <button 
-                                            onClick={executeDelete}
-                                            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow"
-                                        >
-                                            Ya, Hapus
-                                        </button>
+                                        <button onClick={() => setDeleteModalOpen(false)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-colors">Batal</button>
+                                        <button onClick={executeDeleteGeneric} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors shadow">Ya, Hapus</button>
                                     </div>
                                 </div>
                             </div>
