@@ -49,7 +49,8 @@
     <script type="text/babel" data-type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Update import: Menambahkan fungsi limit untuk query
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc, updateDoc, getDoc, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         const { useState, useEffect } = React;
@@ -548,19 +549,20 @@
                 }
             }, [activeTab, user]);
 
-            // Jadwal Listener (Updated to Single Document)
+            // Jadwal Listener (Updated to Append-Only Log)
             useEffect(() => {
                 if (activeTab === "Akademik") {
-                    // Coba baca dokumen utama roster_v2
-                    const rosterDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'roster_v2', 'full_schedule');
-                    const unsubscribe = onSnapshot(rosterDocRef, (docSnap) => {
-                        if (docSnap.exists()) {
-                            setRosterData(docSnap.data().items);
-                        } else {
-                            // Jika belum ada di roster_v2, cek koleksi lama (fallback) atau gunakan default
-                            const oldRosterRef = collection(db, 'artifacts', appId, 'public', 'data', 'roster');
-                            // Kita tidak listen ke old collection secara realtime di sini untuk menyederhanakan, 
-                            // tapi jika roster_v2 kosong, state tetap menggunakan initialRosterData (bawaan)
+                    const q = query(
+                        collection(db, 'artifacts', appId, 'public', 'data', 'roster_logs'),
+                        orderBy('createdAt', 'desc'),
+                        limit(1)
+                    );
+                    const unsubscribe = onSnapshot(q, (snapshot) => {
+                        if (!snapshot.empty) {
+                            const latestData = snapshot.docs[0].data();
+                            if (latestData.roster) {
+                                setRosterData(latestData.roster);
+                            }
                         }
                     });
                     return () => unsubscribe();
@@ -628,21 +630,23 @@
                 }
             };
 
-            // FUNGSI JADWAL (Updated to Single Document Write)
+            // FUNGSI JADWAL (Updated to Append-Only Log)
             const handleSaveSchedule = async () => {
                 if (!auth.currentUser) return alert("Koneksi terputus. Silakan refresh halaman.");
                 if (!isAdmin) return alert("Akses ditolak. Anda bukan admin.");
                 const confirmSave = confirm("Apakah Anda yakin ingin menyimpan perubahan jadwal ini secara permanen?");
                 if (!confirmSave) return;
                 try {
-                    // Validasi
                     if (!rosterData || Object.keys(rosterData).length === 0) {
                         throw new Error("Data jadwal kosong atau tidak valid.");
                     }
 
-                    // Simpan seluruh objek rosterData ke dalam SATU dokumen
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'roster_v2', 'full_schedule');
-                    await setDoc(docRef, { items: rosterData }, { merge: true });
+                    // Simpan sebagai log baru (Append Only)
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'roster_logs'), {
+                        roster: rosterData,
+                        createdAt: serverTimestamp(),
+                        updatedBy: "Admin"
+                    });
 
                     alert("Jadwal berhasil disimpan ke database!");
                     setIsEditingSchedule(false);
