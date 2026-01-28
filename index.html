@@ -828,6 +828,11 @@
             };
 
             const handleMigration = async () => {
+                if (!auth.currentUser) {
+                    alert("Koneksi database belum siap. Silakan tunggu sebentar atau refresh halaman.");
+                    return;
+                }
+
                 if (!confirm("Apakah Anda yakin ingin memigrasikan data bawaan ke Firebase? Ini mungkin membuat duplikat jika data sudah ada.")) return;
                 setMigrationLoading(true);
                 
@@ -858,8 +863,12 @@
 
                     alert("Migrasi Data Berhasil! Aplikasi sekarang menggunakan data dari Database.");
                 } catch (e) {
-                    console.error(e);
-                    alert("Gagal migrasi: " + e.message);
+                    console.error("Migration Error:", e);
+                    if (e.code === 'permission-denied') {
+                        alert("Gagal migrasi: Izin ditolak (Permission Denied). \n\nJika Anda menggunakan project Firebase sendiri, pastikan 'Firestore Security Rules' diatur ke 'allow read, write: if true;' (untuk mode test) atau izinkan auth user.");
+                    } else {
+                        alert("Gagal migrasi: " + e.message);
+                    }
                 }
                 setMigrationLoading(false);
             };
